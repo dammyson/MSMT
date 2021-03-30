@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../screens/user/Login';
 import Register from '../screens/user/Register';
+import SlectUserType from '../screens/user/SlectUserType';
 
 
 
@@ -19,10 +20,11 @@ class AuthStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="Reg">
+             initialRouteName="sel">
 
             <Stack.Screen name="Login" component={Login}  />
             <Stack.Screen name="Reg" component={Register}  />
+            <Stack.Screen name="sel" component={SlectUserType}  />
             
           </Stack.Navigator>
       );

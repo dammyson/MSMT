@@ -14,14 +14,23 @@ export const textInputStyles = StyleSheet.create({
     borderBottomColor: lightTheme.TEXT_PLACEHOLDER_COLOR,
     borderRadius: 10
 },
+searchTextInputContainer:{
+    flexDirection: 'row',
+    height: 55,
+    marginBottom: 15,
+    marginTop: 5,
+    borderWidth: 0.6,
+    borderColor: lightTheme.TEXT_PLACEHOLDER_COLOR,
+    borderRadius: 10
+},
 input: {
     flex: 1,
     marginLeft: 5,
 },
 action_text: {
     color: lightTheme.TEXT_PLACEHOLDER_COLOR,
-    fontFamily: font.BOLD,
-    fontSize: 16,
+    fontFamily: font.SEMI_BOLD,
+    fontSize: 15,
     marginBottom: 2,
     marginTop: 2
 },

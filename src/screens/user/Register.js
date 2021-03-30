@@ -68,13 +68,13 @@ export default class Register extends Component {
 
         return (
 
-            <Container style={{ backgroundColor: 'transparent' }}>
-                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+            <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
+                <StatusBar  backgroundColor="transparent" barStyle="dark-content" />
                 <Content>
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
 
-                            <View style={{ marginLeft: 20, marginRight: 20, justifyContent: 'flex-start', marginBottom: 15, }}>
+                            <View style={{ marginLeft: 20, marginRight: 20,justifyContent: 'flex-start', marginBottom: 15, }}>
                                 <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 26, marginBottom: 2, marginTop: 2 }}>Sign Up</Text>
                             </View>
 

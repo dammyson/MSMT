@@ -68,8 +68,8 @@ export default class Login extends Component {
 
         return (
 
-            <Container style={{ backgroundColor: 'transparent' }}>
-                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+            <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
+                <StatusBar backgroundColor="transparent" barStyle="dark-content" />
                 <Content>
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>

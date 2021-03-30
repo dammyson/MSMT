@@ -5,6 +5,7 @@ import { Root } from 'native-base';
  import AuthStack from './auth-stack';
 import Splash from '../screens/onBoarding/Splash';
 import Welcome from '../screens/onBoarding/Welcome';
+import App from './app-navigator';
 
 
 
@@ -24,11 +25,12 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="Auth">
+             initialRouteName="App">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
-             <Stack.Screen name="Auth" component={AuthStack}  /> 
+            <Stack.Screen name="Auth" component={AuthStack}  /> 
+            <Stack.Screen name="App" component={App}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>
