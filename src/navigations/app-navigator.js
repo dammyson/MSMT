@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Avatar, Icon, } from 'react-native-elements';
 import { lightTheme } from '../theme/colors';
 import HomeScreen from '../screens/home';
+import ExploreScreen from '../screens/explore';
 import { View,Text, Dimensions } from 'react-native';
 import { font } from '../constants';
 
@@ -99,7 +100,7 @@ class AppNavigator extends Component {
       >
 
 
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Home" component={ExploreScreen} />
         <Tab.Screen name="Calendar" component={HomeScreen} />
         <Tab.Screen name="Add" component={HomeScreen} />
         <Tab.Screen name="Setting" component={HomeScreen} />

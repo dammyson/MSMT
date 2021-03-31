@@ -39,5 +39,13 @@ operation_icon: {
     alignItems: 'center',
     justifyContent: 'center',
 },
+secondSearchTextInputContainer:{
+    flexDirection: 'row',
+    height: 45,
+    marginBottom: 15,
+    marginTop: 5,
+    backgroundColor:'#F2F3F2',
+    borderRadius: 5
+},
 
   });

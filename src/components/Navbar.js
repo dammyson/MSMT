@@ -31,7 +31,7 @@ export default class Navbar extends Component {
             {left}
               </View>
             <View style={{ justifyContent: 'flex-start', alignItems: 'center',  flex:1, paddingRight:5 }}>
-              <Text  numberOfLines={1} style={styles.title}>{title} {title} </Text>
+              <Text  numberOfLines={1} style={styles.title}>{title}</Text>
             </View>
             <View style={{ marginTop: 15, justifyContent: 'center', alignItems: 'center',}}>
             {right}
