@@ -16,14 +16,15 @@ import {
 
 } from 'react-native';
 import * as images from '../../assets/images';
-import { Container, Content } from 'native-base';
+import { Container, Content, Button, Left, } from 'native-base';
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-
+import Navbar from '../../components/Navbar';
+import StarRating from 'react-native-star-rating';
 
 export default class index extends Component {
     constructor(props) {
@@ -36,7 +37,8 @@ export default class index extends Component {
             image1_display: '',
             is_valide_mail: false,
             done: false,
-            show_camera: false
+            show_camera: false,
+            starCount:5
         };
     }
 
@@ -50,119 +52,109 @@ export default class index extends Component {
 
     render() {
 
+        var left = (
+            <Left style={{ flex: 1 }}>
+                <Button transparent onPress={() => this.props.navigation.goBack()}>
+                    <Icon
+                        active
+                        name="keyboard-arrow-left"
+                        type='material'
+                        size={35}
+                        color='#FFF'
+                    />
+                </Button>
+            </Left>
+        );
+
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
-                <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
+                <Navbar left={left} title='Doctor’s Profile' bg='#101023' />
                 <Content>
-                    <Navbar left={left} title='Doctor’s Profile' bg='#101023' />
+                   
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+
+                                <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Josephina </Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Ibrahim Abubakar</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Head of Dental Care - Reddington Hospital</Text>
+                                    <View style={{ width: 100 }}>
+                                        <StarRating
+                                            disabled={false}
+                                            maxStars={5}
+                                            rating={this.state.starCount}
+                                            selectedStar={(rating) => this.setState({ starCount: rating })}
+                                            iconSet={'FontAwesome'}
+                                            starSize={20}
+                                            starStyle={{ borderColor: 'red' }}
+                                            fullStarColor={lightTheme.YELLOW}
+                                            emptyStarColor={lightTheme.YELLOW}
+                                        />
+                                    </View>
+                                </View>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
                                     <Image source={images.user} style={styles.image_profile} />
                                 </View>
+                            </View>
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+
+                                {this.renderSummaryDetails("500", 'PATIENTS', '#FFB655')}
+                                {this.renderSummaryDetails("10yrs+", 'Experience', '#F3603F')}
+                                {this.renderSummaryDetails("4.6", 'RATING', '#489E67')}
+
+                            </View>
+
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10,  marginBottom: 5, }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.appointmentButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
+                            </TouchableOpacity>
+                            </View>
+
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 22, marginBottom: 2, marginTop: 2 }}>Hello John</Text>
+                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>About Me</Text>
+                                    <Text style={{ color:lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                </View>
+                            </View>
+
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Working Time</Text>
+                                    <Text style={{ color:lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}> Mon - fri 9:00AM - 8:00PM.</Text>
                                 </View>
                             </View>
 
 
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 10, }}>
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: '#080256', fontFamily: font.BOLD, fontSize: 35, marginBottom: 2, marginTop: 2 }}>What are you looking for?</Text>
-                                </View>
-                            </View>
-
-
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, marginBottom: 5, }}>
-                                <View style={textInputStyles.searchTextInputContainer}>
-                                    <View style={textInputStyles.operation_icon}>
-
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={30}
-                                            type='ionicon'
-                                        />
+                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Reviews</Text>
                                     </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
-                                    </View>
-                                </View>
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Specialist</Text>
-                                </View>
-                            </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-
-                                {this.renderSummaryDetails("500", 'RADIOLOGISTS', '#FFB655')}
-                                {this.renderSummaryDetails("4k+", 'Therapists', '#F3603F')}
-                                {this.renderSummaryDetails("4k", 'PHARMAists', '#489E67')}
-
-                            </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 10, }}>
-
-                                {this.renderSummaryDetails("100", 'General Practitioners', '#5383EC')}
-                                {this.renderSummaryDetails("2k+", 'DERMATOLOGISTS', '#A74343')}
-                                {this.renderSummaryDetails("1k", 'PEDIATRICIANS', '#344356')}
-
-                            </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Packages of Services</Text>
-                                </View>
-                            </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
-                                    {this.renderPackages(packagesa)}
+                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+                                    {this.renderReview(packagesa)}
                                 </ScrollView>
                             </View>
 
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+
+                            <View style={{ marginLeft: 20, marginTop: 25, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderLongPackages(packagesa)}
                                 </ScrollView>
                             </View>
 
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Featured Doctors</Text>
-                                </View>
-
-                                <TouchableOpacity style={{ marginRight: 20, height: 45, backgroundColor: '#4DC59130', justifyContent: 'center', borderRadius: 10, }}>
-                                    <Text style={{ color: '#4DC59180', fontFamily: font.BOLD, fontSize: 17, marginHorizontal: 10, marginBottom: 2, marginTop: 2 }}>See all</Text>
-                                </TouchableOpacity>
-                            </View>
-
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
-                                    {this.renderDoctors(doctors)}
-                                </ScrollView>
-                            </View>
-
+                           
 
                         </View>
                     </View>
@@ -177,23 +169,35 @@ export default class index extends Component {
         return (
             <TouchableOpacity style={[styles.user_box, { backgroundColor: bg }]}>
                 <View style={{ marginLeft: 10, marginVertical: 15, }}>
-                    <Text style={[{ fontFamily: font.EXTRA_BOLD, color: lightTheme.WHITE_COLOR, fontSize: 28, marginBottom: 2 }]}>{count}</Text>
+                    <Text style={[{ fontFamily: font.EXTRA_BOLD, color: lightTheme.WHITE_COLOR, fontSize: 23, marginBottom: 2 }]}>{count}</Text>
                     <Text numberOfLines={1} style={[{ fontFamily: font.REGULAR, textTransform: 'uppercase', color: lightTheme.WHITE_COLOR, fontSize: 11, marginBottom: 15 }]}>{name}</Text>
                 </View>
             </TouchableOpacity>
         )
     }
 
-    renderPackages(data) {
+    renderReview(data) {
         let packages = [];
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < 9; i++) {
             packages.push(
-                <View style={[styles.pack_box, { backgroundColor: data[i].bg }]}>
-                    <View style={{ marginLeft: 10, marginVertical: 15, }}>
-                        <Text numberOfLines={2} style={[{ fontFamily: font.EXTRA_BOLD, color: data[i].text_color, fontSize: 18, marginBottom: 2 }]}>{data[i].title}</Text>
-                        <Text style={[{ fontFamily: font.REGULAR, textTransform: 'uppercase', color: lightTheme.PRIMARY_TEXT_COLOR, fontSize: 16, marginBottom: 15 }]}>{data[i].text}</Text>
-                    </View>
+                <View style={{ marginRight: 20, justifyContent: 'center', flex: 1, marginTop:10 }}>
+                <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 14, }}>Ibrahim Abubakar</Text>
+               
+                <View style={{ width: 100 }}>
+                    <StarRating
+                        disabled={false}
+                        maxStars={5}
+                        rating={this.state.starCount}
+                        selectedStar={(rating) => this.setState({ starCount: rating })}
+                        iconSet={'FontAwesome'}
+                        starSize={15}
+                        starStyle={{ borderColor: 'red' }}
+                        fullStarColor={lightTheme.YELLOW}
+                        emptyStarColor={lightTheme.YELLOW}
+                    />
                 </View>
+                <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. </Text>
+            </View>
             );
         }
         return packages;
@@ -252,13 +256,7 @@ const packagesa = [
         text_color: "#A74343"
 
     },
-    {
-        title: 'General Practitioner & Surgeon',
-        text: 'For the most complete assessment of the cardiovascular system.',
-        bg: '#B7DFF525',
-        text_color: "#F8A44C"
-
-    },
+   
 ];
 
 
@@ -309,8 +307,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     image_profile: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: 150,
         shadowColor: 'gray',
         shadowOffset: { width: 0, height: 1 },

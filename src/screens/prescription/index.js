@@ -68,7 +68,7 @@ export default class index extends Component {
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='Doctor' bg='#101023' />
+                <Navbar left={left} title='Prescriptions' bg='#101023' />
                 <Content scrollEnabled={false}>
 
                     <View style={styles.backgroundImage}>
@@ -115,7 +115,23 @@ export default class index extends Component {
                                     />
                                 </View>
                             </View>
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
+                                </View>
+                            </View>
+                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+                                    {this.renderItem(doctors)}
+                                </ScrollView>
+                            </View>
 
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
+                                </View>
+                            </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
                                     {this.renderItem(doctors)}
@@ -138,27 +154,20 @@ export default class index extends Component {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                         <Image source={images.user} style={styles.image_profile} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
-                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', }}>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', }}>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
 
-                                <Icon
-                                    name="star"
-                                    color={'#FFB655'}
-                                    size={15}
-                                    type='antdesign'
-                                />
-                            </View>
-                            <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>4.4</Text>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
                             <View style={{ flex: 1 }} />
-                            <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>25 Reviews</Text>
-
+                            <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>25 Reviews</Text>
+                            </View>
                         </View>
                     </View>
 
@@ -198,42 +207,7 @@ const doctors = [
         name: 'Josephina Ibrahim Abubakar',
         job: 'Head of Dental Care - Reddington Hospital',
     },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
 
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
 ];
 const styles = StyleSheet.create({
     container: {
@@ -260,6 +234,10 @@ const styles = StyleSheet.create({
         width: 55,
         height: 55,
         borderRadius: 150,
+        shadowColor: 'gray',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
         shadowColor: 'gray',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,

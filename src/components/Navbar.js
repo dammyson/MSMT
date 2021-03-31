@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 import { Header, Body, Title, Left, Right, Icon } from 'native-base';
 import { View, Text, TouchableOpacity  } from 'react-native';
 import { lightTheme } from '../theme/colors';
+import { font } from '../constants';
 // Our custom files and classes import
 
 
@@ -25,12 +26,12 @@ export default class Navbar extends Component {
             flexDirection: 'row',
             alignItems: 'center',
             marginRight: 15,
-            marginLeft: 15,
+            marginLeft: 10,
           }}>
             <View style={{ marginTop: 15, justifyContent: 'center', alignItems: 'center', }}>
             {left}
               </View>
-            <View style={{ justifyContent: 'flex-start', alignItems: 'center',  flex:1, paddingRight:5 }}>
+            <View style={{ justifyContent: 'flex-start', alignItems: 'center',  flex:1, paddingRight:20 }}>
               <Text  numberOfLines={1} style={styles.title}>{title}</Text>
             </View>
             <View style={{ marginTop: 15, justifyContent: 'center', alignItems: 'center',}}>
@@ -54,11 +55,11 @@ const styles = {
     marginBottom: 2,
     marginRight: 20,
     marginLeft: 20,
-    fontSize: 14,
+    fontSize: 18,
     color: '#FFF',
     textAlign: 'center',
     fontWeight: '400',
-    fontFamily: 'NunitoSans-Bold'
+    fontFamily:font.BLACK
   },
 };
 

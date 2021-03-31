@@ -19,5 +19,50 @@ export const buttonStyles = StyleSheet.create({
         color:lightTheme.SECONDARY_BUTTON_COLOR
 
       },
+      appointmentButtonStyle: {
+        height: 60,
+        padding: 12,
+        borderRadius: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        justifyContent: 'center',
+        alignItems:'center',
+        backgroundColor: '#344356',
+      },
+
+      appointmentWhiteButtonStyle: {
+        height: 28,
+        borderRadius: 3,
+        paddingHorizontal:5,
+        marginTop: 10,
+        marginBottom: 10,
+        justifyContent: 'center',
+        alignItems:'center',
+        borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,
+        borderWidth:0.6,
+        backgroundColor: '#FFF',
+        shadowColor: 'gray',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
+        elevation: 2,
+        marginHorizontal:5,
+      },
+      appointmentOrangeButtonStyle: {
+        height: 28,
+        borderRadius: 3,
+        paddingHorizontal:5,
+        marginTop: 10,
+        marginBottom: 10,
+        justifyContent: 'center',
+        alignItems:'center',
+        backgroundColor: '#F3603F',
+        shadowColor: 'gray',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
+        elevation: 2,
+        marginHorizontal:5
+      },
    
   });
