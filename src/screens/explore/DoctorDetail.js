@@ -140,9 +140,7 @@ export default class index extends Component {
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderReview(packagesa)}
-                                </ScrollView>
+                              
                             </View>
 
 
