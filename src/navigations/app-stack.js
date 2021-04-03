@@ -7,6 +7,11 @@ import Splash from '../screens/onBoarding/Splash';
 import Welcome from '../screens/onBoarding/Welcome';
 import App from './app-navigator';
 import TimeData from '../screens/appointment/TimeDate';
+import AppointmentInformation from '../screens/appointment/AppointmentInformation';
+import Billing from '../screens/appointment/Billing';
+import ModePayment from '../screens/appointment/ModePayment';
+import Payment from '../screens/appointment/Payment';
+import Done from '../screens/appointment/Done';
 
 
 
@@ -32,7 +37,7 @@ class AppStack extends Component {
             <Stack.Screen name="Welcome" component={Welcome}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
-            <Stack.Screen name="tm" component={TimeData}  /> 
+            <Stack.Screen name="tm" component={Done}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

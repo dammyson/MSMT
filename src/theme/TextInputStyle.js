@@ -48,4 +48,23 @@ secondSearchTextInputContainer:{
     borderRadius: 5
 },
 
+
+textAreaContainer: {
+    height: 100,
+    backgroundColor: '#F2F3F2',
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 10,
+    justifyContent: 'center',
+},
+textArea: {
+    height: 85,
+    justifyContent: "flex-start",
+    margin: 10,
+    flex: 1,
+    textAlignVertical: 'top',
+    fontSize: 13,
+    fontFamily: font.SEMI_BOLD,
+},
+
   });

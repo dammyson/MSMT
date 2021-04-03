@@ -28,6 +28,13 @@ import Moment from 'moment';
 Moment.locale('en');
 const moment = require('moment');
 
+const width = Dimensions.get('window').width;
+const single_with = width/100;
+const stage_1 = width/single_with;
+const percentage = (width/single_with)/width * 100;
+const sty = percentage.toString() + "%"
+
+
 export default class TimeData extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +49,7 @@ export default class TimeData extends Component {
             show_camera: false,
             starCount: 5,
             display_days: [],
-            selected:{day: 'M', date: 3 }
+            selected: { day: 'M', date: 3 }
         };
     }
 
@@ -62,7 +69,7 @@ export default class TimeData extends Component {
         }
         var res = Moment(today).format('D/dd').split("/");
         instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected:{ day: res[1], date: res[0] } })
+        this.setState({ selected: { day: res[1], date: res[0] } })
         for (let i = 1; i <= 3; i++) {
             var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
             var res = Moment(new_date).format('D/dd').split("/");
@@ -72,7 +79,7 @@ export default class TimeData extends Component {
         this.setState({ display_days: instant_array })
     }
 
-    selDay(data){
+    selDay(data) {
         this.setState({ selected: data })
     }
 
@@ -97,7 +104,7 @@ export default class TimeData extends Component {
 
             <Container style={{ backgroundColor: lightTheme.WHITE_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='' bg='#101023' />
+                <Navbar left={left} title='Appointment' bg='#101023' />
                 <Content>
 
                     <View style={styles.backgroundImage}>
@@ -122,41 +129,46 @@ export default class TimeData extends Component {
                                 </ScrollView>
                             </View>
 
+                            <View style={{ height: 0.6, opacity:0.4, marginVertical:10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color:'#A74343' }}>Morning Time: 8am - 12noon</Text>
-                                    </View>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#A74343' }}>Morning Time: 8am - 12noon</Text>
+                                </View>
                             </View>
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                              
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
+                                {this.renderTimes(times)}
                             </View>
 
-                            <View style={{hieght:4, backgroundColor:lightTheme.SMALL_BODY_TEXT_COLOR }}/>
-
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color:'#A74343' }}>Afternoon Time: 12pm - 4pm</Text>
-                                    </View>
-                            </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                              
-                            </View>
+                            <View style={{ height: 0.5, opacity:0.4, marginVertical:10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color:'#A74343' }}>Evening Time: 4pm - 9pm</Text>
-                                    </View>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#A74343' }}>Afternoon Time: 12pm - 4pm</Text>
+                                </View>
                             </View>
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
+                                {this.renderTimes(times)}
+                            </View>
+                            <View style={{ height: 0.5, opacity:0.6, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                              
+                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#A74343' }}>Evening Time: 4pm - 9pm</Text>
+                                </View>
                             </View>
 
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
+                                {this.renderTimes(times)}
+                            </View>
+                            <View style={{ marginTop: 15, }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
+                            </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
 
@@ -174,10 +186,10 @@ export default class TimeData extends Component {
         for (var i = 0; i < data.length; i++) {
             packages.push(
                 <View style={{ marginHorizontal: 5, marginVertical: 10, borderRadius: 10, backgroundColor: lightTheme.WHITE_COLOR }}>
-                    <View style={[styles.inactive, selected.date == data[i].date &  selected.day == data[i].day ? styles.active : null]}>
+                    <TouchableOpacity style={[styles.inactive, selected.date == data[i].date & selected.day == data[i].day ? styles.active : null]}>
                         <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, opacity: 0.6, fontFamily: font.BOLD, fontSize: 10, }}>{data[i].day}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 15, }}>{data[i].date} </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
             );
@@ -185,6 +197,22 @@ export default class TimeData extends Component {
         return packages;
     }
 
+
+    renderTimes(data) {
+        let packages = [];
+        var selected = this.state.selected
+        for (var i = 0; i < data.length; i++) {
+            packages.push(
+                <View style={[styles.cell]}>
+                    <TouchableOpacity style={[{ width: 80, alignItems: 'center', borderColor: lightTheme.SMALL_BODY_TEXT_COLOR, borderRadius: 4, borderWidth: 0.7, padding: 3, margin:5 }]}>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 12, }}>{data[i].value}</Text>
+                    </TouchableOpacity>
+                </View>
+
+            );
+        }
+        return packages;
+    }
 
 
 }
@@ -202,30 +230,33 @@ const packagesa = [
 ];
 
 
-const doctors = [
+const times = [
     {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-
-
+        value: '10:30 AM',
     },
     {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
+        value: '10:30 AM',
     },
     {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-
-
+        value: '10:30 AM',
     },
     {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
+        value: '10:30 AM',
+    },
+    {
+        value: '10:30 AM',
+    },
+    {
+        value: '10:30 AM',
+    },
+    {
+        value: '10:30 AM',
+    },
+    {
+        value: '10:30 AM',
+    },
+    {
+        value: '10:30 AM',
     },
 ];
 const styles = StyleSheet.create({
@@ -270,7 +301,7 @@ const styles = StyleSheet.create({
     },
     active: {
         backgroundColor: '#FF7648',
-       
+
         borderRadius: 10
     },
 
@@ -283,7 +314,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     cell: {
-        flexBasis: '50%',
+        flexBasis: sty,
         flex: 1,
     },
 
