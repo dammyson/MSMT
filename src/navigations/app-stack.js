@@ -12,6 +12,12 @@ import Billing from '../screens/appointment/Billing';
 import ModePayment from '../screens/appointment/ModePayment';
 import Payment from '../screens/appointment/Payment';
 import Done from '../screens/appointment/Done';
+import MyAppointment from '../screens/appointment/MyAppointment';
+import DoctorMyAppointment from '../screens/appointment/WriteReview';
+import WriteReview from '../screens/appointment/WriteReview';
+import Settings from '../screens/settings';
+import Session from '../screens/settings/Session';
+import SessionDetail from '../screens/settings/SessionDetail';
 
 
 
@@ -37,7 +43,7 @@ class AppStack extends Component {
             <Stack.Screen name="Welcome" component={Welcome}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
-            <Stack.Screen name="tm" component={Done}  /> 
+            <Stack.Screen name="tm" component={SessionDetail}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

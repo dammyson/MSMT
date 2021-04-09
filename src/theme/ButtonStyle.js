@@ -15,12 +15,12 @@ export const buttonStyles = StyleSheet.create({
     },
     primaryButtonTextStyle: {
         fontFamily:font.SEMI_BOLD,
-        fontSize:17,
+        fontSize:16,
         color:lightTheme.SECONDARY_BUTTON_COLOR
 
       },
       appointmentButtonStyle: {
-        height: 60,
+        height: 50,
         padding: 12,
         borderRadius: 10,
         marginTop: 10,
@@ -28,6 +28,7 @@ export const buttonStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center',
         backgroundColor: '#344356',
+        marginHorizontal:5,
       },
 
       appointmentWhiteButtonStyle: {
@@ -63,6 +64,19 @@ export const buttonStyles = StyleSheet.create({
         shadowRadius: 1,
         elevation: 2,
         marginHorizontal:5
+      },
+      appointmentTransparentButtonStyle: {
+        height: 50,
+        padding: 12,
+        borderRadius: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        borderWidth:0.5,
+        justifyContent: 'center',
+        alignItems:'center',
+        borderBottomColor:'#344356',
+        backgroundColor: '#FFF',
+        marginHorizontal:5,
       },
    
   });
