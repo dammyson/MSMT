@@ -26,7 +26,7 @@ import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
 
 
-export default class index extends Component {
+export default class RateSheet extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -65,80 +65,23 @@ export default class index extends Component {
             </Left>
         );
         return (
-
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='Prescriptions' bg='#101023' />
+                <Navbar left={left} title='Rate Sheet' bg='#101023' />
                 <Content scrollEnabled={false}>
-
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-
-
-
-
-
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
-                                <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
-                                    <View style={textInputStyles.operation_icon}>
-
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={22}
-                                            type='ionicon'
-                                        />
-                                    </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search For Doctors by Name..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
-                                    </View>
-                                </View>
-
-                                <View style={{ padding: 10, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
-
-                                    <Icon
-                                        name="git-compare-sharp"
-                                        color={lightTheme.PRIMARY_TEXT_COLOR}
-                                        size={20}
-                                        type='ionicon'
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                            <View style={{ marginLeft: 10, flex:1, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
                                     {this.renderItem(doctors)}
                                 </ScrollView>
                             </View>
 
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
-                                </View>
+                            <View style={{ marginTop: 15, }}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={[buttonStyles.primaryButtonStyle, {height:55}]}>
+                                    <Text style={[buttonStyles.primaryButtonTextStyle,]}>Add New Billing Cost</Text>
+                                </TouchableOpacity>
                             </View>
-                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
-                                </ScrollView>
-                            </View>
-
-
                         </View>
                     </View>
 
@@ -154,33 +97,29 @@ export default class index extends Component {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
             packages.push(
+                <>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
-                    <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={styles.image_profile} />
-                    </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
+                        <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{'Counselling Assessment'}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
 
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>NGN 900</Text>
                             <View style={{ flex: 1 }} />
-                            <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>25 Reviews</Text>
-                            </View>
                         </View>
                     </View>
 
                     <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', }}>
-
                         <Icon
                             name="arrow-right"
                             color={lightTheme.PRIMARY_TEXT_COLOR}
-                            size={20}
+                            size={15}
                             type='simple-line-icon'
                         />
                     </View>
                 </TouchableOpacity>
+                <View style={{ height: 0.5, backgroundColor: '#DADADA', marginVertical: 5 }} />
+                </>
             );
         }
         return packages;
@@ -207,6 +146,29 @@ const doctors = [
         name: 'Josephina Ibrahim Abubakar',
         job: 'Head of Dental Care - Reddington Hospital',
     },
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+
 
 ];
 const styles = StyleSheet.create({
@@ -223,7 +185,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        height: Dimensions.get('window').height - 100,
     },
     mainbody: {
         flex: 1,
@@ -231,8 +193,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     image_profile: {
-        width: 55,
-        height: 55,
+        width: 50,
+        height: 50,
         borderRadius: 150,
         shadowColor: 'gray',
         shadowOffset: { width: 0, height: 1 },

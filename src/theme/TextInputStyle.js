@@ -28,7 +28,7 @@ input: {
     marginLeft: 5,
 },
 action_text: {
-    color: lightTheme.TEXT_PLACEHOLDER_COLOR,
+    color: lightTheme.SMALL_BODY_TEXT_COLOR,
     fontFamily: font.SEMI_BOLD,
     fontSize: 15,
     marginBottom: 2,

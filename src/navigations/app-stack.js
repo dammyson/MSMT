@@ -13,11 +13,21 @@ import ModePayment from '../screens/appointment/ModePayment';
 import Payment from '../screens/appointment/Payment';
 import Done from '../screens/appointment/Done';
 import MyAppointment from '../screens/appointment/MyAppointment';
-import DoctorMyAppointment from '../screens/appointment/WriteReview';
+import DoctorMyAppointment from '../screens/appointment/DoctorMyAppointment';
 import WriteReview from '../screens/appointment/WriteReview';
 import Settings from '../screens/settings';
 import Session from '../screens/settings/Session';
 import SessionDetail from '../screens/settings/SessionDetail';
+import Referer from '../screens/settings/Referer';
+import Account from '../screens/settings/Account';
+import About from '../screens/settings/About';
+import DoctorIndex from '../screens/home/index_doctor';
+import BankInformation from '../screens/settings/BankInformation';
+import Notification from '../screens/Notification';
+import RateSheet from '../screens/settings/RateSheet';
+import Scheduling from '../screens/settings/Scheduling';
+import MakeAppointment from '../screens/settings/MakeAppointment';
+import ViewAppointment from '../screens/settings/ViewAppointment';
 
 
 
@@ -43,7 +53,7 @@ class AppStack extends Component {
             <Stack.Screen name="Welcome" component={Welcome}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
-            <Stack.Screen name="tm" component={SessionDetail}  /> 
+            <Stack.Screen name="tm" component={ViewAppointment}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

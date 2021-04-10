@@ -16,14 +16,13 @@ import {
 
 } from 'react-native';
 import * as images from '../../assets/images';
-import { Container, Content, Button, Left, Toast, Body, Title, List, ListItem, } from 'native-base';
+import { Container, Content } from 'native-base';
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-import Navbar from '../../components/Navbar';
 
 
 export default class index extends Component {
@@ -51,73 +50,50 @@ export default class index extends Component {
 
     render() {
 
-        var left = (
-            <Left style={{ flex: 1 }}>
-                <Button transparent onPress={() => this.props.navigation.goBack()}>
-                    <Icon
-                        active
-                        name="keyboard-arrow-left"
-                        type='material'
-                        size={35}
-                        color='#FFF'
-                    />
-                </Button>
-            </Left>
-        );
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
-                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='Prescriptions' bg='#101023' />
-                <Content scrollEnabled={false}>
-
+                <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+                <Content>
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-
-
-
-
-
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
-                                <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
-                                    <View style={textInputStyles.operation_icon}>
-
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={22}
-                                            type='ionicon'
-                                        />
-                                    </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search For Doctors by Name..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
-                                    </View>
+                            <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
+                                    <Image source={images.user} style={styles.image_profile} />
                                 </View>
-
-                                <View style={{ padding: 10, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
-
-                                    <Icon
-                                        name="git-compare-sharp"
-                                        color={lightTheme.PRIMARY_TEXT_COLOR}
-                                        size={20}
-                                        type='ionicon'
-                                    />
+                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18,  marginTop: 2 }}>Hello</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginBottom: 2,}}>Dr. Chukwuemeka Ojo</Text>
                                 </View>
                             </View>
+
+
+
+                           
+
+
+                          
+
+                            <View style={{ marginLeft: 20, marginVertical: 20, marginRight: 10, }}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{height:70, paddingLeft:20,  justifyContent:'center', alignItems:'flex-start', backgroundColor:'#344356', borderRadius:7}}>
+                                    <Text style={[{ color: '#FFF', fontSize:15 ,fontFamily: font.LIGHT }]}>Wallet Balance</Text>
+                                    <Text style={[{ color: '#FFF', fontSize:22 ,fontFamily: font.BOLD }]}>NGN 10,000</Text>
+                                </TouchableOpacity>
+                              
+
+
+                            </View>                          
+
+                            <View style={{ marginLeft: 20, marginTop: 15, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                {this.renderSummaryDetails("13", 'Pending appointment', '#FFB655')}
+                                {this.renderSummaryDetails("4k+", 'all  appointment', '#F3603F')}
+                                {this.renderSummaryDetails("4k", 'completed sessions', '#489E67')}
+
+                            </View>
+
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Upcoming Appointment</Text>
                                 </View>
                             </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
@@ -129,7 +105,7 @@ export default class index extends Component {
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>My Sessions</Text>
                                 </View>
                             </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
@@ -137,6 +113,7 @@ export default class index extends Component {
                                     {this.renderItem(doctors)}
                                 </ScrollView>
                             </View>
+
 
 
                         </View>
@@ -148,15 +125,24 @@ export default class index extends Component {
         );
     }
 
-
+    renderSummaryDetails(count, name, bg) {
+        return (
+            <TouchableOpacity style={[styles.user_box, { backgroundColor: bg }]}>
+                <View style={{ marginLeft: 10, marginVertical: 15, }}>
+                    <Text style={[{ fontFamily: font.EXTRA_BOLD, color: lightTheme.WHITE_COLOR, fontSize: 28, marginBottom: 2 }]}>{count}</Text>
+                    <Text style={[{ fontFamily: font.REGULAR, textTransform: 'uppercase', color: lightTheme.WHITE_COLOR, fontSize: 11, marginBottom: 5 }]}>{name}</Text>
+                </View>
+            </TouchableOpacity>
+        )
+    }
 
     renderItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={styles.image_profile} />
+                        <Image source={images.user} style={{ width: 50,height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 },shadowOpacity: 0.8,shadowRadius: 1,elevation: 5}} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
@@ -166,7 +152,7 @@ export default class index extends Component {
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
                             <View style={{ flex: 1 }} />
                             <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>25 Reviews</Text>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>11:30 AM</Text>
                             </View>
                         </View>
                     </View>
@@ -188,26 +174,25 @@ export default class index extends Component {
 
 
 
+   
+
 
 }
 
 
-
-
 const doctors = [
     {
-        image: images.user,
+        image: images.user,  
         name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
+        job: 'General Practitioner',
+       
 
     },
     {
-        image: images.user,
+        image: images.user, 
         name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
+        job: 'General Practitioner',
     },
-
 ];
 const styles = StyleSheet.create({
     container: {
@@ -223,7 +208,6 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
     },
     mainbody: {
         flex: 1,
@@ -231,13 +215,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     image_profile: {
-        width: 55,
-        height: 55,
+        width: 60,
+        height: 60,
         borderRadius: 150,
-        shadowColor: 'gray',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 1,
         shadowColor: 'gray',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
@@ -274,7 +254,7 @@ const styles = StyleSheet.create({
 
     },
     doctor_box: {
-        width: Dimensions.get('window').width / 3.5,
+        width: Dimensions.get('window').width/3.5,
         borderRadius: 10,
         marginLeft: 5,
         marginRight: 5,

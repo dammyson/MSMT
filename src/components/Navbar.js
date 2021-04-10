@@ -34,7 +34,7 @@ export default class Navbar extends Component {
             <View style={{ justifyContent: 'flex-start', alignItems: 'center',  flex:1, paddingRight:20 }}>
               <Text  numberOfLines={1} style={styles.title}>{title}</Text>
             </View>
-            <View style={{ marginTop: 15, justifyContent: 'center', alignItems: 'center',}}>
+            <View style={{ marginTop: 15, justifyContent: 'center', alignItems: 'center', width:30}}>
             {right}
               </View>
           </View>
@@ -48,18 +48,18 @@ const styles = {
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 70,
+    height: 60,
   },
   title: {
     marginTop: 2,
     marginBottom: 2,
     marginRight: 20,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: 16,
     color: '#FFF',
     textAlign: 'center',
     fontWeight: '400',
-    fontFamily:font.BLACK
+    fontFamily:font.BOLD
   },
 };
 

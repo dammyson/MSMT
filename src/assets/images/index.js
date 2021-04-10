@@ -6,6 +6,8 @@ import type_user from './type_user.png';
 import type_provider from './type_provider.png';
 import user from './user.png';
 import success from './success.png';
+import refer from './refer.png';
+import information from './information.png'
 
 //Mark:- Export Now
 export {
@@ -14,5 +16,7 @@ export {
   type_provider,
   type_user,
   user,
-  success
+  success,
+  refer,
+  information
 };

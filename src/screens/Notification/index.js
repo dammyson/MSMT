@@ -65,80 +65,17 @@ export default class index extends Component {
             </Left>
         );
         return (
-
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='Prescriptions' bg='#101023' />
+                <Navbar left={left} title='Notifications' bg='#101023' />
                 <Content scrollEnabled={false}>
-
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-
-
-
-
-
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
-                                <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
-                                    <View style={textInputStyles.operation_icon}>
-
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={22}
-                                            type='ionicon'
-                                        />
-                                    </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search For Doctors by Name..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
-                                    </View>
-                                </View>
-
-                                <View style={{ padding: 10, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
-
-                                    <Icon
-                                        name="git-compare-sharp"
-                                        color={lightTheme.PRIMARY_TEXT_COLOR}
-                                        size={20}
-                                        type='ionicon'
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
-                                </View>
-                            </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
                                     {this.renderItem(doctors)}
                                 </ScrollView>
                             </View>
-
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
-                                </ScrollView>
-                            </View>
-
-
                         </View>
                     </View>
 
@@ -166,17 +103,16 @@ export default class index extends Component {
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
                             <View style={{ flex: 1 }} />
                             <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>25 Reviews</Text>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>60 mins</Text>
                             </View>
                         </View>
                     </View>
 
                     <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', }}>
-
                         <Icon
                             name="arrow-right"
                             color={lightTheme.PRIMARY_TEXT_COLOR}
-                            size={20}
+                            size={15}
                             type='simple-line-icon'
                         />
                     </View>
@@ -207,6 +143,18 @@ const doctors = [
         name: 'Josephina Ibrahim Abubakar',
         job: 'Head of Dental Care - Reddington Hospital',
     },
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+
+    {
+        image: images.user,
+        name: 'Josephina Ibrahim Abubakar',
+        job: 'Head of Dental Care - Reddington Hospital',
+    },
+
 
 ];
 const styles = StyleSheet.create({
@@ -231,8 +179,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     image_profile: {
-        width: 55,
-        height: 55,
+        width: 50,
+        height: 50,
         borderRadius: 150,
         shadowColor: 'gray',
         shadowOffset: { width: 0, height: 1 },
