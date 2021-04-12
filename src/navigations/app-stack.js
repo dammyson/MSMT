@@ -47,7 +47,7 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="tm">
+             initialRouteName="Auth">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Welcome" component={Welcome}  />

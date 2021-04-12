@@ -20,7 +20,7 @@ class AuthStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="sel">
+             initialRouteName="Login">
 
             <Stack.Screen name="Login" component={Login}  />
             <Stack.Screen name="Reg" component={Register}  />

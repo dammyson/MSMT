@@ -22,13 +22,14 @@ import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
+import ActivityIndicator from '../../components/ActivityIndicator';
 
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             email: '',
             password: '',
             image1: '',
@@ -65,7 +66,11 @@ export default class Login extends Component {
 
 
     render() {
-
+if(this.state.loading){
+    return(
+      <ActivityIndicator message={'Loading...'} />
+    )
+}
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
