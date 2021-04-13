@@ -25,8 +25,6 @@ class AuthStack extends Component {
 
             <Stack.Screen name="Login" component={Login}  />
             <Stack.Screen name="Reg" component={Register}  />
-            <Stack.Screen name="Users" component={Users}  />
-            
           </Stack.Navigator>
       );
   }

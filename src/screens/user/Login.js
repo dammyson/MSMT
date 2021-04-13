@@ -58,65 +58,46 @@ export default class Login extends Component {
     }
 
     loginRequest(){
-
-        fetch('https://jsonplaceholder.typicode.com/posts/1', {
-      method: 'GET',
-      //Request Type
-    })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-        //Success
-        console.warn(JSON.stringify(responseJson));
-        console.warn(responseJson);
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-        //Error
-        alert(JSON.stringify(error));
-        console.warn(error);
-      });
-        // const{ email, password, is_valide_mail} = this.state
-        // if(!is_valide_mail){
-        //     showTopNotification("warn", "The email provided is invalid", 3)
-        //     return
-        // }
-        // if(password.length < 4){
-        //     showTopNotification("warn", "The password is to short", 3)
-        //     return
-        // }
-        // this.setState({ loading: true})
-        // fetch('https://mhealthwebapi.azurewebsites.net/api/Auth/authenticate', {
-        //     method: 'POST', headers: {
-        //       Accept: 'application/json',
-        //       'Content-Type': 'application/json',
-        //     }, body: JSON.stringify({
-        //         email:"ico.cghpi@gmail.com",
-        //         password:"P@ssw0rd"
-        //     }),
-        //   })
-        //   .then(processResponse)
-        //     .then(res => {
-        //         this.setState({ loading: false})
-        //       const{ statusCode, data} = res
-        //       console.warn(statusCode, data)
-        //       if (statusCode == 200) {
-        //         storeToken(data.data.token)
-        //         storeUserDetails(data.data)
-        //         if(data.data.role){
-        //             this.props.navigation.replace('App')
-        //         }else{
-        //             this.props.navigation.replace('Providers')
-        //         }
+        const{ email, password, is_valide_mail} = this.state
+        if(!is_valide_mail){
+            showTopNotification("warn", "The email provided is invalid", 3)
+            return
+        }
+        if(password.length < 4){
+            showTopNotification("warn", "The password is to short", 3)
+            return
+        }
+        this.setState({ loading: true})
+        fetch('https://mhealthwebapi.azurewebsites.net/api/Auth/authenticate', {
+            method: 'POST', headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }, body: JSON.stringify({
+                email:"ico.cghpi@gmail.com",
+                password:"P@ssw0rd"
+            }),
+          })
+          .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false})
+              const{ statusCode, data} = res
+              console.warn(statusCode, data)
+              if (statusCode == 200) {
+                storeToken(data.data.token)
+                storeUserDetails(data.data)
+                if(data.data.role){
+                    this.props.navigation.replace('App')
+                }else{
+                    this.props.navigation.replace('Providers')
+                }
             
-        //       } else {
-        //         showTopNotification("erroe", data.message, 3)
-        //       }
-        //     }).catch((error) => {
-        //       showTopNotification("erroe", error.message, 3)
-        //       this.setState({ loading: false})
-        //     });
-
+              } else {
+                showTopNotification("erroe", data.message, 3)
+              }
+            }).catch((error) => {
+              showTopNotification("erroe", error.message, 3)
+              this.setState({ loading: false})
+            });
     }
 
 

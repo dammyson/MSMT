@@ -35,9 +35,9 @@ export const getEmail = async () => {
   return  user_email
 };
 
-export const getUser = async () => {
-  let user_email = await AsyncStorage.getItem('user')
-  return  user_email
+export const getUserName = async () => {
+  let username = await AsyncStorage.getItem('username')
+  return  username
 };
 
 export const removeToken = async (selectedValue, email) => {
