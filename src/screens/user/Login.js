@@ -8,11 +8,6 @@ import {
     StatusBar,
     Alert,
     Dimensions,
-    Image,
-    Keyboard,
-    NativeModules,
-    PermissionsAndroid,
-    ImageBackground
 
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -23,13 +18,14 @@ import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import ActivityIndicator from '../../components/ActivityIndicator';
+import { baseUrl, showTopNotification, processResponse, storeToken, storeUserDetails } from '../../utilities';
 
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            loading: false,
             email: '',
             password: '',
             image1: '',
@@ -61,16 +57,71 @@ export default class Login extends Component {
         this.setState({ secureTextEntry: this.state.secureTextEntry ? false : true })
     }
 
+    loginRequest(){
 
+        fetch('https://jsonplaceholder.typicode.com/posts/1', {
+      method: 'GET',
+      //Request Type
+    })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+        //Success
+        console.warn(JSON.stringify(responseJson));
+        console.warn(responseJson);
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+        //Error
+        alert(JSON.stringify(error));
+        console.warn(error);
+      });
+        // const{ email, password, is_valide_mail} = this.state
+        // if(!is_valide_mail){
+        //     showTopNotification("warn", "The email provided is invalid", 3)
+        //     return
+        // }
+        // if(password.length < 4){
+        //     showTopNotification("warn", "The password is to short", 3)
+        //     return
+        // }
+        // this.setState({ loading: true})
+        // fetch('https://mhealthwebapi.azurewebsites.net/api/Auth/authenticate', {
+        //     method: 'POST', headers: {
+        //       Accept: 'application/json',
+        //       'Content-Type': 'application/json',
+        //     }, body: JSON.stringify({
+        //         email:"ico.cghpi@gmail.com",
+        //         password:"P@ssw0rd"
+        //     }),
+        //   })
+        //   .then(processResponse)
+        //     .then(res => {
+        //         this.setState({ loading: false})
+        //       const{ statusCode, data} = res
+        //       console.warn(statusCode, data)
+        //       if (statusCode == 200) {
+        //         storeToken(data.data.token)
+        //         storeUserDetails(data.data)
+        //         if(data.data.role){
+        //             this.props.navigation.replace('App')
+        //         }else{
+        //             this.props.navigation.replace('Providers')
+        //         }
+            
+        //       } else {
+        //         showTopNotification("erroe", data.message, 3)
+        //       }
+        //     }).catch((error) => {
+        //       showTopNotification("erroe", error.message, 3)
+        //       this.setState({ loading: false})
+        //     });
+
+    }
 
 
 
     render() {
-if(this.state.loading){
-    return(
-      <ActivityIndicator message={'Loading...'} />
-    )
-}
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
@@ -136,7 +187,6 @@ if(this.state.loading){
                                         secureTextEntry
                                         placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
                                         returnKeyType="next"
-                                        keyboardType='password'
                                         autoCapitalize="none"
                                         autoCorrect={false}
                                         style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
@@ -169,26 +219,28 @@ if(this.state.loading){
 
                             </View>
                             <View style={{ marginLeft: 20, marginRight: 20, alignItems: 'flex-end', marginBottom: 10, }}>
-                                <Text style={[ { fontFamily: font.REGULAR,fontSize:14, color:lightTheme.PRIMARY_TEXT_COLOR }]}>Forgot Password?</Text>
+                                <Text style={[{ fontFamily: font.REGULAR, fontSize: 14, color: lightTheme.PRIMARY_TEXT_COLOR }]}>Forgot Password?</Text>
                             </View>
 
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
-                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Get Started</Text>
+                            <TouchableOpacity onPress={() => this.loginRequest()} style={buttonStyles.primaryButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Login</Text>
                             </TouchableOpacity>
                             <View style={{ marginLeft: 20, marginRight: 20, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginBottom: 10, }}>
-                                    <View style={{ alignItems: 'center' }}>
-                                        <Text style={{ color: '#193a4d', fontFamily:  font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Don’t have an account? </Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUP')} style={{ alignItems: 'center' }}>
-                                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily:  font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}> Sign up</Text>
-                                    </TouchableOpacity>
+                                <View style={{ alignItems: 'center' }}>
+                                    <Text style={{ color: '#193a4d', fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Don’t have an account? </Text>
                                 </View>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUP')} style={{ alignItems: 'center' }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}> Sign up</Text>
+                                </TouchableOpacity>
+                            </View>
 
                         </View>
                     </View>
 
                 </Content>
+                {this.state.loading?  <ActivityIndicator message={'Loading...'} /> : null}
             </Container>
+            
 
         );
     }
@@ -220,5 +272,5 @@ const styles = StyleSheet.create({
 
         justifyContent: 'center',
     },
-   
+
 });

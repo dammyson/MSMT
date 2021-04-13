@@ -2,20 +2,26 @@ import { AsyncStorage } from 'react-native';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
-export const loginbaseUrl = () => {
-  return 'http://18.133.168.180:9090/';
-};
-
 export const baseUrl = () => {
-  return 'http://18.133.168.180:6060/';
+  return 'https://mhealthwebapi.azurewebsites.net/api';
 };
 
-export const storeToken = async (selectedValue, email) => {
+
+export const storeToken = async (selectedValue) => {
   try {
     await AsyncStorage.setItem('token', selectedValue);
-    await AsyncStorage.setItem('user_email', email);
   } catch (error) {
-    console.warn('AsyncStorage error: ' + error.message);
+  }
+}
+
+
+export const storeUserDetails = async (data) => {
+  try {
+    await AsyncStorage.setItem('user_email', data.email);
+    await AsyncStorage.setItem('username', data.userName);
+    await AsyncStorage.setItem('phone_number', data.phoneNumber);
+    await AsyncStorage.setItem('role', data.role);
+  } catch (error) {
   }
 }
 
@@ -23,6 +29,7 @@ export const getToken = async () => {
   let token = await AsyncStorage.getItem('token')
   return token
 };
+
 export const getEmail = async () => {
   let user_email = await AsyncStorage.getItem('user_email')
   return  user_email
@@ -62,12 +69,12 @@ export const processResponse = (response) =>  {
     data: res[1]
   }));
 }
-
-export const showTopNotification = (type, message)=> {
+//success, warning, info and danger
+export const showTopNotification = (type, message, duration)=> {
   showMessage({
     message: message,
     type: type,
-    duration: 5000,
+    duration: duration*1000,
     icon: type 
   });
 }
