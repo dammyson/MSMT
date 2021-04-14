@@ -22,6 +22,7 @@ import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
+import SelectAddressType from '../../components/SelectAddressType';
 
 
 export default class Register extends Component {
@@ -287,6 +288,8 @@ export default class Register extends Component {
                     </View>
 
                 </Content>
+                
+                <SelectAddressType />
             </Container>
 
         );

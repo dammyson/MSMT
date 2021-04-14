@@ -23,6 +23,7 @@ import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
+import { getUserName } from '../../utilities';
 
 
 export default class index extends Component {
@@ -30,7 +31,7 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
+            name: '',
             password: '',
             image1: '',
             image1_display: '',
@@ -41,7 +42,8 @@ export default class index extends Component {
     }
 
     async componentDidMount() {
-
+        this.setState({name: await getUserName()})
+        
     }
 
 
@@ -62,7 +64,7 @@ export default class index extends Component {
                                     <Image source={images.user} style={styles.image_profile} />
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 22, marginBottom: 2, marginTop: 2 }}>Hello John</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 22, marginBottom: 2, marginTop: 2 }}>Hello</Text>
                                 </View>
                             </View>
 
@@ -123,26 +125,26 @@ export default class index extends Component {
                                 {this.renderSummaryDetails("2k+", 'DERMATOLOGISTS', '#A74343')}
                                 {this.renderSummaryDetails("1k", 'PEDIATRICIANS', '#344356')}
 
-                            </View> 
+                            </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Packages of Services</Text>
                                 </View>
                             </View>
-                           
-                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderPackages(packagesa)}
-                                    </ScrollView>
-                                </View> 
+                                </ScrollView>
+                            </View>
 
 
-                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderLongPackages(packagesa)}
-                                    </ScrollView>
-                                </View> 
+                                </ScrollView>
+                            </View>
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
@@ -159,8 +161,8 @@ export default class index extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderDoctors(doctors)}
-                                    </ScrollView>
-                                </View> 
+                                </ScrollView>
+                            </View>
 
 
                         </View>
@@ -229,7 +231,7 @@ export default class index extends Component {
         for (var i = 0; i < data.length; i++) {
             packages.push(
                 <View style={[styles.doctor_box, { backgroundColor: data[i].bg }]}>
-                      <Image source={data[i].image} style={{width: Dimensions.get('window').width/3.55, height : Dimensions.get('window').width/4.5, borderRadius: 10, }} />
+                    <Image source={data[i].image} style={{ width: Dimensions.get('window').width / 3.55, height: Dimensions.get('window').width / 4.5, borderRadius: 10, }} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
                         <Text numberOfLines={2} style={[{ fontFamily: font.EXTRA_BOLD, color: '#344356', fontSize: 9, marginBottom: 8 }]}>{data[i].name}</Text>
                         <Text style={[{ fontFamily: font.REGULAR, color: lightTheme.TEXT_PLACEHOLDER_COLOR, fontSize: 8, marginBottom: 2 }]}>{data[i].job}</Text>
@@ -263,26 +265,26 @@ const packagesa = [
 
 const doctors = [
     {
-        image: images.user,  
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
-       
+
 
     },
     {
-        image: images.user, 
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
     },
     {
-        image: images.user,  
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
-       
+
 
     },
     {
-        image: images.user, 
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
     },
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
 
     },
     doctor_box: {
-        width: Dimensions.get('window').width/3.5,
+        width: Dimensions.get('window').width / 3.5,
         borderRadius: 10,
         marginLeft: 5,
         marginRight: 5,
