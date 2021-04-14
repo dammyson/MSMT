@@ -42,7 +42,7 @@ export default class Welcome extends React.Component {
                 style={{ flex: 1 }}
                 resizeMode="cover"
             >
-                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+                <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
                 <View style={styles.container}>
                     <View style={{ flex: 1 }}>
 
@@ -56,7 +56,7 @@ export default class Welcome extends React.Component {
                         <View style={{}}>
                             <Text style={[styles.welcome_text]}>Welcome to MSMT</Text>
                             <Text style={[styles.title_text]}>Bringing Health Practitioners and Patients together on one platform</Text>
-                            <TouchableOpacity onPress={()=>  this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                            <TouchableOpacity onPress={()=>  this.props.navigation.navigate('user_type')} style={buttonStyles.primaryButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Get Started</Text>
                             </TouchableOpacity>
                         </View>
@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#00000099'
     },
     welcome_text: {
-        color: lightTheme.SECOND_TEXT_COLOR,
+        color: lightTheme.WHITE_COLOR,
         fontSize: 47,
         marginHorizontal: 25,
         textAlign: 'center',
         fontFamily: font.SEMI_BOLD
     },
     title_text: {
-        color: lightTheme.SECOND_TEXT_COLOR,
+        color: lightTheme.WHITE_COLOR,
         fontSize: 17,
         marginHorizontal: 25,
         textAlign: 'center'

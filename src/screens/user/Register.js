@@ -279,7 +279,7 @@ export default class Register extends Component {
                                 <View style={{ alignItems: 'center' }}>
                                     <Text style={{ color: '#193a4d', fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Already have an account?  </Text>
                                 </View>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUP')} style={{ alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={{ alignItems: 'center' }}>
                                     <Text style={{ color: lightTheme.SECONDARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Login</Text>
                                 </TouchableOpacity>
                             </View>
@@ -289,7 +289,7 @@ export default class Register extends Component {
 
                 </Content>
                 
-                <SelectAddressType />
+             
             </Container>
 
         );

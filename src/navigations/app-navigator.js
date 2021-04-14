@@ -6,6 +6,7 @@ import HomeScreen from '../screens/home';
 import ExploreScreen from '../screens/explore/explore-stack';
 import PrescriptionScreen from '../screens/prescription/presscription-stack';
 import { View,Text, Dimensions } from 'react-native';
+import Settings from '../screens/settings';
 import { font } from '../constants';
 
 
@@ -105,7 +106,7 @@ class AppNavigator extends Component {
         <Tab.Screen name="Calendar" component={ExploreScreen} />
         <Tab.Screen name="Add" component={HomeScreen} />
         <Tab.Screen name="Setting" component={PrescriptionScreen} />
-        <Tab.Screen name="User" component={HomeScreen} />
+        <Tab.Screen name="User" component={Settings} />
 
       </Tab.Navigator>
 

@@ -73,8 +73,8 @@ export default class Login extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             }, body: JSON.stringify({
-                email:"ico.cghpi@gmail.com",
-                password:"P@ssw0rd"
+                email:email,
+                password:password
             }),
           })
           .then(processResponse)

@@ -28,6 +28,7 @@ import RateSheet from '../screens/settings/RateSheet';
 import Scheduling from '../screens/settings/Scheduling';
 import MakeAppointment from '../screens/settings/MakeAppointment';
 import ViewAppointment from '../screens/settings/ViewAppointment';
+import SlectUserType from '../screens/user/SlectUserType';
 
 
 
@@ -47,13 +48,17 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="Auth">
+             initialRouteName="Splash">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
+            <Stack.Screen name="user_type" component={SlectUserType}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
-            <Stack.Screen name="tm" component={ViewAppointment}  /> 
+            <Stack.Screen name="appointment" component={TimeData}  /> 
+            <Stack.Screen name="book_appointment" component={AppointmentInformation}  /> 
+            <Stack.Screen name="billing_appointment" component={Billing}  /> 
+            <Stack.Screen name="mode_appointment" component={ModePayment}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

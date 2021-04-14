@@ -66,7 +66,7 @@ export default class SlectUserType extends Component {
 
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 20, flexDirection: 'row', marginBottom: 15, }}>
 
-                                <TouchableOpacity style={styles.user_box}>
+                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Auth')} style={styles.user_box}>
                                     <View style={{ alignItems: 'center', }}>
                                         <Image source={images.type_provider} style={{ margin: 20, }} />
                                         <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginVertical: 5 }]}>Provider</Text>
@@ -83,7 +83,7 @@ export default class SlectUserType extends Component {
                                     </View>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.user_box}>
+                                <TouchableOpacity onPress={()=> this.props.navigation.navigate('Auth')} style={styles.user_box}>
                                     <View style={{ alignItems: 'center', }}>
                                         <Image source={images.type_user} style={{ margin: 20, }} />
                                         <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginVertical: 5 }]}>Member (Patient)</Text>

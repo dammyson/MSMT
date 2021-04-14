@@ -165,7 +165,7 @@ export default class TimeData extends Component {
                                 {this.renderTimes(times)}
                             </View>
                             <View style={{ marginTop: 15, }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('book_appointment')} style={buttonStyles.primaryButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                             </TouchableOpacity>
                             </View>

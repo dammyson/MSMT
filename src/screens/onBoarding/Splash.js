@@ -40,6 +40,7 @@ export default class Splash extends React.Component {
 
 
   initPage = async () => {
+    this.props.navigation.navigate('Welcome');
    /* AsyncStorage.getItem('rem').then((value) => {
       if (value == 'login') {
         this.props.navigation.navigate('Welcome');
@@ -59,7 +60,7 @@ export default class Splash extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#415c5a' barStyle="light-content" />
+       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
 
         
           <Text style={{ color: '#fff', fontFamily: 'Poppins-Bold', fontSize: 20, marginBottom: 2, marginTop: 2}}>  NAME HERE</Text>
@@ -77,7 +78,7 @@ const height_logo = height * 0.28;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#415c5a'
+    backgroundColor: '#fff'
   },
  
   footer: {

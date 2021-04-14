@@ -202,7 +202,7 @@ export default class AppointmentInformation extends Component {
                             </View>
 
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('billing_appointment')} style={buttonStyles.primaryButtonStyle}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                                 </TouchableOpacity>
                             </View>
