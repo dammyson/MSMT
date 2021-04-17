@@ -4,7 +4,11 @@ import { FlatList, Dimensions, View, Text, TextInput, StyleSheet, TouchableOpaci
 import { Icon } from 'react-native-elements'
 import * as Animatable from 'react-native-animatable';
 import { lightTheme } from '../theme/colors';
-
+import { getToken, showTopNotification, processResponse, baseUrl } from '../utilities';
+import ActivityIndicator from './ActivityIndicator';
+import {
+    SkypeIndicator,
+} from 'react-native-indicators';
 
 export default class AppointmentType extends Component {
     constructor(props) {
@@ -12,12 +16,7 @@ export default class AppointmentType extends Component {
         this.state = {
             progress: new Animated.Value(0),
             merchant: 'ay345',
-            shippingmethod: [
-                { id: "1", name: 'Behavioral Health' },
-                { id: "2", name: 'Medical' },
-                { id: "3", name: 'Diagnostics' },
-                { id: "4", name: 'Medication dispensing' },
-            ],
+            shippingmethod: []
 
 
         };
@@ -25,18 +24,72 @@ export default class AppointmentType extends Component {
     }
 
     componentDidMount() {
+        this.getAppointmentType()
         Animated.timing(this.state.progress, {
             toValue: 1,
             duration: 2000,
             easing: Easing.linear,
-            useNativeDriver:true
+           
         }).start();
 
     }
 
 
+
+    async getAppointmentType() {
+        console.warn("lllll")
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Options/GetAppointmentTypes', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        shippingmethod: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+    }
+
+    close(){
+        return(
+            <TouchableOpacity onPress={() => onClose()}>
+            <Icon
+                name="closecircle"
+                size={20}
+                type='antdesign'
+                color={lightTheme.WHITE_COLOR}
+            />
+
+        </TouchableOpacity>
+        )
+    }
+
     render() {
         const { onClose } = this.props;
+
+        
         return (
             <>
                 <View
@@ -53,7 +106,7 @@ export default class AppointmentType extends Component {
 
                 >
 
-                    <Animatable.View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} animation="fadeInUpBig" >
+                    <View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} animation="fadeInUpBig" >
 
                         <View style={{ height: Dimensions.get('window').height / 1.5, width: Dimensions.get('window').width - 50, }} >
                             <View style={styles.body_top}>
@@ -66,6 +119,8 @@ export default class AppointmentType extends Component {
 
                                 <Text style={{ fontSize: 14, margin: 7, flex: 1, fontFamily: 'NunitoSans-Light', fontStyle: 'italic', color: '#fff', textAlign: 'center', marginRight: 10 }}>Select address type</Text>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 25 }}>
+                                   <View>
+                                   <View>
                                     <TouchableOpacity onPress={() => onClose()}>
                                         <Icon
                                             name="closecircle"
@@ -75,13 +130,20 @@ export default class AppointmentType extends Component {
                                         />
 
                                     </TouchableOpacity>
+                                    </View>
+                                    </View>
                                 </View>
                             </View>
                             <View style={styles.body}>
                                 <View style={{ marginTop: 10, marginLeft: 30, marginRight: 30 }}>
 
-                                </View>
+                                </View >
 
+                                {this.state.loading ? 
+                               <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+                                     <SkypeIndicator count={6} size={60} color={lightTheme.PRIMARY_COLOR} />
+                               </View>
+                                :
                                 <View style={{ paddingTop: 1, paddingBottom: 10, flex: 1, }}>
                                     <FlatList
                                         style={{ paddingBottom: 5 }}
@@ -92,11 +154,12 @@ export default class AppointmentType extends Component {
                                         ListHeaderComponent={this.renderHeader}
                                     />
                                 </View>
+                                }
 
 
                             </View>
                         </View>
-                    </Animatable.View>
+                    </View>
 
                 </View>
             </>

@@ -15,7 +15,6 @@ import {
     ImageBackground
 
 } from 'react-native';
-import * as images from '../../assets/images';
 import { Container, Content, Button, Left, } from 'native-base';
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
@@ -28,7 +27,6 @@ import Navbar from '../../components/Navbar';
 import Moment from 'moment';
 import AppointmentActivity from '../../components/AppointmentActivity';
 import { getToken, showTopNotification, processResponse, baseUrl } from '../../utilities';
-import DoctorServices from '../../components/DoctorServices';
 Moment.locale('en');
 const moment = require('moment');
 
@@ -55,17 +53,18 @@ export default class AppointmentInformation extends Component {
             activity_text: 'Select activity',
             activity_id: '',
 
-            show_service: false,
-            service_text: 'Select Service',
-            service_id: '',
-            service_cost: 0,
+            appointment_datetime:'',
             selected_symptoms: ['Migraine', 'Headache'],
             selected: { day: 'M', date: 3 }
         };
     }
 
     async componentDidMount() {
-        this.getDates()
+       // this.getDates()
+        const { appointment_datetime } = this.props.route.params;
+        this.setState({
+            appointment_datetime: appointment_datetime,
+        });
         this.getDoctorServicesCost()
     }
 
@@ -73,103 +72,19 @@ export default class AppointmentInformation extends Component {
     currencyFormat(n) {
         return parseFloat(n).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
-    getDates() {
+   
+    hanedProceedButton() {
+        const {appointment_datetime, selected_symptoms, type_id,  activity_id, category_id} = this.state
 
-        var instant_array = []
-        var today = new Date();
-        for (let i = 3; i >= 1; i--) {
-            var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
+        let appointment_information = {
+            appointment_datetime: appointment_datetime,
+             selected_symptoms: selected_symptoms,
+            type_id: type_id,
+            category_id:category_id,
+            activity_id: activity_id
         }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
-        for (let i = 1; i <= 3; i++) {
-            var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
-
-        this.setState({ display_days: instant_array })
-    }
-
-    selDay(data) {
-        this.setState({ selected: data })
-    }
-
-    async getDoctorServices() {
-        this.setState({ loading: true })
-        fetch(baseUrl() + '/Clinician/getDoctorServices?clinicianId=' + '4972a38a-2c33-4707-9ffd-44a088a991ee', {
-            method: 'GET', headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + await getToken(),
-            }
-        })
-            .then(processResponse)
-            .then(res => {
-                this.setState({ loading: false })
-                const { statusCode, data } = res
-                console.warn(res)
-                if (statusCode == 200) {
-
-                    this.setState({
-                        list_doctor_services: data.data
-                    })
-
-
-                } else {
-                    this.setState({ loading: false })
-                    showTopNotification("danger", res.data.message)
-
-                }
-            })
-            .catch((error) => {
-                this.setState({ loading: false })
-                console.warn(error.message)
-                showTopNotification("danger", error.message)
-            });
-
-
-    }
-
-
-    async getDoctorServicesCost() {
-        this.setState({ loading: true })
-        fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + '4972a38a-2c33-4707-9ffd-44a088a991ee', {
-            method: 'GET', headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + await getToken(),
-            }
-        })
-            .then(processResponse)
-            .then(res => {
-                this.setState({ loading: false })
-                const { statusCode, data } = res
-                console.warn(res)
-                if (statusCode == 200) {
-
-                    this.setState({
-                        list_doctor_services: data.data
-                    })
-
-
-                } else {
-                    this.setState({ loading: false })
-                    showTopNotification("danger", res.data.message)
-
-                }
-            })
-            .catch((error) => {
-                this.setState({ loading: false })
-                console.warn(error.message)
-                showTopNotification("danger", error.message)
-            });
-
-
-    }
+         this.props.navigation.navigate('appointment_billing', { appointment_information : appointment_information})
+     }
 
 
 
@@ -247,22 +162,6 @@ export default class AppointmentInformation extends Component {
                                 </View>
 
                             </TouchableOpacity>
-
-
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
-                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Service</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => this.state.service_text == "Select service" ? showTopNotification("warning", "You need to Select category") : this.setState({ show_service: true })} style={styles.textInputContainer}>
-                                <View style={styles.input}>
-                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.service_text == "Select Service" ? { color: '#08025640' } : {}]}>{this.state.service_text}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-                            <View style={{ marginLeft: 25, marginRight: 20, marginTop: 0, justifyContent: 'flex-start', }}>
-                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: '#080256' }}> ₦{this.currencyFormat(this.state.service_cost)}</Text>
-
-                            </View>
-
 
 
                             <View style={{ marginHorizontal: 5, marginTop: 20 }}>
@@ -345,7 +244,7 @@ export default class AppointmentInformation extends Component {
                             </View>
 
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('billing_appointment')} style={buttonStyles.primaryButtonStyle}>
+                                <TouchableOpacity onPress={() => this.hanedProceedButton()} style={buttonStyles.primaryButtonStyle}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                                 </TouchableOpacity>
                             </View>
@@ -356,7 +255,6 @@ export default class AppointmentInformation extends Component {
                 {this.state.show_type ? this.SelectAppointmentType() : null}
                 {this.state.show_category ? this.SelectAppointmentCategory() : null}
                 {this.state.show_activty ? this.SelectAppointmentActivity() : null}
-                {this.state.show_service ? this.SelectDoctorService() : null}
             </Container>
 
         );
@@ -437,28 +335,9 @@ export default class AppointmentInformation extends Component {
     }
     onSelectActivity(value) {
         this.setState({
-            show_category: false,
+            show_activty: false,
             activity_id: value.id,
             activity_text: value.name
-        })
-    }
-
-
-    SelectDoctorService() {
-        return (
-            <DoctorServices
-                onClose={() => this.setState({ show_category: false })}
-                onSelect={(value) => this.onSelectService(value)}
-                services={this.state.list_doctor_services}
-            />
-        )
-    }
-    onSelectService(value) {
-        this.setState({
-            show_service: false,
-            service_id: value.service_id,
-            service_text: value.service_name,
-            service_cost: value.cost
         })
     }
 

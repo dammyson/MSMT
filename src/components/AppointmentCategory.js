@@ -4,14 +4,18 @@ import { FlatList, Dimensions, View, Text, TextInput, StyleSheet, TouchableOpaci
 import { Icon } from 'react-native-elements'
 import * as Animatable from 'react-native-animatable';
 import { lightTheme } from '../theme/colors';
-
+import { getToken, showTopNotification, processResponse, baseUrl } from '../utilities';
+import ActivityIndicator from './ActivityIndicator';
+import {
+    SkypeIndicator,
+} from 'react-native-indicators';
 
 export default class AppointmentCategory extends Component {
     constructor(props) {
         super(props);
         this.state = {
             progress: new Animated.Value(0),
-            merchant: 'ay345',
+            type: '',
             shippingmethod: [],
 
 
@@ -20,16 +24,51 @@ export default class AppointmentCategory extends Component {
     }
 
     componentDidMount() {
-        const { type } = this.props;
-     
+       this.getAppointmentCategory()
         Animated.timing(this.state.progress, {
             toValue: 1,
             duration: 2000,
             easing: Easing.linear,
         }).start();
+       
+    }
+
+
+    async getAppointmentCategory() {
+        const { type } = this.props;
         console.warn(type)
-        console.warn(times[type].values)
-        this.setState({ shippingmethod: times[type].values,})
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Options/GetAppointmentActivities?parent_id='+type, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        shippingmethod: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
     }
 
 
@@ -51,7 +90,7 @@ export default class AppointmentCategory extends Component {
 
                 >
 
-                    <Animatable.View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} animation="fadeInUpBig" >
+                    <View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} animation="fadeInUpBig" >
 
                         <View style={{ height: Dimensions.get('window').height / 1.5, width: Dimensions.get('window').width - 50, }} >
                             <View style={styles.body_top}>
@@ -80,6 +119,12 @@ export default class AppointmentCategory extends Component {
 
                                 </View>
 
+                                {this.state.loading ? 
+                               <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+                                     <SkypeIndicator count={6} size={60} color={lightTheme.PRIMARY_COLOR} />
+                               </View>
+                                :
+
                                 <View style={{ paddingTop: 1, paddingBottom: 10, flex: 1, }}>
                                     <FlatList
                                         style={{ paddingBottom: 5 }}
@@ -90,11 +135,12 @@ export default class AppointmentCategory extends Component {
                                         ListHeaderComponent={this.renderHeader}
                                     />
                                 </View>
+                                }
 
 
                             </View>
                         </View>
-                    </Animatable.View>
+                    </View>
 
                 </View>
             </>

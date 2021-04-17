@@ -107,7 +107,7 @@ export default class index extends Component {
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10,  marginBottom: 5, }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('appointment', {clinician: clinician.id})} style={buttonStyles.appointmentButtonStyle}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('appointment_datetime', {clinician: clinician.id})} style={buttonStyles.appointmentButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
                             </TouchableOpacity>
                             </View>

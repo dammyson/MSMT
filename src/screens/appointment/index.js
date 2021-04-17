@@ -20,10 +20,17 @@ import { Container, Content, Button, Left, Toast, Body, Title, List, ListItem, }
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
+import ImageLoad from 'react-native-image-placeholder';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID } from '../../utilities';
+import IsEmpty from '../../components/IsEmpty';
+import Moment from 'moment';
+Moment.locale('en');
+const moment = require('moment');
 
 
 export default class index extends Component {
@@ -31,25 +38,75 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false
+            list_appointments:[]
+            
         };
     }
 
     async componentDidMount() {
-
+        this.getDoctorServicesCost();
     }
 
 
 
+    async getDoctorServicesCost() {
 
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Appointment/getAppointments?profileId='+await getUserID() , {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_appointments: data.data
+                    })
+                    this.arrayholder = data.data;
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
+    searchFilterFunction = search => {
+        this.setState({ search });
+        const newData = this.arrayholder.filter(item => {
+          const itemData = `${item.doctor.fullName? item.doctor.fullName.toUpperCase(): ''.toUpperCase()}`;
+          const textData = search.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        });
+        this.setState({
+            list_appointments: newData,
+        });
+    
+      };
 
     render() {
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting appointments... '} />
+            );
+        }
+
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -70,14 +127,11 @@ export default class index extends Component {
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
                 <Navbar left={left} title='Appointments' bg='#101023' />
                 <Content scrollEnabled={false}>
-
+                {this.state.list_appointments.length == 0 ?
+                        <IsEmpty message={'You do not have any appointment'} />
+                        :
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-
-
-
-
-
                             <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
                                 <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
                                     <View style={textInputStyles.operation_icon}>
@@ -99,8 +153,7 @@ export default class index extends Component {
                                             autoCorrect={false}
                                             defaultValue={this.state.email}
                                             style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                            onChangeText={this.searchFilterFunction}
                                         />
                                     </View>
                                 </View>
@@ -115,11 +168,11 @@ export default class index extends Component {
                             </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderItem(this.state.list_appointments)}
                                 </ScrollView>
                             </View>
 
-
+{/* 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
@@ -141,11 +194,11 @@ export default class index extends Component {
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
                                     {this.renderItem(doctors)}
                                 </ScrollView>
-                            </View>
+                            </View> */}
 
 
                         </View>
-                    </View>
+                    </View> }
 
                 </Content>
             </Container>
@@ -158,20 +211,24 @@ export default class index extends Component {
     renderItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let id = i
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={styles.image_profile} />
+                    <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
+                    <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
+                    </View>
+                      
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.title}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
 
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
                             <View style={{ flex: 1 }} />
                             <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>11:30 AM</Text>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>{Moment(data[i].appointmentDate).format('h:A')}</Text>
                             </View>
                         </View>
                     </View>
@@ -192,28 +249,14 @@ export default class index extends Component {
     }
 
 
+    onSingleAppointmentClick(value){
+    console.warn(value);
+    }
 
 
 }
 
 
-
-
-const doctors = [
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-
-];
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -240,6 +283,8 @@ const styles = StyleSheet.create({
         height: 55,
         borderRadius: 150,
         shadowColor: 'gray',
+        borderColor:lightTheme.PRIMARY_COLOR,
+        borderWidth:8,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 1,

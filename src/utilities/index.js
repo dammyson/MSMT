@@ -7,6 +7,11 @@ export const baseUrl = () => {
 };
 
 
+export const imageUrl = () => {
+  return 'https://mhealthwebapi.azurewebsites.net/';
+};
+
+
 export const storeToken = async (selectedValue) => {
   try {
     await AsyncStorage.setItem('token', selectedValue);
@@ -18,6 +23,7 @@ export const storeToken = async (selectedValue) => {
 export const storeUserDetails = async (data) => {
   try {
     await AsyncStorage.setItem('user_email', data.email);
+    await AsyncStorage.setItem('user_id', data.profileId);
     await AsyncStorage.setItem('username', data.userName);
     await AsyncStorage.setItem('phone_number', data.phoneNumber);
     await AsyncStorage.setItem('role', data.role);
@@ -28,6 +34,10 @@ export const storeUserDetails = async (data) => {
 export const getToken = async () => {
   let token = await AsyncStorage.getItem('token')
   return token
+};
+
+export const getUserID = async () => {
+  return AsyncStorage.getItem('user_id')
 };
 
 export const getEmail = async () => {

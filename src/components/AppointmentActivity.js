@@ -4,6 +4,11 @@ import { FlatList, Dimensions, View, Text, TextInput, StyleSheet, TouchableOpaci
 import { Icon } from 'react-native-elements'
 import * as Animatable from 'react-native-animatable';
 import { lightTheme } from '../theme/colors';
+import { getToken, showTopNotification, processResponse, baseUrl } from '../utilities';
+import ActivityIndicator from './ActivityIndicator';
+import {
+    SkypeIndicator,
+} from 'react-native-indicators';
 
 
 export default class AppointmentActivity extends Component {
@@ -20,17 +25,57 @@ export default class AppointmentActivity extends Component {
     }
 
     componentDidMount() {
-        const { category } = this.props;
+      this.getAppointmentActivity()
      
         Animated.timing(this.state.progress, {
             toValue: 1,
             duration: 2000,
             easing: Easing.linear,
         }).start();
-        console.warn(type)
-        console.warn(times[category].values)
-        this.setState({ shippingmethod: times[category].values,})
+        
     }
+
+
+    async getAppointmentActivity() {
+        const { category } = this.props;
+        console.warn(category)
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Options/GetAppointmentSubActivities?parent_id='+category, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        shippingmethod: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+    }
+
+
+
+
 
 
     render() {
@@ -79,7 +124,11 @@ export default class AppointmentActivity extends Component {
                                 <View style={{ marginTop: 10, marginLeft: 30, marginRight: 30 }}>
 
                                 </View>
-
+                                {this.state.loading ? 
+                               <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+                                     <SkypeIndicator count={6} size={60} color={lightTheme.PRIMARY_COLOR} />
+                               </View>
+                                :
                                 <View style={{ paddingTop: 1, paddingBottom: 10, flex: 1, }}>
                                     <FlatList
                                         style={{ paddingBottom: 5 }}
@@ -90,6 +139,7 @@ export default class AppointmentActivity extends Component {
                                         ListHeaderComponent={this.renderHeader}
                                     />
                                 </View>
+                                }
 
 
                             </View>
@@ -125,46 +175,6 @@ export default class AppointmentActivity extends Component {
     }
 
 }
-
-
-const times = {
-    1: {
-        id: 'Migraine',
-        values:[
-            { id: 1, name: 'Behavioral New' },
-            { id: 2, name: 'Medical' },
-            { id: 3, name: 'Diagnostics' },
-            { id: 4, name: 'Medication dispensing' },
-        ]
-    }, 
-    3: {
-        id: 'Migraine',
-        values:[
-            { id: 1, name: 'Behavioral New' },
-            { id: 2, name: 'Medical' },
-            { id: 3, name: 'Diagnostics' },
-            { id: 4, name: 'Medication dispensing' },
-        ]
-    }, 
-    3: {
-        id: 'Migraine',
-        values:[
-            { id: 1, name: 'Behavioral New' },
-            { id: 2, name: 'Medical' },
-            { id: 3, name: 'Diagnostics' },
-            { id: 4, name: 'Medication dispensing' },
-        ]
-    }, 
-    4: {
-        id: 'Migraine',
-        values:[
-            { id: 1, name: 'Behavioral New' },
-            { id: 2, name: 'Medical' },
-            { id: 3, name: 'Diagnostics' },
-            { id: 4, name: 'Medication dispensing' },
-        ]
-    }, 
-};
 
 AppointmentActivity;
 

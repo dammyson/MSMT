@@ -41,22 +41,19 @@ export default class TimeData extends Component {
         this.state = {
             loading: false,
             sel_time: '10:30 PM',
-
-
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
             starCount: 5,
             display_days: [],
-            selected: { day: 'M', date: 3 }
+            selected: { day: 'M', date: 3},
+            clinician_id: ''
         };
     }
 
     async componentDidMount() {
         this.getDates()
+        const { clinician } = this.props.route.params;
+        this.setState({
+            clinician_id: clinician,
+        });
     }
 
 
@@ -167,7 +164,7 @@ export default class TimeData extends Component {
                                 {this.renderTimes(times)}
                             </View>
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('book_appointment')} style={buttonStyles.primaryButtonStyle}>
+                                <TouchableOpacity onPress={() => this.hanedProceedButton()} style={buttonStyles.primaryButtonStyle}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                                 </TouchableOpacity>
                             </View>
@@ -180,7 +177,16 @@ export default class TimeData extends Component {
         );
     }
 
+    hanedProceedButton() {
+       const {sel_time, selected, clinician_id} = this.state
 
+       let appointment_datetime = {
+        clinician_id: clinician_id,
+           time: sel_time,
+           date: selected
+       }
+        this.props.navigation.navigate('appointment_information', { appointment_datetime : appointment_datetime})
+    }
 
     renderdays(data) {
         let packages = [];
@@ -189,7 +195,7 @@ export default class TimeData extends Component {
             let sel = i
             packages.push(
                 <View style={{ marginHorizontal: 5, marginVertical: 10, borderRadius: 10, backgroundColor: lightTheme.WHITE_COLOR }}>
-                    <TouchableOpacity    onPress={() => this.selDay(data[sel])} style={[styles.inactive, selected.date == data[i].date & selected.day == data[i].day ? styles.active : null]}>
+                    <TouchableOpacity onPress={() => this.selDay(data[sel])} style={[styles.inactive, selected.date == data[i].date & selected.day == data[i].day ? styles.active : null]}>
                         <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, opacity: 0.6, fontFamily: font.BOLD, fontSize: 10, }}>{data[i].day}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 15, }}>{data[i].date} </Text>
                     </TouchableOpacity>

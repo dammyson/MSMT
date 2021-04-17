@@ -24,7 +24,10 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl } from '../../utilities';
 import Moment from 'moment';
+import IsEmpty from '../../components/IsEmpty';
 Moment.locale('en');
 const moment = require('moment');
 
@@ -40,52 +43,98 @@ export default class Billing extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            list_doctor_services: [],
+            appointment_information: this.props.route.params.appointment_information
         };
     }
 
     async componentDidMount() {
-        this.getDates()
+
+        this.getDoctorServicesCost();
     }
 
 
-    getDates() {
 
-        var instant_array = []
-        var today = new Date();
-        for (let i = 3; i >= 1; i--) {
-            var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
+    async getDoctorServicesCost() {
+        const { appointment_information } = this.state
+        console.warn(appointment_information.appointment_datetime.clinician_id)
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + appointment_information.appointment_datetime.clinician_id, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_doctor_services: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
+
+    selectSevice(value) {
+        console.warn(value)
+        const { appointment_information } = this.state
+        let information = {
+            clinicianId: appointment_information.appointment_datetime.clinician_id,
+            appointment_type: appointment_information.type_id,
+            startDate: appointment_information.appointment_datetime.date,
+            startTime: appointment_information.appointment_datetime.time,
+            appointmentService: value.id,
+            appointmentActivityId:  appointment_information.category_id,
+            appointmentActivitySubId:  appointment_information.activity_id
         }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
-        for (let i = 1; i <= 3; i++) {
-            var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
 
-        this.setState({ display_days: instant_array })
+        this.setState({ loading: true})
+        fetch( baseUrl() +'/Appointment/bookAppointment', {
+            method: 'POST', headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }, body: JSON.stringify(information),
+          })
+          .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false})
+              const{ statusCode, data} = res
+              console.warn(statusCode, data)
+              if (statusCode == 200) {
+                
+              } else {
+                showTopNotification("erroe", data.message, 3)
+              }
+            }).catch((error) => {
+              showTopNotification("erroe", error.message, 3)
+              this.setState({ loading: false})
+            });
     }
 
-    selDay(data) {
-        this.setState({ selected: data })
-    }
+
+
 
 
     render() {
-
         var left = (
             <Left style={{ flex: 1 }}>
                 <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -100,37 +149,41 @@ export default class Billing extends Component {
             </Left>
         );
 
-        return (
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting services and cost... '} />
+            );
+        }
 
+
+
+        return (
             <Container style={{ backgroundColor: lightTheme.WHITE_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
                 <Navbar left={left} title='Billing' bg='#101023' />
                 <Content>
+                    {this.state.list_doctor_services.length == 0 ?
+                        <IsEmpty message={'services and cost is not available at the moment '} />
+                        :
+                        <View style={styles.backgroundImage}>
+                            <View style={styles.mainbody}>
 
-                    <View style={styles.backgroundImage}>
-                        <View style={styles.mainbody}>
+                                <View style={{ marginVertical: 20, justifyContent: 'center', }}>
+                                    {this.renderSymptom(this.state.list_doctor_services)}
 
-                            
-
-                            <View style={{ marginVertical:20, justifyContent: 'center', }}>
-                                {this.renderSymptom(times)}
-
+                                </View>
                             </View>
-
-
-
-
-
                         </View>
-                    </View>
+                    }
 
                 </Content>
             </Container>
 
         );
     }
-    selectSymptom(value) {
-        console.warn(value)
+
+    currencyFormat(n) {
+        return parseFloat(n).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
     renderSymptom(data) {
         let packages = [];
@@ -140,26 +193,24 @@ export default class Billing extends Component {
             index = i
             vall = data[index].value
             packages.push(
-                <View style={{ paddingHorizontal: 20, paddingVertical:10, marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth:0.5, borderBottomColor:lightTheme.SMALL_BODY_TEXT_COLOR }}>
-
-                    <View style={{ marginHorizontal: 10, justifyContent: 'center', flex:1 ,}}>
-                        <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, opacity:0.7, marginTop: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}>Individual Counseling</Text>
-                        <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 2, color: '#5383EC' }}>Counselling Assessment</Text>
-                        <Text style={{ fontFamily: font.BOLD, fontSize: 18, marginTop: 2, color: lightTheme.PRIMARY_TEXT_COLOR }}>NGN 900</Text>
-
+                <TouchableOpacity onPress={() => this.selectSevice(data[index])} style={{ paddingHorizontal: 20, paddingVertical: 10, marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 0.5, borderBottomColor: lightTheme.SMALL_BODY_TEXT_COLOR }}>
+                    <View style={{ marginHorizontal: 10, justifyContent: 'center', flex: 1, }}>
+                        <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, opacity: 0.7, marginTop: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}>{data[index].service_name}</Text>
+                        <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 2, color: '#5383EC' }}>{data[index].sub_name}</Text>
+                        <Text style={{ fontFamily: font.BOLD, fontSize: 18, marginTop: 2, color: lightTheme.PRIMARY_TEXT_COLOR }}>NGN {this.currencyFormat(data[index].cost)} </Text>
                     </View>
 
                     <View style={{ justifyContent: 'center', }}>
-                    <Icon
-                        active
-                        name="keyboard-arrow-right"
-                        type='material'
-                        size={35}
-                        color={lightTheme.SMALL_BODY_TEXT_COLOR}
-                    />
+                        <Icon
+                            active
+                            name="keyboard-arrow-right"
+                            type='material'
+                            size={35}
+                            color={lightTheme.SMALL_BODY_TEXT_COLOR}
+                        />
 
                     </View>
-                </View>
+                </TouchableOpacity>
             );
         }
         return packages;
@@ -177,7 +228,7 @@ const times = [
     {
         value: 'Pain after Surgery',
     },
-    
+
 ];
 
 const styles = StyleSheet.create({
