@@ -29,9 +29,9 @@ Moment.locale('en');
 const moment = require('moment');
 
 const width = Dimensions.get('window').width;
-const single_with = width/100;
-const stage_1 = width/single_with;
-const percentage = (width/single_with)/width * 100;
+const single_with = width / 100;
+const stage_1 = width / single_with;
+const percentage = (width / single_with) / width * 100;
 const sty = percentage.toString() + "%"
 
 
@@ -40,7 +40,9 @@ export default class TimeData extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
+            sel_time: '10:30 PM',
+
+
             password: '',
             image1: '',
             image1_display: '',
@@ -111,10 +113,10 @@ export default class TimeData extends Component {
                         <View style={styles.mainbody}>
                             <View style={{ paddingHorizontal: 15, paddingVertical: 10, backgroundColor: '#F6F6F6', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 40, marginBottom: 2, marginTop: 2, marginRight: 7, color: lightTheme.PRIMARY_TEXT_COLOR }}>24</Text>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 40, marginBottom: 2, marginTop: 2, marginRight: 7, color: lightTheme.PRIMARY_TEXT_COLOR }}>{Moment(new Date()).format('D')}</Text>
                                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                                        <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}>Wed</Text>
-                                        <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}> Jan 2021 </Text>
+                                        <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}>{Moment(new Date()).format('ddd')}</Text>
+                                        <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.SMALL_BODY_TEXT_COLOR }}> {Moment(new Date()).format('MMM YYYY')} </Text>
                                     </View>
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={styles.appointmentButtonStyle}>
                                         <Text style={{ fontFamily: font.BOLD, marginHorizontal: 15, fontSize: 14, color: '#4DC591' }}>Today</Text>
@@ -129,7 +131,7 @@ export default class TimeData extends Component {
                                 </ScrollView>
                             </View>
 
-                            <View style={{ height: 0.6, opacity:0.4, marginVertical:10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
+                            <View style={{ height: 0.6, opacity: 0.4, marginVertical: 10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
@@ -141,7 +143,7 @@ export default class TimeData extends Component {
                                 {this.renderTimes(times)}
                             </View>
 
-                            <View style={{ height: 0.5, opacity:0.4, marginVertical:10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
+                            <View style={{ height: 0.5, opacity: 0.4, marginVertical: 10, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
@@ -153,7 +155,7 @@ export default class TimeData extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
                                 {this.renderTimes(times)}
                             </View>
-                            <View style={{ height: 0.5, opacity:0.6, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
+                            <View style={{ height: 0.5, opacity: 0.6, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
@@ -165,9 +167,9 @@ export default class TimeData extends Component {
                                 {this.renderTimes(times)}
                             </View>
                             <View style={{ marginTop: 15, }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('book_appointment')} style={buttonStyles.primaryButtonStyle}>
-                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('book_appointment')} style={buttonStyles.primaryButtonStyle}>
+                                    <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
@@ -184,9 +186,10 @@ export default class TimeData extends Component {
         let packages = [];
         var selected = this.state.selected
         for (var i = 0; i < data.length; i++) {
+            let sel = i
             packages.push(
                 <View style={{ marginHorizontal: 5, marginVertical: 10, borderRadius: 10, backgroundColor: lightTheme.WHITE_COLOR }}>
-                    <TouchableOpacity style={[styles.inactive, selected.date == data[i].date & selected.day == data[i].day ? styles.active : null]}>
+                    <TouchableOpacity    onPress={() => this.selDay(data[sel])} style={[styles.inactive, selected.date == data[i].date & selected.day == data[i].day ? styles.active : null]}>
                         <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, opacity: 0.6, fontFamily: font.BOLD, fontSize: 10, }}>{data[i].day}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 15, }}>{data[i].date} </Text>
                     </TouchableOpacity>
@@ -202,9 +205,12 @@ export default class TimeData extends Component {
         let packages = [];
         var selected = this.state.selected
         for (var i = 0; i < data.length; i++) {
+            let selected = i
             packages.push(
                 <View style={[styles.cell]}>
-                    <TouchableOpacity style={[{ width: 80, alignItems: 'center', borderColor: lightTheme.SMALL_BODY_TEXT_COLOR, borderRadius: 4, borderWidth: 0.7, padding: 3, margin:5 }]}>
+                    <TouchableOpacity
+                        onPress={() => this.selectTime(data[selected].value)}
+                        style={[{ width: 80, alignItems: 'center', borderColor: lightTheme.SMALL_BODY_TEXT_COLOR, borderRadius: 4, borderWidth: 0.7, padding: 3, margin: 5 }, this.state.sel_time == data[i].value ? { backgroundColor: "#FF7648" } : {}]}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 12, }}>{data[i].value}</Text>
                     </TouchableOpacity>
                 </View>
@@ -213,7 +219,10 @@ export default class TimeData extends Component {
         }
         return packages;
     }
-
+    selectTime(value) {
+        console.warn(value)
+        this.setState({ sel_time: value })
+    }
 
 }
 
@@ -253,7 +262,7 @@ const times = [
         value: '10:30 AM',
     },
     {
-        value: '10:30 AM',
+        value: '10:30 PM',
     },
     {
         value: '10:30 AM',

@@ -31,19 +31,16 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount:5
+            clinician: '',
+           
         };
     }
 
     async componentDidMount() {
-
+        const { clinician } = this.props.route.params;
+        this.setState({ 
+            clinician: clinician, 
+        });
     }
 
 
@@ -51,7 +48,8 @@ export default class index extends Component {
 
 
     render() {
-
+        const { clinician } = this.state
+       
         var left = (
             <Left style={{ flex: 1 }}>
                 <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -78,14 +76,13 @@ export default class index extends Component {
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
 
                                 <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Josephina </Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Ibrahim Abubakar</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Head of Dental Care - Reddington Hospital</Text>
+                                     <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>{clinician.fullName} </Text> 
+                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{clinician.title}</Text>
                                     <View style={{ width: 100 }}>
                                         <StarRating
                                             disabled={false}
                                             maxStars={5}
-                                            rating={this.state.starCount}
+                                            rating={clinician.rating}
                                             selectedStar={(rating) => this.setState({ starCount: rating })}
                                             iconSet={'FontAwesome'}
                                             starSize={20}
@@ -110,7 +107,7 @@ export default class index extends Component {
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10,  marginBottom: 5, }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('appointment')} style={buttonStyles.appointmentButtonStyle}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('appointment', {clinician: clinician.id})} style={buttonStyles.appointmentButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
                             </TouchableOpacity>
                             </View>

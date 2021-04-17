@@ -22,9 +22,13 @@ import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
-import { ScrollView } from 'react-native';
+import AppointmentType from '../../components/AppointmentType';
+import AppointmentCategory from '../../components/AppointmentCategory';
 import Navbar from '../../components/Navbar';
 import Moment from 'moment';
+import AppointmentActivity from '../../components/AppointmentActivity';
+import { getToken, showTopNotification, processResponse, baseUrl } from '../../utilities';
+import DoctorServices from '../../components/DoctorServices';
 Moment.locale('en');
 const moment = require('moment');
 
@@ -40,14 +44,21 @@ export default class AppointmentInformation extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
+            show_type: false,
+            type_text: 'Select type',
+            type_id: '',
+            list_doctor_services: [],
+            show_category: false,
+            category_text: 'Select category',
+            category_id: '',
+            show_activty: false,
+            activity_text: 'Select activity',
+            activity_id: '',
+
+            show_service: false,
+            service_text: 'Select Service',
+            service_id: '',
+            service_cost: 0,
             selected_symptoms: ['Migraine', 'Headache'],
             selected: { day: 'M', date: 3 }
         };
@@ -55,9 +66,13 @@ export default class AppointmentInformation extends Component {
 
     async componentDidMount() {
         this.getDates()
+        this.getDoctorServicesCost()
     }
 
 
+    currencyFormat(n) {
+        return parseFloat(n).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
     getDates() {
 
         var instant_array = []
@@ -82,6 +97,80 @@ export default class AppointmentInformation extends Component {
     selDay(data) {
         this.setState({ selected: data })
     }
+
+    async getDoctorServices() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getDoctorServices?clinicianId=' + '4972a38a-2c33-4707-9ffd-44a088a991ee', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_doctor_services: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
+
+    async getDoctorServicesCost() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + '4972a38a-2c33-4707-9ffd-44a088a991ee', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_doctor_services: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
 
 
     render() {
@@ -116,11 +205,65 @@ export default class AppointmentInformation extends Component {
                             </View>
 
                             <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
-                              {this.renderSymptom(times)}
+                                {this.renderSymptom(times)}
 
                             </View>
 
-                           
+
+
+
+
+                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
+                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Type</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => this.setState({ show_type: true })} style={styles.textInputContainer}>
+                                <View style={styles.input}>
+                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.type_text == "Select type" ? { color: '#08025640' } : {}]}>{this.state.type_text}</Text>
+                                </View>
+
+                            </TouchableOpacity>
+
+
+
+
+                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
+                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment category</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => this.state.type_text == "Select type" ? showTopNotification("warning", "You need to Select type") : this.setState({ show_category: true })} style={styles.textInputContainer}>
+                                <View style={styles.input}>
+                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.category_text == "Select category" ? { color: '#08025640' } : {}]}>{this.state.category_text}</Text>
+                                </View>
+
+                            </TouchableOpacity>
+
+
+
+                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
+                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Activity</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => this.state.category_text == "Select category" ? showTopNotification("warning", "You need to Select category") : this.setState({ show_activty: true })} style={styles.textInputContainer}>
+                                <View style={styles.input}>
+                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.activity_text == "Select activity" ? { color: '#08025640' } : {}]}>{this.state.activity_text}</Text>
+                                </View>
+
+                            </TouchableOpacity>
+
+
+                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
+                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Service</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => this.state.service_text == "Select service" ? showTopNotification("warning", "You need to Select category") : this.setState({ show_service: true })} style={styles.textInputContainer}>
+                                <View style={styles.input}>
+                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.service_text == "Select Service" ? { color: '#08025640' } : {}]}>{this.state.service_text}</Text>
+                                </View>
+
+                            </TouchableOpacity>
+                            <View style={{ marginLeft: 25, marginRight: 20, marginTop: 0, justifyContent: 'flex-start', }}>
+                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: '#080256' }}> ₦{this.currencyFormat(this.state.service_cost)}</Text>
+
+                            </View>
+
+
 
                             <View style={{ marginHorizontal: 5, marginTop: 20 }}>
                                 <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
@@ -210,11 +353,15 @@ export default class AppointmentInformation extends Component {
                     </View>
 
                 </Content>
+                {this.state.show_type ? this.SelectAppointmentType() : null}
+                {this.state.show_category ? this.SelectAppointmentCategory() : null}
+                {this.state.show_activty ? this.SelectAppointmentActivity() : null}
+                {this.state.show_service ? this.SelectDoctorService() : null}
             </Container>
 
         );
     }
-    selectSymptom(value){
+    selectSymptom(value) {
         console.warn(value)
     }
     renderSymptom(data) {
@@ -222,28 +369,103 @@ export default class AppointmentInformation extends Component {
         let index;
         let vall;
         for (var i = 0; i < data.length; i++) {
-            index =i
+            index = i
             vall = data[index].value
             packages.push(
-                <View style={{ marginHorizontal: 10, marginVertical:5, flexDirection: 'row' , alignItems:'center'}}>
-                 <TouchableOpacity onPress={() => this.selectSymptom(vall)}>
-                 <Icon
-                    active
-                    name={ this.state.selected_symptoms.includes(data[i].value)? "check-box":"check-box-outline-blank"}
-                    type='material'
-                    size={35}
-                    color={this.state.selected_symptoms.includes(data[i].value) ? "#FF7648" : lightTheme.SMALL_BODY_TEXT_COLOR}
-                />
-                </TouchableOpacity>
-                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: this.state.selected_symptoms.includes(data[i].value)? '#FF7648'  : '#080256' }}>{data[i].value}</Text>
+                <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => this.selectSymptom(vall)}>
+                        <Icon
+                            active
+                            name={this.state.selected_symptoms.includes(data[i].value) ? "check-box" : "check-box-outline-blank"}
+                            type='material'
+                            size={35}
+                            color={this.state.selected_symptoms.includes(data[i].value) ? "#FF7648" : lightTheme.SMALL_BODY_TEXT_COLOR}
+                        />
+                    </TouchableOpacity>
+                    <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: this.state.selected_symptoms.includes(data[i].value) ? '#FF7648' : '#080256' }}>{data[i].value}</Text>
 
-            </View>               
+                </View>
             );
         }
         return packages;
     }
 
+
+
+    SelectAppointmentType() {
+        return (
+            <AppointmentType
+                onClose={() => this.setState({ show_type: false })}
+                onSelect={(value) => this.onSelectType(value)}
+            />
+        )
+    }
+    onSelectType(value) {
+        this.setState({
+            show_type: false,
+            type_id: value.id,
+            type_text: value.name
+        })
+    }
+
+
+    SelectAppointmentCategory() {
+        return (
+            <AppointmentCategory
+                onClose={() => this.setState({ show_category: false })}
+                onSelect={(value) => this.onSelectCategory(value)}
+                type={this.state.type_id}
+            />
+        )
+    }
+    onSelectCategory(value) {
+        this.setState({
+            show_category: false,
+            category_id: value.id,
+            category_text: value.name
+        })
+    }
+
+    SelectAppointmentActivity() {
+        return (
+            <AppointmentActivity
+                onClose={() => this.setState({ show_category: false })}
+                onSelect={(value) => this.onSelectActivity(value)}
+                category={this.state.type_id}
+            />
+        )
+    }
+    onSelectActivity(value) {
+        this.setState({
+            show_category: false,
+            activity_id: value.id,
+            activity_text: value.name
+        })
+    }
+
+
+    SelectDoctorService() {
+        return (
+            <DoctorServices
+                onClose={() => this.setState({ show_category: false })}
+                onSelect={(value) => this.onSelectService(value)}
+                services={this.state.list_doctor_services}
+            />
+        )
+    }
+    onSelectService(value) {
+        this.setState({
+            show_service: false,
+            service_id: value.service_id,
+            service_text: value.service_name,
+            service_cost: value.cost
+        })
+    }
+
 }
+
+
+
 
 const times = [
     {
@@ -309,14 +531,23 @@ const styles = StyleSheet.create({
     piceContainer: {
         flexDirection: 'row'
     },
-    table: {
-        marginTop: 15,
-        flexWrap: 'wrap',
-        flexDirection: 'row'
+
+    textInputContainer: {
+        flexDirection: 'row',
+        backgroundColor: '#F2F3F2',
+        justifyContent: 'center',
+        marginRight: 20,
+        marginLeft: 20,
+        height: 45,
+        marginBottom: 15,
+        marginTop: 5,
+        borderRadius: 10
     },
-    cell: {
-        flexBasis: sty,
+
+    input: {
         flex: 1,
+        justifyContent: 'center',
+        marginLeft: 15
     },
 
 

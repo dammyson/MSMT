@@ -24,32 +24,84 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-
+import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import ActivityIndicator from '../../components/ActivityIndicator';
 
 export default class index extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false
+            list_doctor: []
         };
+        this.arrayholder = [];
     }
 
     async componentDidMount() {
+        this.getDoctors()
+    }
+
+    async getDoctors() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getDoctors', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                      list_doctor: data.data
+                    })
+                    this.arrayholder = data.data;
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
 
     }
 
 
+
+    searchFilterFunction = search => {
+        this.setState({ search });
+        const newData = this.arrayholder.filter(item => {
+          const itemData = `${item.fullName? item.fullName.toUpperCase(): ''.toUpperCase()}`;
+          const textData = search.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        });
+        this.setState({
+            list_doctor: newData,
+        });
+    
+      };
 
 
 
     render() {
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting doctors... '} />
+
+            );
+        }
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -99,8 +151,7 @@ export default class index extends Component {
                                             autoCorrect={false}
                                             defaultValue={this.state.email}
                                             style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                            onChangeText={this.searchFilterFunction}
                                         />
                                     </View>
                                 </View>
@@ -118,7 +169,7 @@ export default class index extends Component {
 
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderItem(this.state.list_doctor)}
                                 </ScrollView>
                             </View>
 
@@ -137,14 +188,15 @@ export default class index extends Component {
     renderItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let item = data[i]
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details',  {clinician: item})} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                         <Image source={images.user} style={styles.image_profile} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].title}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', }}>
 
@@ -155,7 +207,7 @@ export default class index extends Component {
                                     type='antdesign'
                                 />
                             </View>
-                            <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>4.4</Text>
+                            <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].rating}</Text>
                             <View style={{ flex: 1 }} />
                             <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>25 Reviews</Text>
 
@@ -183,58 +235,6 @@ export default class index extends Component {
 }
 
 
-
-
-const doctors = [
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-];
 const styles = StyleSheet.create({
     container: {
         flex: 1,
