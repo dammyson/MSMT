@@ -29,6 +29,7 @@ import {
     SelectMultipleButton,
     SelectMultipleGroupButton
 } from "react-native-selectmultiple-button";
+import { getLogout } from '../../utilities';
 
 export default class index extends Component {
     constructor(props) {
@@ -104,7 +105,7 @@ export default class index extends Component {
 
 
                             <View style={{ marginLeft: 20, marginVertical: 10, marginRight: 10, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{ height: 60, justifyContent: 'center', flexDirection: 'row', alignItems: 'center', backgroundColor: '#E90000', borderRadius: 7 }}>
+                                <TouchableOpacity onPress={() => this.logout()} style={{ height: 60, justifyContent: 'center', flexDirection: 'row', alignItems: 'center', backgroundColor: '#E90000', borderRadius: 7 }}>
                                     <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
                                         <Icon
                                             active
@@ -147,7 +148,18 @@ export default class index extends Component {
     }
 
   
+    logout(){
 
+        this.setState({ loading: true })
+        getLogout()
+        setTimeout(() => {
+            this.props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Welcome' }],
+              });
+                }, 1000);
+
+    }
 
 
     renderItem(data) {

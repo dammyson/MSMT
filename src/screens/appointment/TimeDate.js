@@ -43,7 +43,7 @@ export default class TimeData extends Component {
             sel_time: '10:30 PM',
             starCount: 5,
             display_days: [],
-            selected: { day: 'M', date: 3},
+            selected: { day: 'M', date: 3, full: "01/01/2021"},
             clinician_id: ''
         };
     }
@@ -63,22 +63,23 @@ export default class TimeData extends Component {
         var today = new Date();
         for (let i = 3; i >= 1; i--) {
             var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
+            var res = Moment(new_date).format('D-dd-DD/MM/YYYY').split("-");
             instant_array.push({ day: res[1], date: res[0] })
         }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
+        var res = Moment(today).format('D-dd-DD/MM/YYYY').split("-");
+        instant_array.push({ day: res[1], date: res[0] ,  full:res[2] })
         this.setState({ selected: { day: res[1], date: res[0] } })
         for (let i = 1; i <= 3; i++) {
             var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
+            var res = Moment(new_date).format('D-dd-DD/MM/YYYY').split("-");
+            instant_array.push({ day: res[1], date: res[0], full:res[2] })
         }
 
         this.setState({ display_days: instant_array })
     }
 
     selDay(data) {
+        console.warn(data)
         this.setState({ selected: data })
     }
 

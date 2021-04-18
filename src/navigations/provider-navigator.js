@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Avatar, Icon, } from 'react-native-elements';
 import { lightTheme } from '../theme/colors';
-import HomeScreen from '../screens/home';
-import ExploreScreen from '../screens/explore/explore-stack';
+import HomeScreen from '../screens/home/index_doctor';
+import DoctorAppointmentList from '../screens/appointment/DoctorAppointmentList';
 import PrescriptionScreen from '../screens/prescription/presscription-stack';
 import { View,Text, Dimensions } from 'react-native';
 import { font } from '../constants';
+import Settings from '../screens/settings';
 
 
 
@@ -37,7 +38,7 @@ class AppNavigator extends Component {
                <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD, marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Home</Text>
               </View>;
             }
-            else if (route.name === 'Calendar') {
+            else if (route.name === 'DoctorAppointmentList') {
               iconName = 'text-search';
               return<View style={{width:Dimensions.get('window').width/5}}>
                <Icon
@@ -47,11 +48,11 @@ class AppNavigator extends Component {
                 color={color}
                 type='material-community'
               />
-               <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD,  marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Explore</Text>
+               <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD,  marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Appts.</Text>
               </View>;
             }
             else if (route.name === 'Add') {
-              iconName = 'calendar-plus-o';
+              iconName = 'bell-o';
               return <View style={{width:Dimensions.get('window').width/5}}>
               <Icon
                 active
@@ -60,7 +61,7 @@ class AppNavigator extends Component {
                 color={color}
                 type='font-awesome'
               />
-               <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD,  marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Visit</Text>
+               <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD,  marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Notification</Text>
               </View>;
             } else if (route.name === 'Setting') {
               iconName = 'heart-o';
@@ -102,10 +103,10 @@ class AppNavigator extends Component {
 
 
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Calendar" component={ExploreScreen} />
+        <Tab.Screen name="DoctorAppointmentList" component={DoctorAppointmentList} />
         <Tab.Screen name="Add" component={HomeScreen} />
         <Tab.Screen name="Setting" component={PrescriptionScreen} />
-        <Tab.Screen name="User" component={HomeScreen} />
+        <Tab.Screen name="User" component={Settings} />
 
       </Tab.Navigator>
 

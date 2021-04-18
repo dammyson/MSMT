@@ -33,7 +33,7 @@ Moment.locale('en');
 const moment = require('moment');
 
 
-export default class index extends Component {
+export default class DoctorAppointmentList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -163,7 +163,7 @@ export default class index extends Component {
                             </View>
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>List</Text>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
                                 </View>
                             </View>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
@@ -213,7 +213,7 @@ export default class index extends Component {
         for (var i = 0; i < data.length; i++) {
             let id = i
             packages.push(
-                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 5,  flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                     <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
                     <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
@@ -221,11 +221,10 @@ export default class index extends Component {
                       
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.fullName}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.title}</Text>
-                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
-
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 1, marginTop: 1 }}>{data[i].doctor.fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 1, marginTop: 1 }}>{data[i].doctor.title}</Text>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:2}}>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
                             <View style={{ flex: 1 }} />
                             <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
                                 <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>{Moment(data[i].appointmentDate).format('h:A')}</Text>

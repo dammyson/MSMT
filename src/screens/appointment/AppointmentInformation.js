@@ -55,7 +55,7 @@ export default class AppointmentInformation extends Component {
 
             appointment_datetime:'',
             selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            selected: { day: 'M', date: 3 , }
         };
     }
 
@@ -327,7 +327,7 @@ export default class AppointmentInformation extends Component {
     SelectAppointmentActivity() {
         return (
             <AppointmentActivity
-                onClose={() => this.setState({ show_category: false })}
+                onClose={() => this.setState({ show_activty: false })}
                 onSelect={(value) => this.onSelectActivity(value)}
                 category={this.state.type_id}
             />

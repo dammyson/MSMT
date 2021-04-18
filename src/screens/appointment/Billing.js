@@ -49,7 +49,6 @@ export default class Billing extends Component {
     }
 
     async componentDidMount() {
-
         this.getDoctorServicesCost();
     }
 
@@ -86,7 +85,7 @@ export default class Billing extends Component {
             })
             .catch((error) => {
                 this.setState({ loading: false })
-                console.warn(error.message)
+                console.warn(error)
                 showTopNotification("danger", error.message)
             });
 
@@ -95,18 +94,18 @@ export default class Billing extends Component {
 
 
     selectSevice(value) {
-        console.warn(value)
+      
         const { appointment_information } = this.state
         let information = {
             clinicianId: appointment_information.appointment_datetime.clinician_id,
             appointment_type: appointment_information.type_id,
-            startDate: appointment_information.appointment_datetime.date,
+            startDate: appointment_information.appointment_datetime.date.full,
             startTime: appointment_information.appointment_datetime.time,
-            appointmentService: value.id,
+            appointmentService: value.service_id,
             appointmentActivityId:  appointment_information.category_id,
             appointmentActivitySubId:  appointment_information.activity_id
         }
-
+        console.warn(information)
         this.setState({ loading: true})
         fetch( baseUrl() +'/Appointment/bookAppointment', {
             method: 'POST', headers: {
@@ -120,6 +119,7 @@ export default class Billing extends Component {
               const{ statusCode, data} = res
               console.warn(statusCode, data)
               if (statusCode == 200) {
+                this.props.navigation.navigate('mode_appointment', { appointment_information : data.data})
                 
               } else {
                 showTopNotification("erroe", data.message, 3)
@@ -218,18 +218,6 @@ export default class Billing extends Component {
 
 }
 
-const times = [
-    {
-        value: 'Migraine',
-    },
-    {
-        value: 'Cluster Headache',
-    },
-    {
-        value: 'Pain after Surgery',
-    },
-
-];
 
 const styles = StyleSheet.create({
     container: {

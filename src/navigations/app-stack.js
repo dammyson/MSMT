@@ -6,6 +6,7 @@ import { Root } from 'native-base';
 import Splash from '../screens/onBoarding/Splash';
 import Welcome from '../screens/onBoarding/Welcome';
 import App from './app-navigator';
+import ProviderApp from './provider-navigator';
 import TimeData from '../screens/appointment/TimeDate';
 import AppointmentInformation from '../screens/appointment/AppointmentInformation';
 import Billing from '../screens/appointment/Billing';
@@ -48,13 +49,14 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="App">
+             initialRouteName="Splash">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
             <Stack.Screen name="user_type" component={SlectUserType}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
+            <Stack.Screen name="ProviderApp" component={ProviderApp}  /> 
             <Stack.Screen name="appointment_datetime" component={TimeData}  /> 
             <Stack.Screen name="appointment_information" component={AppointmentInformation}  /> 
             <Stack.Screen name="appointment_billing" component={Billing}  /> 

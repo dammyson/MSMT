@@ -85,7 +85,7 @@ export default class Login extends Component {
               if (statusCode == 200) {
                 storeToken(data.data.token)
                 storeUserDetails(data.data)
-                if(data.data.role){
+                if(data.data.role == 'client'){
                     this.props.navigation.replace('App')
                 }else{
                     this.props.navigation.replace('Providers')

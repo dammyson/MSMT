@@ -27,18 +27,13 @@ export default class AppointmentActivity extends Component {
     componentDidMount() {
       this.getAppointmentActivity()
      
-        Animated.timing(this.state.progress, {
-            toValue: 1,
-            duration: 2000,
-            easing: Easing.linear,
-        }).start();
-        
+      
     }
 
 
     async getAppointmentActivity() {
         const { category } = this.props;
-        console.warn(category)
+        console.warn("category id"+ category)
         this.setState({ loading: true })
         fetch(baseUrl() + '/Options/GetAppointmentSubActivities?parent_id='+category, {
             method: 'GET', headers: {
@@ -53,11 +48,9 @@ export default class AppointmentActivity extends Component {
                 const { statusCode, data } = res
                 console.warn(res)
                 if (statusCode == 200) {
-
                     this.setState({
                         shippingmethod: data.data
                     })
-
 
                 } else {
                     this.setState({ loading: false })
@@ -96,7 +89,7 @@ export default class AppointmentActivity extends Component {
 
                 >
 
-                    <Animatable.View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} animation="fadeInUpBig" >
+                    <View style={{ height: Dimensions.get('window').height / 2, alignItems: 'center', justifyContent: 'center', borderRadius:20 }} >
 
                         <View style={{ height: Dimensions.get('window').height / 1.5, width: Dimensions.get('window').width - 50, }} >
                             <View style={styles.body_top}>
@@ -144,7 +137,7 @@ export default class AppointmentActivity extends Component {
 
                             </View>
                         </View>
-                    </Animatable.View>
+                    </View>
 
                 </View>
             </>

@@ -43,7 +43,7 @@ export default class index extends Component {
 
     async getDoctors() {
         this.setState({ loading: true })
-        fetch(baseUrl() + '/Clinician/getDoctors', {
+        fetch(baseUrl() + '/Clinician/getFeaturedDoctors', {
             method: 'GET', headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

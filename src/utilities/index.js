@@ -60,6 +60,17 @@ export const removeToken = async (selectedValue, email) => {
   }
 }
 
+
+export const getLogout = () => {
+  try {
+    AsyncStorage.clear()
+    return true;
+  }
+  catch (exception) {
+    return false;
+  }
+};
+
 export const makeUrlStringFromObject = (data) => {
   var formBody = [];
   for (var property in data) {
