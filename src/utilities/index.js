@@ -11,6 +11,9 @@ export const imageUrl = () => {
   return 'https://mhealthwebapi.azurewebsites.net/';
 };
 
+export const getPaystackKey = () => {
+    return "";
+};
 
 export const storeToken = async (selectedValue) => {
   try {

@@ -40,47 +40,23 @@ export default class ModePayment extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            appointment_information: this.props.route.params.appointment_information
         };
     }
 
     async componentDidMount() {
-        this.getDates()
+       console.warn(this.props.route.params.appointment_information)
     }
 
 
-    getDates() {
+    payWithWallet() {
 
-        var instant_array = []
-        var today = new Date();
-        for (let i = 3; i >= 1; i--) {
-            var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
-        for (let i = 1; i <= 3; i++) {
-            var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
-
-        this.setState({ display_days: instant_array })
+      
     }
 
-    selDay(data) {
-        this.setState({ selected: data })
+    payWithCard(data) {
+       const {appointment_information} =this.state
+       this.props.navigation.navigate('payment', { appointment_information : appointment_information})
     }
 
 
@@ -103,7 +79,7 @@ export default class ModePayment extends Component {
         return (
 
             <Container style={{ backgroundColor: lightTheme.INPUT_BACKGROUND_COLOR }}>
-                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
+                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="light-content" />
                 <Navbar left={left} title='Mode of Payment' />
                 <Content>
 
@@ -119,7 +95,7 @@ export default class ModePayment extends Component {
                                 </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.user_box}>
+                            <TouchableOpacity onPress={()=> this.payWithCard()} style={styles.user_box}>
 
                                 <View style={{ alignItems: 'flex-start', margin: 20 }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 14, color: lightTheme.PRIMARY_TEXT_COLOR, marginBottom: 10 }}>Online Payment</Text>

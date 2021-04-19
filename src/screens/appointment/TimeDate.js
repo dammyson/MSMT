@@ -63,15 +63,15 @@ export default class TimeData extends Component {
         var today = new Date();
         for (let i = 3; i >= 1; i--) {
             var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D-dd-DD/MM/YYYY').split("-");
+            var res = Moment(new_date).format('D-dd-MM/DD/YYYY').split("-");
             instant_array.push({ day: res[1], date: res[0] })
         }
-        var res = Moment(today).format('D-dd-DD/MM/YYYY').split("-");
+        var res = Moment(today).format('D-dd-MM/DD/YYYY').split("-");
         instant_array.push({ day: res[1], date: res[0] ,  full:res[2] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
+        this.setState({ selected: { day: res[1], date: res[0],  full:res[2] } })
         for (let i = 1; i <= 3; i++) {
             var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D-dd-DD/MM/YYYY').split("-");
+            var res = Moment(new_date).format('D-dd-MM/DD/YYYY').split("-");
             instant_array.push({ day: res[1], date: res[0], full:res[2] })
         }
 
@@ -186,6 +186,8 @@ export default class TimeData extends Component {
            time: sel_time,
            date: selected
        }
+
+    
         this.props.navigation.navigate('appointment_information', { appointment_datetime : appointment_datetime})
     }
 

@@ -44,6 +44,7 @@ export default class Billing extends Component {
         this.state = {
             loading: false,
             list_doctor_services: [],
+            loading_msg:'',
             appointment_information: this.props.route.params.appointment_information
         };
     }
@@ -57,7 +58,7 @@ export default class Billing extends Component {
     async getDoctorServicesCost() {
         const { appointment_information } = this.state
         console.warn(appointment_information.appointment_datetime.clinician_id)
-        this.setState({ loading: true })
+        this.setState({ loading: true, loading_msg:'getting services and cost...' })
         fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + appointment_information.appointment_datetime.clinician_id, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json',
@@ -93,8 +94,7 @@ export default class Billing extends Component {
     }
 
 
-    selectSevice(value) {
-      
+   async selectSevice(value) {
         const { appointment_information } = this.state
         let information = {
             clinicianId: appointment_information.appointment_datetime.clinician_id,
@@ -106,11 +106,12 @@ export default class Billing extends Component {
             appointmentActivitySubId:  appointment_information.activity_id
         }
         console.warn(information)
-        this.setState({ loading: true})
+        this.setState({ loading: true, loading_msg:'creating appointment...'})
         fetch( baseUrl() +'/Appointment/bookAppointment', {
             method: 'POST', headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + await getToken(),
             }, body: JSON.stringify(information),
           })
           .then(processResponse)
@@ -119,13 +120,18 @@ export default class Billing extends Component {
               const{ statusCode, data} = res
               console.warn(statusCode, data)
               if (statusCode == 200) {
-                this.props.navigation.navigate('mode_appointment', { appointment_information : data.data})
+                showTopNotification("success", data.message, 3)
+                let information = {
+                    appointmentId: data.data,
+                    amount: value.cost,
+                }
+                this.props.navigation.navigate('mode_appointment', { appointment_information : information})
                 
               } else {
-                showTopNotification("erroe", data.message, 3)
+                showTopNotification("error", data.message, 3)
               }
             }).catch((error) => {
-              showTopNotification("erroe", error.message, 3)
+              showTopNotification("error", error.message, 3)
               this.setState({ loading: false})
             });
     }
@@ -151,7 +157,7 @@ export default class Billing extends Component {
 
         if (this.state.loading) {
             return (
-                <ActivityIndicator message={'getting services and cost... '} />
+                <ActivityIndicator message={this.state.loading_msg} />
             );
         }
 

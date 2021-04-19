@@ -21,18 +21,11 @@ import { lightTheme } from '../../theme/colors';
 import { font } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
-import { textInputStyles } from '../../theme/TextInputStyle';
-import { ScrollView } from 'react-native';
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl , getPaystackKey} from '../../utilities';
 import Navbar from '../../components/Navbar';
-import Moment from 'moment';
-Moment.locale('en');
-const moment = require('moment');
-
-const width = Dimensions.get('window').width;
-const single_with = width / 100;
-const stage_1 = width / single_with;
-const percentage = (width / single_with) / width * 100;
-const sty = percentage.toString() + "%"
+import RNPaystack from 'react-native-paystack';
+RNPaystack.init({ publicKey: getPaystackKey() });
 
 
 export default class Payment extends Component {
@@ -40,49 +33,118 @@ export default class Payment extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            cv: '',
+            ex: '',
+            cn: '',
+            cname: '',
+           // appointment_information: this.props.route.params.appointment_information,
+           // amount:this.props.route.params.appointment_information.amount
         };
     }
 
     async componentDidMount() {
-        this.getDates()
+     
     }
 
 
-    getDates() {
+    handleChange = (text) => {
 
-        var instant_array = []
-        var today = new Date();
-        for (let i = 3; i >= 1; i--) {
-            var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
+        let textTemp = text;
+        if (textTemp[0] !== '1' && textTemp[0] !== '0') {
+            textTemp = '';
         }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
-        for (let i = 1; i <= 3; i++) {
-            var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
+        if (textTemp.length === 2) {
+            if (parseInt(textTemp.substring(0, 2)) > 12 || parseInt(textTemp.substring(0, 2)) == 0) {
+                textTemp = textTemp[0];
+            } else if (this.state.ex.length === 1) {
+                textTemp += '/';
+            } else {
+                textTemp = textTemp[0];
+            }
+        }
+        this.setState({ ex: textTemp })
+    }
+
+
+    chargeCard() {
+
+        const { cn, ex, cv, amount, data, email } = this.state
+
+        var card_lenghts = [16, 17, 18, 19, 20];
+        if (!card_lenghts.includes(cn.length)) {
+            Alert.alert('Operation failed', 'Invalide card number, remove spaces if present', [{ text: 'Okay' }])
+            return
         }
 
-        this.setState({ display_days: instant_array })
+
+        if (!ex.includes('/')) {
+            Alert.alert('Operation failed', 'Invalide Expiry date', [{ text: 'Okay' }])
+            return
+        }
+        if (cv.length != 3) {
+            Alert.alert('Operation failed', 'Invalide card cvv', [{ text: 'Okay' }])
+            return
+        }
+
+        var res = ex.split("/");
+        this.setState({ loading: true })
+        RNPaystack.chargeCard({
+            cardNumber: cn,
+            expiryMonth: res[0],
+            expiryYear: res[1],
+            cvc: cv,
+            email: email,
+            amountInKobo: amount * 100,
+        })
+            .then(response => {
+                console.warn(response); // card charged successfully, get reference here
+                this.processPostPayment(response)
+            })
+            .catch(error => {
+                this.setState({ loading: false })
+                console.warn(error);
+                Alert.alert('Process failed', error.message, [{ text: 'Okay' }])// error is a javascript Error object
+            })
+
     }
 
-    selDay(data) {
-        this.setState({ selected: data })
-    }
 
+  async  processPostPayment(res) {
+
+        console.warn(value)
+        const { appointment_information } = this.state
+        let information = {
+            appointmentId: appointment_information,
+            amount: appointment_information,
+            transactionReference: appointment_information,
+            
+        }
+        console.warn(information)
+        this.setState({ loading: true, loading_msg:'creating appointment...'})
+        fetch( baseUrl() +'/Appointment/bookAppointment', {
+            method: 'POST', headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + await getToken(),
+            }, body: JSON.stringify(information),
+          })
+          .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false})
+              const{ statusCode, data} = res
+              console.warn(statusCode, data)
+              if (statusCode == 200) {
+                showTopNotification("success", data.message, 3)
+                this.props.navigation.navigate('mode_appointment', { appointment_information : data.data})
+                
+              } else {
+                showTopNotification("error", data.message, 3)
+              }
+            }).catch((error) => {
+              showTopNotification("error", error.message, 3)
+              this.setState({ loading: false})
+            });
+    }
 
     render() {
 
@@ -121,7 +183,7 @@ export default class Payment extends Component {
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                             style={{ flex: 1, fontSize: 20, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, }}
-                                            onChangeText={(text) => this.setState({ password: text })}
+                                            onChangeText={(text) => this.setState({ cname: text })}
                                             onSubmitEditing={() => this.loginRequest()}
                                         />
                                     </View>
@@ -141,7 +203,7 @@ export default class Payment extends Component {
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                             style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, }}
-                                            onChangeText={(text) => this.setState({ password: text })}
+                                            onChangeText={(text) => this.setState({ cn: text })}
                                             onSubmitEditing={() => this.loginRequest()}
                                         />
                                     </View>
@@ -172,8 +234,10 @@ export default class Payment extends Component {
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                             style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, }}
-                                            onChangeText={(text) => this.setState({ password: text })}
-                                            onSubmitEditing={() => this.loginRequest()}
+                                            onChangeText={this.handleChange} 
+                                            defaultValue={this.state.ex} 
+                                            maxLength={5}
+                                           
                                         />
                                     </View>
                                 </View>
@@ -192,7 +256,7 @@ export default class Payment extends Component {
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                             style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, }}
-                                            onChangeText={(text) => this.setState({ password: text })}
+                                            onChangeText={(text) => this.setState({ cv: text })}
                                             onSubmitEditing={() => this.loginRequest()}
                                         />
                                     </View>
@@ -226,7 +290,7 @@ export default class Payment extends Component {
 
 
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                                <TouchableOpacity onPress={() => this.chargeCard()} style={buttonStyles.primaryButtonStyle}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                                 </TouchableOpacity>
                             </View>
