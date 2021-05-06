@@ -40,52 +40,18 @@ export default class Done extends Component {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            clinician: this.props.route.params.clinician
         };
     }
 
     async componentDidMount() {
-        this.getDates()
+       console.warn( this.props.route.params.clinician)
     }
 
-
-    getDates() {
-
-        var instant_array = []
-        var today = new Date();
-        for (let i = 3; i >= 1; i--) {
-            var new_date = moment(today, "DD-MM-YYYY").subtract(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
-        var res = Moment(today).format('D/dd').split("/");
-        instant_array.push({ day: res[1], date: res[0] })
-        this.setState({ selected: { day: res[1], date: res[0] } })
-        for (let i = 1; i <= 3; i++) {
-            var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
-            var res = Moment(new_date).format('D/dd').split("/");
-            instant_array.push({ day: res[1], date: res[0] })
-        }
-
-        this.setState({ display_days: instant_array })
-    }
-
-    selDay(data) {
-        this.setState({ selected: data })
-    }
 
 
     render() {
-
+        const { clinician } = this.state
         var left = (
             <Left style={{ flex: 1 }}>
                 <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -111,16 +77,19 @@ export default class Done extends Component {
 
                             <View style={{ alignItems: 'center', }}>
                                 <Image source={images.success} style={{ margin: 20, }} />
-                              
+
                             </View>
 
                             <View style={{ marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={{ fontFamily: font.BOLD, fontSize: 30, marginTop: 2, color: lightTheme.PRIMARY_TEXT_COLOR }}>Booking Successful</Text>
-                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 5,  color:lightTheme.PRIMARY_TEXT_COLOR, textAlign: 'center' }}>Your appointment booking with 
-                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, color: '#A74343', textAlign: 'center' }}> Dr. Johnson Jones Joseph</Text> was successful.</Text>
+                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 5, color: lightTheme.PRIMARY_TEXT_COLOR, textAlign: 'center' }}>Your appointment booking with
+                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, color: '#A74343', textAlign: 'center' }}> Dr. {clinician.fullName}</Text> was successful.</Text>
                             </View>
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
+                                <TouchableOpacity onPress={() => this.props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'App' }],
+                                })} style={buttonStyles.primaryButtonStyle}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle]}>Proceed</Text>
                                 </TouchableOpacity>
                             </View>

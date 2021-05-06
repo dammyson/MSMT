@@ -24,6 +24,7 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
+import { getToken, showTopNotification, processResponse, baseUrl } from '../../utilities';
 import Moment from 'moment';
 Moment.locale('en');
 const moment = require('moment');
@@ -40,11 +41,11 @@ export default class TimeData extends Component {
         super(props);
         this.state = {
             loading: false,
-            sel_time: '10:30 PM',
+            sel_time: '',
             starCount: 5,
             display_days: [],
             selected: { day: 'M', date: 3, full: "01/01/2021"},
-            clinician_id: ''
+            clinician: ''
         };
     }
 
@@ -52,7 +53,7 @@ export default class TimeData extends Component {
         this.getDates()
         const { clinician } = this.props.route.params;
         this.setState({
-            clinician_id: clinician,
+            clinician: clinician,
         });
     }
 
@@ -151,7 +152,7 @@ export default class TimeData extends Component {
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
-                                {this.renderTimes(times)}
+                                {this.renderTimes(timesafter)}
                             </View>
                             <View style={{ height: 0.5, opacity: 0.6, backgroundColor: lightTheme.SMALL_BODY_TEXT_COLOR }} />
 
@@ -162,7 +163,7 @@ export default class TimeData extends Component {
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, marginTop: 15, flexWrap: 'wrap', flexDirection: 'row' }}>
-                                {this.renderTimes(times)}
+                                {this.renderTimes(timesafeven)}
                             </View>
                             <View style={{ marginTop: 15, }}>
                                 <TouchableOpacity onPress={() => this.hanedProceedButton()} style={buttonStyles.primaryButtonStyle}>
@@ -179,10 +180,15 @@ export default class TimeData extends Component {
     }
 
     hanedProceedButton() {
-       const {sel_time, selected, clinician_id} = this.state
+       const {sel_time, selected, clinician} = this.state
+
+       if(sel_time == ""){
+        showTopNotification("error", 'Select time date and time',3)
+           return
+       }
 
        let appointment_datetime = {
-        clinician_id: clinician_id,
+           clinician: clinician,
            time: sel_time,
            date: selected
        }
@@ -250,31 +256,97 @@ const packagesa = [
 
 const times = [
     {
-        value: '10:30 AM',
+        value: '08:00 AM',
+    },
+    {
+        value: '08:30 AM',
+    },
+    {
+        value: '09:00 AM',
+    },
+    {
+        value: '09:30 AM',
+    },
+    {
+        value: '10:00 AM',
     },
     {
         value: '10:30 AM',
     },
     {
-        value: '10:30 AM',
+        value: '11:00 AM',
     },
     {
-        value: '10:30 AM',
+        value: '11:30 PM',
     },
     {
-        value: '10:30 AM',
+        value: '12:00 AM',
+    },
+];
+
+const timesafter = [
+    {
+        value: '12:00 PM',
     },
     {
-        value: '10:30 AM',
+        value: '12:30 PM',
     },
     {
-        value: '10:30 AM',
+        value: '13:00 PM',
     },
     {
-        value: '10:30 PM',
+        value: '13:30 AM',
     },
     {
-        value: '10:30 AM',
+        value: '14:00 AM',
+    },
+    {
+        value: '14:30 AM',
+    },
+    {
+        value: '15:00 AM',
+    },
+    {
+        value: '15:30 PM',
+    },
+    {
+        value: '16:00 AM',
+    },
+];
+const timesafeven = [
+    {
+        value: '16:00 PM',
+    },
+    {
+        value: '16:30 PM',
+    },
+    {
+        value: '17:00 PM',
+    },
+    {
+        value: '17:30 AM',
+    },
+    {
+        value: '18:00 AM',
+    },
+    {
+        value: '18:30 AM',
+    },
+    {
+        value: '19:00 AM',
+    },
+    {
+        value: '19:30 PM',
+    },
+    {
+        value: '20:00 AM',
+    },
+
+    {
+        value: '20:30 AM',
+    },
+    {
+        value: '21:00 AM',
     },
 ];
 const styles = StyleSheet.create({

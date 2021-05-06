@@ -8,6 +8,7 @@ import PrescriptionScreen from '../screens/prescription/presscription-stack';
 import { View,Text, Dimensions } from 'react-native';
 import { font } from '../constants';
 import Settings from '../screens/settings';
+import Notification from '../screens/Notification';
 
 
 
@@ -104,7 +105,7 @@ class AppNavigator extends Component {
 
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DoctorAppointmentList" component={DoctorAppointmentList} />
-        <Tab.Screen name="Add" component={HomeScreen} />
+        <Tab.Screen name="Add" component={Notification} />
         <Tab.Screen name="Setting" component={PrescriptionScreen} />
         <Tab.Screen name="User" component={Settings} />
 

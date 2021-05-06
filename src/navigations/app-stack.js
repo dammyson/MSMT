@@ -49,7 +49,7 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="payment">
+             initialRouteName="ProviderApp">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
@@ -62,6 +62,7 @@ class AppStack extends Component {
             <Stack.Screen name="appointment_billing" component={Billing}  /> 
             <Stack.Screen name="mode_appointment" component={ModePayment}  /> 
             <Stack.Screen name="payment" component={Payment}  /> 
+            <Stack.Screen name="done" component={Done}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

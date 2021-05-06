@@ -22,7 +22,7 @@ import { font } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import ActivityIndicator from '../../components/ActivityIndicator';
-import { getToken, showTopNotification, processResponse, baseUrl , getPaystackKey} from '../../utilities';
+import { getToken, getEmail, showTopNotification, processResponse, baseUrl , getPaystackKey} from '../../utilities';
 import Navbar from '../../components/Navbar';
 import RNPaystack from 'react-native-paystack';
 RNPaystack.init({ publicKey: getPaystackKey() });
@@ -33,17 +33,18 @@ export default class Payment extends Component {
         super(props);
         this.state = {
             loading: false,
+            loading_msg:'',
             cv: '',
             ex: '',
             cn: '',
             cname: '',
-           // appointment_information: this.props.route.params.appointment_information,
-           // amount:this.props.route.params.appointment_information.amount
+            appointment_information: this.props.route.params.appointment_information,
+            amount:this.props.route.params.appointment_information.amount
         };
     }
 
     async componentDidMount() {
-     
+     this.setState({email: await getEmail()})
     }
 
 
@@ -68,26 +69,26 @@ export default class Payment extends Component {
 
     chargeCard() {
 
-        const { cn, ex, cv, amount, data, email } = this.state
+        const { cn, ex, cv, amount, email } = this.state
 
         var card_lenghts = [16, 17, 18, 19, 20];
         if (!card_lenghts.includes(cn.length)) {
-            Alert.alert('Operation failed', 'Invalide card number, remove spaces if present', [{ text: 'Okay' }])
+            showTopNotification("error", 'Invalide card number, remove spaces if present',3)
             return
         }
 
 
         if (!ex.includes('/')) {
-            Alert.alert('Operation failed', 'Invalide Expiry date', [{ text: 'Okay' }])
+            showTopNotification("error", 'Invalid Expiry date',3)
             return
         }
         if (cv.length != 3) {
-            Alert.alert('Operation failed', 'Invalide card cvv', [{ text: 'Okay' }])
+            showTopNotification("error", 'Invalid card cvv',3)
             return
         }
 
         var res = ex.split("/");
-        this.setState({ loading: true })
+        this.setState({ loading: true, loading_msg:'payment in progress...'})
         RNPaystack.chargeCard({
             cardNumber: cn,
             expiryMonth: res[0],
@@ -103,25 +104,26 @@ export default class Payment extends Component {
             .catch(error => {
                 this.setState({ loading: false })
                 console.warn(error);
-                Alert.alert('Process failed', error.message, [{ text: 'Okay' }])// error is a javascript Error object
+                showTopNotification("error", error.message,3)
+               // error is a javascript Error object
             })
 
     }
 
 
+
   async  processPostPayment(res) {
 
-        console.warn(value)
         const { appointment_information } = this.state
         let information = {
-            appointmentId: appointment_information,
-            amount: appointment_information,
-            transactionReference: appointment_information,
+            appointmentId: appointment_information.appointmentId,
+            amount: appointment_information.amount,
+            transactionReference: res.reference,
             
         }
         console.warn(information)
-        this.setState({ loading: true, loading_msg:'creating appointment...'})
-        fetch( baseUrl() +'/Appointment/bookAppointment', {
+        this.setState({ loading: true, loading_msg:'confirming appointment...'})
+        fetch( baseUrl() +'/Appointment/confirmAppointment', {
             method: 'POST', headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
@@ -135,8 +137,7 @@ export default class Payment extends Component {
               console.warn(statusCode, data)
               if (statusCode == 200) {
                 showTopNotification("success", data.message, 3)
-                this.props.navigation.navigate('mode_appointment', { appointment_information : data.data})
-                
+                this.props.navigation.replace('done', {clinician: appointment_information.clinician})
               } else {
                 showTopNotification("error", data.message, 3)
               }
@@ -161,6 +162,12 @@ export default class Payment extends Component {
                 </Button>
             </Left>
         );
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={this.state.loading_msg} />
+            );
+        }
 
         return (
 

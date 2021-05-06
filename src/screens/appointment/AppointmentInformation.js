@@ -51,7 +51,7 @@ export default class AppointmentInformation extends Component {
             category_id: '',
             show_activty: false,
             activity_text: 'Select activity',
-            activity_id: '',
+            activity_id: '4',
 
             appointment_datetime:'',
             selected_symptoms: ['Migraine', 'Headache'],

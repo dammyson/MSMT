@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
@@ -12,7 +12,7 @@ export const imageUrl = () => {
 };
 
 export const getPaystackKey = () => {
-    return "";
+    return "pk_test_cbc0ffd2257819c3855fd7d6f4b9397d10c3a37f";
 };
 
 export const storeToken = async (selectedValue) => {

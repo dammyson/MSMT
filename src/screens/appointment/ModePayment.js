@@ -54,7 +54,7 @@ export default class ModePayment extends Component {
       
     }
 
-    payWithCard(data) {
+    payWithCard() {
        const {appointment_information} =this.state
        this.props.navigation.navigate('payment', { appointment_information : appointment_information})
     }
