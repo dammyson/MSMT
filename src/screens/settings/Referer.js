@@ -21,14 +21,9 @@ import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
-import { textInputStyles } from '../../theme/TextInputStyle';
-import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-import StarRating from 'react-native-star-rating';
-import {
-    SelectMultipleButton,
-    SelectMultipleGroupButton
-} from "react-native-selectmultiple-button";
+import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import ActivityIndicator from '../../components/ActivityIndicator';
 
 export default class Referer extends Component {
     constructor(props) {
@@ -50,6 +45,44 @@ export default class Referer extends Component {
     }
 
     async componentDidMount() {
+this.getReferals()
+    }
+
+
+
+   async getReferals(){
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Referral/GetReferrals', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(res)
+                if (statusCode == 200) {
+
+                    this.setState({
+                      list_doctor: data.data
+                    })
+                    this.arrayholder = data.data;
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
 
     }
 
@@ -59,6 +92,12 @@ export default class Referer extends Component {
 
     render() {
 
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting referals... '} />
+
+            );
+        }
         var left = (
             <Left style={{ flex: 1 }}>
                 <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -129,33 +168,6 @@ export default class Referer extends Component {
             </Container>
 
         );
-    }
-
-
-    renderSymptom(data) {
-        let packages = [];
-        let index;
-        let vall;
-        for (var i = 0; i < data.length; i++) {
-            index =i
-            vall = data[index].value
-            packages.push(
-                <View style={{ marginHorizontal: 10, marginVertical:5, flexDirection: 'row' , alignItems:'center'}}>
-                 <TouchableOpacity onPress={() => this.selectSymptom(vall)}>
-                 <Icon
-                    active
-                    name={ this.state.selected_symptoms.includes(data[i].value)? "check-box":"check-box-outline-blank"}
-                    type='material'
-                    size={35}
-                    color={this.state.selected_symptoms.includes(data[i].value) ? "#FF7648" : lightTheme.SMALL_BODY_TEXT_COLOR}
-                />
-                </TouchableOpacity>
-                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: this.state.selected_symptoms.includes(data[i].value)? '#FF7648'  : '#080256' }}>{data[i].value}</Text>
-
-            </View>               
-            );
-        }
-        return packages;
     }
 
 }

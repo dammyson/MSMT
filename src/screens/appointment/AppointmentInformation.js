@@ -55,7 +55,12 @@ export default class AppointmentInformation extends Component {
 
             appointment_datetime:'',
             selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 , }
+            selected: { day: 'M', date: 3 , },
+
+            allegies:'',
+            medication:'',
+            on_medication:'',
+            diagnosis:'',
         };
     }
 
@@ -74,14 +79,17 @@ export default class AppointmentInformation extends Component {
     }
    
     hanedProceedButton() {
-        const {appointment_datetime, selected_symptoms, type_id,  activity_id, category_id} = this.state
-
+        const {appointment_datetime, selected_symptoms, type_id,  activity_id, category_id, allegies, medication, on_medication, diagnosis } = this.state
         let appointment_information = {
             appointment_datetime: appointment_datetime,
-             selected_symptoms: selected_symptoms,
+            selected_symptoms: selected_symptoms,
             type_id: type_id,
             category_id:category_id,
-            activity_id: activity_id
+            activity_id: activity_id,
+            allegies: allegies,
+            medication: medication,
+            on_medication: on_medication,
+            diagnosis: diagnosis,
         }
          this.props.navigation.navigate('appointment_billing', { appointment_information : appointment_information})
      }
@@ -179,7 +187,7 @@ export default class AppointmentInformation extends Component {
                                         numberOfLines={5}
                                         multiline={true}
                                         onSubmitEditing={() => this.proceedAppointment()}
-                                        onChangeText={text => this.setState({ note: text })}
+                                        onChangeText={text => this.setState({ allegies: text })}
                                     />
                                 </View>
                             </View>
@@ -200,7 +208,7 @@ export default class AppointmentInformation extends Component {
                                         numberOfLines={5}
                                         multiline={true}
                                         onSubmitEditing={() => this.proceedAppointment()}
-                                        onChangeText={text => this.setState({ note: text })}
+                                        onChangeText={text => this.setState({ diagnosis: text })}
                                     />
                                 </View>
                             </View>
@@ -219,7 +227,7 @@ export default class AppointmentInformation extends Component {
                                         numberOfLines={5}
                                         multiline={true}
                                         onSubmitEditing={() => this.proceedAppointment()}
-                                        onChangeText={text => this.setState({ note: text })}
+                                        onChangeText={text => this.setState({ medication: text })}
                                     />
                                 </View>
                             </View>
@@ -238,7 +246,7 @@ export default class AppointmentInformation extends Component {
                                         numberOfLines={5}
                                         multiline={true}
                                         onSubmitEditing={() => this.proceedAppointment()}
-                                        onChangeText={text => this.setState({ note: text })}
+                                        onChangeText={text => this.setState({ on_medication: text })}
                                     />
                                 </View>
                             </View>

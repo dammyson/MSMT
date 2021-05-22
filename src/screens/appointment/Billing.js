@@ -103,7 +103,12 @@ export default class Billing extends Component {
             startTime: appointment_information.appointment_datetime.time,
             appointmentService: value.service_id,
             appointmentActivityId: 4,
-            appointmentActivitySubId:  appointment_information.activity_id
+            appointmentActivitySubId:  appointment_information.activity_id,
+            previousAllergies:  appointment_information.allegies,
+            previousDiagnosis:  appointment_information.diagnosis,
+            previousMedication:  appointment_information.medication,
+            ongoingMedication:  appointment_information.on_medication,
+            possibleSymptoms:""
         }
         console.warn(information)
         this.setState({ loading: true, loading_msg:'creating appointment...'})

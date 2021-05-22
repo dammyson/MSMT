@@ -23,13 +23,7 @@ import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-import Navbar from '../../components/Navbar';
-import StarRating from 'react-native-star-rating';
-import {
-    SelectMultipleButton,
-    SelectMultipleGroupButton
-} from "react-native-selectmultiple-button";
-import { getLogout } from '../../utilities';
+import { getLogout , getUserName, getEmail} from '../../utilities';
 
 export default class index extends Component {
     constructor(props) {
@@ -37,21 +31,17 @@ export default class index extends Component {
         this.state = {
             loading: false,
             email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            multipleSelectedData: [],
-            multipleSelectedDataLimited: [],
-            multipleData: ["Headache", 'Mouth Bleeding', 'Coughing', 'Pain after Surgey', 'Cluster Headache'],
+            name: '',
+            
         };
     }
 
     async componentDidMount() {
-
+       // console.warn( await getUserName())
+        this.setState({
+            name: await getUserName(), 
+            email: await getEmail() 
+        })
     }
 
 
@@ -87,8 +77,8 @@ export default class index extends Component {
                                     <Image source={images.user} style={styles.image_profile} />
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 18, }}>Johnson Abubakar </Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>john.abubakar@gmail.com</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 18, }}> {this.state.name} </Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{this.state.email} </Text>
 
                                 </View>
 
@@ -165,9 +155,11 @@ export default class index extends Component {
     renderItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let nna = i;
+        
             packages.push(
                 <>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate(data[i].navigation)} style={[{ paddingLeft: 10, marginTop: 10, paddingBottom: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate(data[nna].navigation)} style={[{ paddingLeft: 10, marginTop: 10, paddingBottom: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
                    
                     <View style={{ margin: 2, justifyContent:'center', borderRadius:4, backgroundColor:'#B7DFF550', height:40, width:40 }}>
                     <Icon
@@ -220,7 +212,7 @@ const doctors = [
         title: 'User Account',
         icon: 'idcard',
         icon_type: 'antdesign',
-        navigation: '',
+        navigation: 'Account',
     },
     {
         title: 'My Sessions',
@@ -238,7 +230,7 @@ const doctors = [
         title: 'Referrals',
         icon: 'ticket',
         icon_type: 'foundation',
-        navigation: '',
+        navigation: 'Referer',
     },
     {
         title: 'Notifications ',

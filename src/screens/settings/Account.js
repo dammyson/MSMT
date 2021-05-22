@@ -24,18 +24,16 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-import StarRating from 'react-native-star-rating';
-import {
-    SelectMultipleButton,
-    SelectMultipleGroupButton
-} from "react-native-selectmultiple-button";
+import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import ActivityIndicator from '../../components/ActivityIndicator';
 
 export default class Account extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             email: '',
+            details:{},
             password: '',
             image1: '',
             image1_display: '',
@@ -50,14 +48,59 @@ export default class Account extends Component {
     }
 
     async componentDidMount() {
-
-    }
-
-
+        this.getReferals()
+            }
+        
+        
+        
+           async getReferals(){
+                this.setState({ loading: true })
+                fetch(baseUrl() + '/Profile/getProfileDetail', {
+                    method: 'GET', headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'Authorization': 'Bearer ' + await getToken(),
+                    }
+                })
+                    .then(processResponse)
+                    .then(res => {
+                        this.setState({ loading: false })
+                        const { statusCode, data } = res
+                        console.warn(res)
+                        if (statusCode == 200) {
+        
+                            this.setState({
+                              details: data.data
+                            })
+                          
+        
+                        } else {
+                            this.setState({ loading: false })
+                            showTopNotification("danger", res.data.message)
+        
+                        }
+                    })
+                    .catch((error) => {
+                        this.setState({ loading: false })
+                        console.warn(error.message)
+                        showTopNotification("danger", error.message)
+                    });
+        
+        
+            }
+        
 
 
 
     render() {
+        const {details} = this.state
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting referals... '} />
+
+            );
+        }
 
         var left = (
             <Left style={{ flex: 1 }}>
