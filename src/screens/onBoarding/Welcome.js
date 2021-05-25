@@ -56,7 +56,7 @@ export default class Welcome extends React.Component {
                         <View style={{}}>
                             <Text style={[styles.welcome_text]}>Welcome to MSMT</Text>
                             <Text style={[styles.title_text]}>Bringing Health Practitioners and Patients together on one platform</Text>
-                            <TouchableOpacity onPress={()=>  this.props.navigation.navigate('user_type')} style={buttonStyles.primaryButtonStyle}>
+                            <TouchableOpacity onPress={()=>  this.props.navigation.navigate('Auth')} style={buttonStyles.primaryButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Get Started</Text>
                             </TouchableOpacity>
                         </View>

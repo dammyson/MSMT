@@ -115,26 +115,22 @@ export default class AppointmentInformation extends Component {
         return (
 
             <Container style={{ backgroundColor: lightTheme.WHITE_COLOR }}>
-                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
+                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" translucent />
                 <Navbar left={left} title='Additional Information' bg='#101023' />
                 <Content>
 
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
 
-                            <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
+                            {/* <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
                                 <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Previous Diagnosis</Text>
 
-                            </View>
+                            </View> */}
 
-                            <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
+                            {/* <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
                                 {this.renderSymptom(times)}
 
-                            </View>
-
-
-
-
+                            </View> */}
 
                             <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
                                 <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Type</Text>

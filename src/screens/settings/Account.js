@@ -97,7 +97,7 @@ export default class Account extends Component {
 
         if (this.state.loading) {
             return (
-                <ActivityIndicator message={'getting referals... '} />
+                <ActivityIndicator message={'getting account... '} />
 
             );
         }

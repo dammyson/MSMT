@@ -32,7 +32,8 @@ export default class Login extends Component {
             image1_display: '',
             is_valide_mail: false,
             done: false,
-            show_camera: false
+            show_camera: false,
+            secureTextEntry: true
         };
     }
 
@@ -166,7 +167,7 @@ export default class Login extends Component {
                                 <View style={textInputStyles.input}>
                                     <TextInput
                                         placeholder="password "
-                                        secureTextEntry
+                                        secureTextEntry={this.state.secureTextEntry}
                                         placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
                                         returnKeyType="next"
                                         autoCapitalize="none"
@@ -211,7 +212,7 @@ export default class Login extends Component {
                                 <View style={{ alignItems: 'center' }}>
                                     <Text style={{ color: '#193a4d', fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Don’t have an account? </Text>
                                 </View>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUP')} style={{ alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Reg')} style={{ alignItems: 'center' }}>
                                     <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}> Sign up</Text>
                                 </TouchableOpacity>
                             </View>
