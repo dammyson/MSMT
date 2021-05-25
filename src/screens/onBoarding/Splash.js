@@ -33,7 +33,7 @@ export default class Splash extends React.Component {
 
     setTimeout(() => {
       this.initPage();
-    }, 1000);
+    }, 4000);
   }
 
 
@@ -41,18 +41,17 @@ export default class Splash extends React.Component {
 
   initPage = async () => {
     this.props.navigation.navigate('Welcome');
-   /* AsyncStorage.getItem('rem').then((value) => {
-      if (value == 'login') {
-        this.props.navigation.navigate('Welcome');
-
-      } else if (value == null) {
-        this.props.navigation.navigate('Welcome');
-      }
-      else {
-        this.props.navigation.navigate('Welcome');
-      }
-
-    }) */
+  AsyncStorage.getItem('rem').then((value) => {
+       if (value == 'login') {
+          this.props.navigation.navigate('Auth');
+       } else if (value == null) {
+         this.props.navigation.navigate('Intro');
+       }
+       else {
+         this.props.navigation.navigate('Intro');
+       }
+ 
+     }) 
 
   }
 
@@ -60,12 +59,15 @@ export default class Splash extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+        <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
 
-        
-          <Text style={{ color: '#fff', fontFamily: 'Poppins-Bold', fontSize: 20, marginBottom: 2, marginTop: 2}}>  NAME HERE</Text>
-                
-     
+        <Image
+          style={styles.logo}
+          source={require('../../assets/images/logo.png')} />
+
+
+
+
       </View>
     );
   }
@@ -78,13 +80,21 @@ const height_logo = height * 0.28;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
- 
+  logo: {
+    width: 300,
+    height: 120,
+    justifyContent: 'center',
+    resizeMode: 'contain'
+  },
+
   footer: {
     flex: 1,
-justifyContent:'center',
-alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 50,

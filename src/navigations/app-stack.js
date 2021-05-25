@@ -30,6 +30,7 @@ import Scheduling from '../screens/settings/Scheduling';
 import MakeAppointment from '../screens/settings/MakeAppointment';
 import ViewAppointment from '../screens/settings/ViewAppointment';
 import SlectUserType from '../screens/user/SlectUserType';
+import Intro from '../screens/onBoarding/Intro';
 
 
 
@@ -52,6 +53,7 @@ class AppStack extends Component {
              initialRouteName="Splash">
 
             <Stack.Screen name="Splash" component={Splash}  />
+            <Stack.Screen name="Intro" component={Intro}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
             <Stack.Screen name="user_type" component={SlectUserType}  />
             <Stack.Screen name="Auth" component={AuthStack}  /> 

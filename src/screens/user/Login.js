@@ -10,6 +10,7 @@ import {
     Dimensions,
 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { Container, Content } from 'native-base';
 import { lightTheme } from '../../theme/colors';
@@ -86,6 +87,7 @@ export default class Login extends Component {
               if (statusCode == 200) {
                 storeToken(data.data.token)
                 storeUserDetails(data.data)
+                AsyncStorage.setItem('rem', 'login');
                 if(data.data.role == 'client'){
                     this.props.navigation.replace('App')
                 }else{
