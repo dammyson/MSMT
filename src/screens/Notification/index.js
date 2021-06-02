@@ -25,15 +25,22 @@ import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
 
+import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import ActivityIndicator from '../../components/ActivityIndicator';
+
+import Moment from 'moment';
+Moment.locale('en');
+const moment = require('moment');
+
 
 export default class index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             email: '',
             password: '',
-            image1: '',
+            list_message: [],
             image1_display: '',
             is_valide_mail: false,
             done: false,
@@ -42,14 +49,57 @@ export default class index extends Component {
     }
 
     async componentDidMount() {
+     this.getMessages()
+    }
+
+
+    async getMessages() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Messaging/GetNotifications', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(data)
+                if (statusCode == 200) {
+
+                    this.setState({
+                      list_message: data.data
+                    })
+                    this.arrayholder = data.data;
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
 
     }
 
 
 
 
-
     render() {
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting notification... '} />
+
+            );
+        }
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -73,7 +123,7 @@ export default class index extends Component {
                         <View style={styles.mainbody}>
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderItem(this.state.list_message)}
                                 </ScrollView>
                             </View>
                         </View>
@@ -91,20 +141,20 @@ export default class index extends Component {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
-                    <View style={{ margin: 2, }}>
+                <View onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                    {/* <View style={{ margin: 2, }}>
                         <Image source={images.user} style={styles.image_profile} />
-                    </View>
+                    </View> */}
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].title}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
 
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].created_at).format('llll')}</Text>
                             <View style={{ flex: 1 }} />
-                            <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
+                            {/* <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
                                 <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>60 mins</Text>
-                            </View>
+                            </View> */}
                         </View>
                     </View>
 
@@ -116,7 +166,7 @@ export default class index extends Component {
                             type='simple-line-icon'
                         />
                     </View>
-                </TouchableOpacity>
+                </View>
             );
         }
         return packages;
@@ -127,36 +177,6 @@ export default class index extends Component {
 
 }
 
-
-
-
-const doctors = [
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'Head of Dental Care - Reddington Hospital',
-    },
-
-
-];
 const styles = StyleSheet.create({
     container: {
         flex: 1,

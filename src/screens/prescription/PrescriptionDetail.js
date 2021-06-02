@@ -24,26 +24,25 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-import StarRating from 'react-native-star-rating';
+
+import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import ActivityIndicator from '../../components/ActivityIndicator';
+
+import Moment from 'moment';
+Moment.locale('en');
+const moment = require('moment');
 
 export default class PrescriptionDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5
+            details: this.props.route.params.item
         };
     }
 
     async componentDidMount() {
-
+        console.warn(this.props.route.params.item)
     }
 
 
@@ -51,6 +50,8 @@ export default class PrescriptionDetail extends Component {
 
 
     render() {
+
+       const {details} =this.state
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -77,16 +78,16 @@ export default class PrescriptionDetail extends Component {
                         <View style={styles.mainbody}>
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 18, marginBottom: 2, marginTop: 2, color: lightTheme.WHITE_COLOR }}>Your prescription for Fever</Text>
-                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.WHITE_COLOR }}>Dr. Josephina Ibrahim Abubakar</Text>
-                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 8, marginBottom: 2, color: lightTheme.WHITE_COLOR }}>BEHAVIORAL HEALTH </Text>
+                                    <Text style={{ fontFamily: font.BOLD, fontSize: 18, marginBottom: 2, marginTop: 2, color: lightTheme.WHITE_COLOR }}>{details.comment}</Text>
+                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, color: lightTheme.WHITE_COLOR }}>{details.clinician.fullName}</Text>
+                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 8, marginBottom: 2, color: lightTheme.WHITE_COLOR }}>{details.clinician.title}</Text>
 
                                 </View>
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderReview(packagesa)}
+                                    {this.renderReview(details.drugs)}
                                 </ScrollView>
                             </View>
 
@@ -104,7 +105,9 @@ export default class PrescriptionDetail extends Component {
 
     renderReview(data) {
         let packages = [];
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i < data.length; i++) {
+            var nice = data[i]
+            console.warn(nice)
             packages.push(
                 <View style={{ marginRight: 20, marginVertical: 10, borderRadius: 10, backgroundColor: lightTheme.WHITE_COLOR }}>
                     <View style={{ marginVertical: 10, marginRight: 20, justifyContent: 'center', flex: 1, flexDirection: 'row' }}>
@@ -118,17 +121,17 @@ export default class PrescriptionDetail extends Component {
                             />
                         </View>
                         <View style={{ margin: 2, justifyContent: 'center', flex: 1, marginTop: 10, }}>
-                            <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 14, }}>Ciprofloxacin (Cipro)</Text>
+                             <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 14, }}>{data[i].drug}</Text> 
 
 
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>2 tablets everyday for 2 weeks in morning noon and evening after food. </Text>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{data[i].dosage} </Text>
 
                             <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.appointmentWhiteButtonStyle}>
+                                <TouchableOpacity  style={buttonStyles.appointmentWhiteButtonStyle}>
                                     <Text style={{ fontFamily: font.REGULAR, marginHorizontal: 15, fontSize: 10, color: lightTheme.PRIMARY_TEXT_COLOR }}>Order Meds.</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={buttonStyles.appointmentOrangeButtonStyle}>
+                                <TouchableOpacity style={buttonStyles.appointmentOrangeButtonStyle}>
                                     <Text style={{ fontFamily: font.REGULAR, marginHorizontal: 15, fontSize: 10, color: lightTheme.WHITE_COLOR }}>Order Meds.</Text>
                                 </TouchableOpacity>
                             </View>
@@ -146,45 +149,6 @@ export default class PrescriptionDetail extends Component {
 
 }
 
-
-const packagesa = [
-    {
-        title: 'Cardio Screening \n          ',
-        text: 'For the most complete assessment of the cardiovascular system.',
-        bg: '#D3B0E025',
-        text_color: "#A74343"
-
-    },
-
-];
-
-
-const doctors = [
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-
-
-    },
-    {
-        image: images.user,
-        name: 'Josephina Ibrahim Abubakar',
-        job: 'General Practitioner',
-    },
-];
 const styles = StyleSheet.create({
     container: {
         flex: 1,

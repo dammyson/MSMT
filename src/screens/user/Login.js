@@ -214,7 +214,7 @@ export default class Login extends Component {
                                 <View style={{ alignItems: 'center' }}>
                                     <Text style={{ color: '#193a4d', fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}>Don’t have an account? </Text>
                                 </View>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Reg')} style={{ alignItems: 'center' }}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('user_type')} style={{ alignItems: 'center' }}>
                                     <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.REGULAR, fontSize: 15, marginBottom: 7, marginTop: 7 }}> Sign up</Text>
                                 </TouchableOpacity>
                             </View>

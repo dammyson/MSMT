@@ -50,7 +50,7 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="Splash">
+             initialRouteName="App">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Intro" component={Intro}  />
@@ -67,6 +67,7 @@ class AppStack extends Component {
             <Stack.Screen name="done" component={Done}  /> 
             <Stack.Screen name="Referer" component={Referer}  /> 
             <Stack.Screen name="Account" component={Account}  /> 
+            <Stack.Screen name="Notification" component={Notification}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

@@ -45,12 +45,12 @@ export default class Referer extends Component {
     }
 
     async componentDidMount() {
-this.getReferals()
+        this.getReferals()
     }
 
 
 
-   async getReferals(){
+    async getReferals() {
         this.setState({ loading: true })
         fetch(baseUrl() + '/Referral/GetReferrals', {
             method: 'GET', headers: {
@@ -67,7 +67,7 @@ this.getReferals()
                 if (statusCode == 200) {
 
                     this.setState({
-                      list_doctor: data.data
+                        list_doctor: data.data
                     })
                     this.arrayholder = data.data;
 
@@ -121,41 +121,41 @@ this.getReferals()
 
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-                            <View style={{flex:1,}}>
-                            <View style={{ marginLeft: 20, marginTop: 40, marginRight: 10, marginBottom: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.refer} style={styles.image_profile} />
-                                </View>
-                                <View style={{justifyContent: 'center', }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 20, textAlign: 'center' }}>Get a Discount</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 13, textAlign: 'center', marginHorizontal:20 }}>You and your friends earn cash reward when they signup and buy an idea with your referral link or code.</Text>
+                            <View style={{ flex: 1, }}>
+                                <View style={{ marginLeft: 20, marginTop: 40, marginRight: 10, marginBottom: 5, justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
+                                        <Image source={images.refer} style={styles.image_profile} />
+                                    </View>
+                                    <View style={{ justifyContent: 'center', }}>
+                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 20, textAlign: 'center' }}>Get a Discount</Text>
+                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 13, textAlign: 'center', marginHorizontal: 20 }}>You and your friends earn cash reward when they signup and buy an idea with your referral link or code.</Text>
+                                    </View>
+
                                 </View>
 
-                            </View>
+                                <View style={{ marginHorizontal: 5, marginTop: 20 }}>
+                                    <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
+                                        <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginTop: 2, color: '#080256' }}>Your Referral Code</Text>
+                                    </View>
+                                    <View style={{ marginTop: 20, height: 50, backgroundColor: '#F2F3F2', marginLeft: 10, marginRight: 10, borderRadius: 10, justifyContent: 'center', borderColor: lightTheme.SMALL_BODY_TEXT_COLOR + '50', borderWidth: 0.6 }} >
+                                        <TextInput
+                                            style={{ height: 40, justifyContent: "flex-start", marginHorizontal: 15, flex: 1, fontSize: 15, fontFamily: font.BOLD }}
+                                            underlineColorAndroid="transparent"
+                                            placeholder="Input Note"
+                                            placeholderTextColor={lightTheme.SUB_TEXT_COLOR}
+                                            placeholderTextColor="gray"
+                                            numberOfLines={5}
+                                            defaultValue={'MSMT001'}
+                                            multiline={true}
+                                            onSubmitEditing={() => this.proceedAppointment()}
+                                            onChangeText={text => this.setState({ note: text })}
+                                        />
+                                    </View>
+                                </View>
 
-                            <View style={{ marginHorizontal: 5, marginTop: 20 }}>
-                                <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 14, marginTop: 2, color: '#080256' }}>Your Referral Code</Text>
-                                </View>
-                                <View style={{marginTop:20, height: 50, backgroundColor: '#F2F3F2',marginLeft: 10, marginRight: 10,borderRadius: 10, justifyContent: 'center', borderColor:lightTheme.SMALL_BODY_TEXT_COLOR+'50', borderWidth:0.6}} >
-                                    <TextInput
-                                        style={ { height: 40,justifyContent: "flex-start",marginHorizontal:15, flex: 1,fontSize: 15,fontFamily: font.BOLD}}
-                                        underlineColorAndroid="transparent"
-                                        placeholder="Input Note"
-                                        placeholderTextColor={lightTheme.SUB_TEXT_COLOR}
-                                        placeholderTextColor="gray"
-                                        numberOfLines={5}
-                                        defaultValue={'MSMT001'}
-                                        multiline={true}
-                                        onSubmitEditing={() => this.proceedAppointment()}
-                                        onChangeText={text => this.setState({ note: text })}
-                                    />
-                                </View>
-                            </View>
-                           
                             </View>
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={[buttonStyles.primaryButtonStyle, {height:60}]}>
+                                <TouchableOpacity style={[buttonStyles.primaryButtonStyle, { height: 60 }]}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle,]}>Share</Text>
                                 </TouchableOpacity>
                             </View>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height-100,
+        height: Dimensions.get('window').height - 100,
     },
     mainbody: {
         flex: 1,

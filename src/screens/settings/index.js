@@ -205,7 +205,7 @@ const doctors = [
         title: 'Edit Profile',
         icon: 'shopping-outline',
         icon_type: 'material-community',
-        navigation: '',
+        navigation: 'Account',
     },
 
     {
@@ -236,7 +236,7 @@ const doctors = [
         title: 'Notifications ',
         icon: 'notifications-none',
         icon_type: 'material',
-        navigation: '',
+        navigation: 'Notification',
     },
     {
         title: 'Help',

@@ -54,8 +54,7 @@ export default class Intro extends Component {
     this.setState({ index: ind })
   }
   onSkip() {
-
-    if (this.state.index > 1) {
+    if (this.state.index > 2) {
       return
     } else {
       this.swiper.scrollBy(1, true);
