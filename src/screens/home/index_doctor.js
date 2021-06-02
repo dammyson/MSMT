@@ -24,13 +24,15 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 
+import { getUserName } from '../../utilities';
+
 
 export default class index extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            email: '',
+            name: '',
             password: '',
             image1: '',
             image1_display: '',
@@ -41,7 +43,8 @@ export default class index extends Component {
     }
 
     async componentDidMount() {
-
+        this.setState({name: await getUserName()})
+        
     }
 
 
@@ -63,16 +66,10 @@ export default class index extends Component {
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18,  marginTop: 2 }}>Hello</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginBottom: 2,}}>Dr. Chukwuemeka Ojo</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginBottom: 2,}}> </Text>
                                 </View>
                             </View>
 
-
-
-                           
-
-
-                          
 
                             <View style={{ marginLeft: 20, marginVertical: 20, marginRight: 10, }}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{height:70, paddingLeft:20,  justifyContent:'center', alignItems:'flex-start', backgroundColor:'#344356', borderRadius:7}}>

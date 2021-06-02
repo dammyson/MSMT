@@ -40,7 +40,6 @@ export default class Splash extends React.Component {
 
 
   initPage = async () => {
-    this.props.navigation.navigate('Welcome');
   AsyncStorage.getItem('rem').then((value) => {
        if (value == 'login') {
           this.props.navigation.navigate('Auth');

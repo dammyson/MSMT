@@ -91,7 +91,7 @@ export default class Login extends Component {
                 if(data.data.role == 'client'){
                     this.props.navigation.replace('App')
                 }else{
-                    this.props.navigation.replace('Providers')
+                    this.props.navigation.replace('ProviderApp')
                 }
             
               } else {

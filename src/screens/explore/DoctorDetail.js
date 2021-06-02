@@ -38,6 +38,7 @@ export default class index extends Component {
 
     async componentDidMount() {
         const { clinician } = this.props.route.params;
+        console.warn(clinician)
         this.setState({ 
             clinician: clinician, 
         });
@@ -116,7 +117,7 @@ export default class index extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{  fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>About Me</Text>
-                                    <Text style={{ color:lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color:lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}> {clinician.about}</Text>
                                 </View>
                             </View>
 

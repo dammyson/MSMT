@@ -50,7 +50,7 @@ class AppStack extends Component {
               headerTintColor: 'white',
               headerShown: false,
              }}
-             initialRouteName="App">
+             initialRouteName="Splash">
 
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Intro" component={Intro}  />
