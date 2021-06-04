@@ -71,7 +71,7 @@ export default class index extends Component {
                             </View>
 
 
-                            <View style={{ marginLeft: 20, marginVertical: 20, marginRight: 10, }}>
+                            {/* <View style={{ marginLeft: 20, marginVertical: 20, marginRight: 10, }}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{height:70, paddingLeft:20,  justifyContent:'center', alignItems:'flex-start', backgroundColor:'#344356', borderRadius:7}}>
                                     <Text style={[{ color: '#FFF', fontSize:15 ,fontFamily: font.LIGHT }]}>Wallet Balance</Text>
                                     <Text style={[{ color: '#FFF', fontSize:22 ,fontFamily: font.BOLD }]}>NGN 10,000</Text>
@@ -79,7 +79,7 @@ export default class index extends Component {
                               
 
 
-                            </View>                          
+                            </View>                           */}
 
                             <View style={{ marginLeft: 20, marginTop: 15, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 {this.renderSummaryDetails("13", 'Pending appointment', '#FFB655')}

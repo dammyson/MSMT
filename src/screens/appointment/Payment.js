@@ -280,7 +280,7 @@ export default class Payment extends Component {
                                 </View>
                             </View>
 
-                            <View style={{ marginHorizontal: 15, marginVertical: 5, flexDirection: 'row', alignItems: 'center' }}>
+                            {/* <View style={{ marginHorizontal: 15, marginVertical: 5, flexDirection: 'row', alignItems: 'center' }}>
                                 <TouchableOpacity >
                                     <Icon
                                         active
@@ -292,7 +292,7 @@ export default class Payment extends Component {
                                 </TouchableOpacity>
                                 <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 13, color: lightTheme.SMALL_BODY_TEXT_COLOR }}>Set as default payment method</Text>
 
-                            </View>
+                            </View> */}
 
 
 

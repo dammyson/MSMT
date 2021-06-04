@@ -86,14 +86,14 @@ export default class ModePayment extends Component {
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
 
-                            <TouchableOpacity style={styles.user_box}>
+                            {/* <TouchableOpacity style={styles.user_box}>
 
                                 <View style={{ alignItems: 'flex-start', margin: 20 }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 14, color: lightTheme.PRIMARY_TEXT_COLOR }}>Wallet</Text>
                                     <Text style={{ fontFamily: font.REGULAR, fontSize: 11, color: lightTheme.SMALL_BODY_TEXT_COLOR, marginBottom: 10 }}>Counselling Assessment</Text>
 
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity onPress={()=> this.payWithCard()} style={styles.user_box}>
 
