@@ -19,42 +19,80 @@ import * as images from '../../assets/images';
 import { Container, Content } from 'native-base';
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
-import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
-import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID } from '../../utilities';
+import IsEmpty from '../../components/IsEmpty';
+import Moment from 'moment';
+Moment.locale('en');
+const moment = require('moment');
 import { getUserName } from '../../utilities';
-
+const axios = require('axios');
 
 export default class index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            name: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false
+            loading: true,
+            list_session: [],
+            list_appoitment: [],
+
         };
     }
 
     async componentDidMount() {
-        this.setState({name: await getUserName()})
-        
+        this.setState({ name: await getUserName() })
+        this.getAppointsments()
     }
 
 
 
+    async getAppointsments() {
+
+        this.setState({ loading: true })
+
+        try {
+            axios.all([
+                axios({
+                    method: 'GET',
+                    url: baseUrl() + '/Appointment/getAppointments',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await getToken(),
+                    }, body: {},
+                }),
+                axios({
+                    method: 'GET',
+                    url: baseUrl() + '/Appointment/getSessions',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await getToken(),
+                    }, body: {},
+                })
+            ])
+                .then(axios.spread((data1, data2) => {
+                    console.warn(data2.data.data)
+                    this.setState({ loading: false, list_appoitment: data1.data.data, list_session: data2.data.data })
+                }));
+
+        } catch (error) {
+            this.setState({ loading: false })
+            return error;
+        }
+
+    }
 
 
     render() {
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting appointments... '} />
+            );
+        }
+
 
         return (
-
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor="#fff" barStyle="dark-content" />
                 <Content>
@@ -65,8 +103,8 @@ export default class index extends Component {
                                     <Image source={images.user} style={styles.image_profile} />
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18,  marginTop: 2 }}>Hello</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginBottom: 2,}}> </Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginTop: 2 }}>Hello</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginBottom: 2, }}> {this.state.name}</Text>
                                 </View>
                             </View>
 
@@ -87,27 +125,27 @@ export default class index extends Component {
                                 {this.renderSummaryDetails("4k", 'completed sessions', '#489E67')}
 
                             </View>
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Upcoming Appointment</Text>
-                                </View>
-                            </View>
+                            {this.state.list_appoitment.length < 1 ? null :
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                    <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                        <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Upcoming Appointment</Text>
+                                    </View>
+                                </View>}
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderItem(this.state.list_appoitment)}
                                 </ScrollView>
                             </View>
 
-
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>My Sessions</Text>
-                                </View>
-                            </View>
+                            {this.state.list_session.length < 1 ? null :
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                    <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                        <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>My Sessions</Text>
+                                    </View>
+                                </View>}
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderSessionItem(this.state.list_session)}
                                 </ScrollView>
                             </View>
 
@@ -136,20 +174,62 @@ export default class index extends Component {
     renderItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let id = i
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={{ width: 50,height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 },shadowOpacity: 0.8,shadowRadius: 1,elevation: 5}} />
+                    <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
+                    <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
+                    </View>
+                      
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].name}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].job}</Text>
-                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
-
-                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>18th Tuesday, March</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 1, marginTop: 1 }}>{data[i].member.fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 1, marginTop: 1 }}>{data[i].title}</Text>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:2}}>
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
                             <View style={{ flex: 1 }} />
                             <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
-                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>11:30 AM</Text>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>{Moment(data[i].appointmentDate).format('h:A')}</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', }}>
+
+                        <Icon
+                            name="arrow-right"
+                            color={lightTheme.PRIMARY_TEXT_COLOR}
+                            size={20}
+                            type='simple-line-icon'
+                        />
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        return packages;
+    }
+
+    renderSessionItem(data) {
+        let packages = [];
+        for (var i = 0; i < data.length; i++) {
+            packages.push(
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                    <View style={{ margin: 2, }}>
+                        <Image source={images.user} style={{ width: 50, height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 1, elevation: 5 }} />
+                    </View>
+                    <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].member.fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].title}</Text>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
+
+
+
+
+                            <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}> {Moment(data[i].appointmentDate).format('llll')}</Text>
+                            <View style={{ flex: 1 }} />
+                            <View style={{ justifyContent: 'center', borderRadius: 5, backgroundColor: "#F3603F" }}>
+                                <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>  {Moment(data[i].appointmentDate).format('h:mm a')}</Text>
                             </View>
                         </View>
                     </View>
@@ -171,7 +251,7 @@ export default class index extends Component {
 
 
 
-   
+
 
 
 }
@@ -179,14 +259,14 @@ export default class index extends Component {
 
 const doctors = [
     {
-        image: images.user,  
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
-       
+
 
     },
     {
-        image: images.user, 
+        image: images.user,
         name: 'Josephina Ibrahim Abubakar',
         job: 'General Practitioner',
     },
@@ -219,7 +299,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 1,
-        elevation: 5
     },
     user_box: {
         flex: 1,
@@ -251,7 +330,7 @@ const styles = StyleSheet.create({
 
     },
     doctor_box: {
-        width: Dimensions.get('window').width/3.5,
+        width: Dimensions.get('window').width / 3.5,
         borderRadius: 10,
         marginLeft: 5,
         marginRight: 5,

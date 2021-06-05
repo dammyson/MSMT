@@ -68,6 +68,7 @@ class AppStack extends Component {
             <Stack.Screen name="Referer" component={Referer}  /> 
             <Stack.Screen name="Account" component={Account}  /> 
             <Stack.Screen name="Notification" component={Notification}  /> 
+            <Stack.Screen name="Session" component={Session}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

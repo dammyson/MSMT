@@ -9,9 +9,9 @@ import {
   Image,
   Animated,
   Easing,
-  AsyncStorage
 } from 'react-native';
-
+import { getRole } from '../../utilities';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -40,17 +40,22 @@ export default class Splash extends React.Component {
 
 
   initPage = async () => {
-  AsyncStorage.getItem('rem').then((value) => {
-       if (value == 'login') {
-          this.props.navigation.navigate('Auth');
-       } else if (value == null) {
-         this.props.navigation.navigate('Intro');
-       }
-       else {
-         this.props.navigation.navigate('Intro');
-       }
- 
-     }) 
+   let role = await getRole()
+    AsyncStorage.getItem('rem').then((value) => {
+      if (value == 'login') {
+        if(role == 'client'){
+          this.props.navigation.replace('App')
+      }else{
+          this.props.navigation.replace('ProviderApp')
+      }
+      } else if (value == null) {
+        this.props.navigation.navigate('Intro');
+      }
+      else {
+        this.props.navigation.navigate('Intro');
+      }
+
+    })
 
   }
 

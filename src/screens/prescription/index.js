@@ -30,6 +30,7 @@ import { getToken, baseUrl, processResponse, showTopNotification } from '../../u
 import ActivityIndicator from '../../components/ActivityIndicator';
 
 import Moment from 'moment';
+import IsEmpty from '../../components/IsEmpty';
 Moment.locale('en');
 const moment = require('moment');
 
@@ -39,51 +40,50 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            list_prescription:[]
+            list_prescription: []
         };
         this.arrayholder
     }
 
     async componentDidMount() {
         this.getMessages()
-       }
-   
-   
-       async getMessages() {
-           this.setState({ loading: true })
-           fetch(baseUrl() + '/Prescription/getPrescription', {
-               method: 'GET', headers: {
-                   'Content-Type': 'application/json',
-                   Accept: 'application/json',
-                   'Authorization': 'Bearer ' + await getToken(),
-               }
-           })
-               .then(processResponse)
-               .then(res => {
-                   this.setState({ loading: false })
-                   const { statusCode, data } = res
-                   console.warn(data.data[0].clinician)
-                   if (statusCode == 200) {
-   
-                       this.setState({
-                         list_prescription: data.data
-                       })
-                       this.arrayholder = data.data;
-   
-                   } else {
-                       this.setState({ loading: false })
-                       showTopNotification("danger", res.data.message)
-   
-                   }
-               })
-               .catch((error) => {
-                   this.setState({ loading: false })
-                   console.warn(error.message)
-                   showTopNotification("danger", error.message)
-               });
-   
-   
-       }
+    }
+
+
+    async getMessages() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Prescription/getPrescription', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_prescription: data.data
+                    })
+                    this.arrayholder = data.data;
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
 
 
 
@@ -116,62 +116,62 @@ export default class index extends Component {
                 <Navbar left={left} title='Prescriptions' bg='#101023' />
                 <Content scrollEnabled={false}>
 
-                    <View style={styles.backgroundImage}>
-                        <View style={styles.mainbody}>
 
+                    {this.state.list_prescription.length == 0 ?
+                        <IsEmpty message={'You do not have any prescriptions '} />
+                        :
 
+                        <View style={styles.backgroundImage}>
+                            <View style={styles.mainbody}>
+                                <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
+                                    <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
+                                        <View style={textInputStyles.operation_icon}>
 
+                                            <Icon
+                                                name="search"
+                                                color={lightTheme.PRIMARY_COLOR}
+                                                size={22}
+                                                type='ionicon'
+                                            />
+                                        </View>
+                                        <View style={textInputStyles.input}>
+                                            <TextInput
+                                                placeholder="Search For Doctors by Name..."
+                                                placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                                returnKeyType="next"
+                                                keyboardType='email-address'
+                                                autoCapitalize="none"
+                                                autoCorrect={false}
+                                                defaultValue={this.state.email}
+                                                style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
+                                                onChangeText={(text) => this.validate(text)}
+                                                onSubmitEditing={() => this.passwordInput.focus()}
+                                            />
+                                        </View>
+                                    </View>
 
-
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
-                                <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
-                                    <View style={textInputStyles.operation_icon}>
+                                    <View style={{ padding: 10, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
 
                                         <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={22}
+                                            name="git-compare-sharp"
+                                            color={lightTheme.PRIMARY_TEXT_COLOR}
+                                            size={20}
                                             type='ionicon'
                                         />
                                     </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search For Doctors by Name..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
+                                </View>
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                    <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                        <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
                                     </View>
                                 </View>
-
-                                <View style={{ padding: 10, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
-
-                                    <Icon
-                                        name="git-compare-sharp"
-                                        color={lightTheme.PRIMARY_TEXT_COLOR}
-                                        size={20}
-                                        type='ionicon'
-                                    />
+                                <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                    <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+                                        {this.renderItem(this.state.list_prescription)}
+                                    </ScrollView>
                                 </View>
-                            </View>
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Today</Text>
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(this.state.list_prescription)}
-                                </ScrollView>
-                            </View>
 
-                            {/* <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                {/* <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
                                 </View>
@@ -181,8 +181,9 @@ export default class index extends Component {
                                     {this.renderItem(doctors)}
                                 </ScrollView>
                             </View> */}
+                            </View>
                         </View>
-                    </View>
+                    }
 
                 </Content>
             </Container>
@@ -204,7 +205,7 @@ export default class index extends Component {
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1 }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].clinician.fullName}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].comment}</Text>
-                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
 
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].created_at).format('llll')}</Text>
                             <View style={{ flex: 1 }} />
@@ -229,9 +230,9 @@ export default class index extends Component {
     }
 
 
-actionNext(item){
-    this.props.navigation.navigate('prescription_details',{item: item})
-}
+    actionNext(item) {
+        this.props.navigation.navigate('prescription_details', { item: item })
+    }
 
 }
 

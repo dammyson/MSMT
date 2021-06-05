@@ -44,12 +44,12 @@ export default class DoctorAppointmentList extends Component {
     }
 
     async componentDidMount() {
-        this.getDoctorServicesCost();
+        this.getAppointments();
     }
 
 
 
-    async getDoctorServicesCost() {
+    async getAppointments() {
 
         this.setState({ loading: true })
         fetch(baseUrl() + '/Appointment/getAppointments?profileId='+await getUserID() , {
@@ -124,7 +124,7 @@ export default class DoctorAppointmentList extends Component {
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
-                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
+                <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR}  barStyle="light-content" />
                 <Navbar left={left} title='Appointments' bg='#101023' />
                 <Content scrollEnabled={false}>
                 {this.state.list_appointments.length == 0 ?
@@ -145,7 +145,7 @@ export default class DoctorAppointmentList extends Component {
                                     </View>
                                     <View style={textInputStyles.input}>
                                         <TextInput
-                                            placeholder="Search For Doctors by Name..."
+                                            placeholder="Search For Patient by Name..."
                                             placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
                                             returnKeyType="next"
                                             keyboardType='email-address'
@@ -221,8 +221,8 @@ export default class DoctorAppointmentList extends Component {
                       
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
-                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 1, marginTop: 1 }}>{data[i].doctor.fullName}</Text>
-                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 1, marginTop: 1 }}>{data[i].doctor.title}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 1, marginTop: 1 }}>{data[i].member.fullName}</Text>
+                        <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 1, marginTop: 1 }}>{data[i].title}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:2}}>
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
                             <View style={{ flex: 1 }} />

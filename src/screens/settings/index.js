@@ -218,7 +218,7 @@ const doctors = [
         title: 'My Sessions',
         icon: 'location',
         icon_type: 'evilicon',
-        navigation: '',
+        navigation: 'Session',
     },
     {
         title: 'Bank Information',

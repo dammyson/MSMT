@@ -95,7 +95,7 @@ export default class Login extends Component {
                 }
             
               } else {
-                showTopNotification("erroe", data.message, 3)
+                showTopNotification("error", data.message, 3)
               }
             }).catch((error) => {
               showTopNotification("erroe", error.message, 3)

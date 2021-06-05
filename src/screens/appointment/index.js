@@ -145,7 +145,7 @@ export default class index extends Component {
                                     </View>
                                     <View style={textInputStyles.input}>
                                         <TextInput
-                                            placeholder="Search For Doctors by Name..."
+                                            placeholder="Search For Provider by Name..."
                                             placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
                                             returnKeyType="next"
                                             keyboardType='email-address'

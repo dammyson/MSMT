@@ -25,11 +25,12 @@ export const storeToken = async (selectedValue) => {
 
 export const storeUserDetails = async (data) => {
   try {
+    console.warn(data.role)
     await AsyncStorage.setItem('user_email', data.email);
     await AsyncStorage.setItem('user_id', data.profileId);
     await AsyncStorage.setItem('username', data.userName);
     await AsyncStorage.setItem('phone_number', data.phoneNumber);
-    await AsyncStorage.setItem('role', data.role);
+    await AsyncStorage.setItem('user_role', data.role);
   } catch (error) {
   }
 }
@@ -46,6 +47,13 @@ export const getUserID = async () => {
 export const getEmail = async () => {
   let user_email = await AsyncStorage.getItem('user_email')
   return  user_email
+};
+
+
+export const getRole = async () => {
+  let role = await AsyncStorage.getItem('user_role')
+  console.warn(role)
+  return  role
 };
 
 export const getUserName = async () => {
