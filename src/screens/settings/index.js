@@ -206,6 +206,7 @@ const doctors = [
         icon: 'shopping-outline',
         icon_type: 'material-community',
         navigation: 'Account',
+        tag:''
     },
 
     {
@@ -213,42 +214,49 @@ const doctors = [
         icon: 'idcard',
         icon_type: 'antdesign',
         navigation: 'Account',
+        tag:''
     },
     {
         title: 'My Sessions',
         icon: 'location',
         icon_type: 'evilicon',
         navigation: 'Session',
+        tag:''
     },
     {
         title: 'Bank Information',
         icon: 'credit-card-alt',
         icon_type: 'font-awesome',
-        navigation: '',
+        navigation: 'BankInformation',
+        tag:''
     },
     {
         title: 'Referrals',
         icon: 'ticket',
         icon_type: 'foundation',
         navigation: 'Referer',
+        tag:''
     },
     {
         title: 'Notifications ',
         icon: 'notifications-none',
         icon_type: 'material',
         navigation: 'Notification',
+        tag:''
     },
     {
         title: 'Help',
         icon: 'help-circle-outline',
         icon_type: 'material-community',
         navigation: '',
+        tag:''
     },
     {
         title: 'About ',
         icon: 'information-outline',
         icon_type: 'material-community',
         navigation: '',
+        tag:''
     }
 
 

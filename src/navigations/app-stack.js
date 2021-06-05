@@ -69,6 +69,7 @@ class AppStack extends Component {
             <Stack.Screen name="Account" component={Account}  /> 
             <Stack.Screen name="Notification" component={Notification}  /> 
             <Stack.Screen name="Session" component={Session}  /> 
+            <Stack.Screen name="BankInformation" component={BankInformation}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

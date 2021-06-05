@@ -24,36 +24,112 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-import StarRating from 'react-native-star-rating';
-import {
-    SelectMultipleButton,
-    SelectMultipleGroupButton
-} from "react-native-selectmultiple-button";
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID } from '../../utilities';
+
 
 export default class BankInformation extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
-            starCount: 5,
-            selected_symptoms: ['Migraine', 'Headache'],
-            selected: { day: 'M', date: 3 }
+            bank_name:'',
+            account_name:'',
+            account_number:'',
+            id_mode:'',
+            id_number:''
+
 
         };
     }
 
     async componentDidMount() {
+        this.getBankinformation()
+    }
+
+
+
+    async getBankinformation() {
+
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getBankDetails', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(data)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_appointments: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
 
     }
 
 
+    async UpdateBankinformation() {
+
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getBankDetails', {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            },body:  JSON.stringify({
+                bankName:email,
+                accountNumber:password,
+                accountName:'',
+                modeOfIdentification:'',
+                identificationNumber:'',
+
+            }),
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(data)
+                if (statusCode == 200) {
+
+                    this.setState({
+                        list_appointments: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
 
 
 
@@ -82,133 +158,133 @@ export default class BankInformation extends Component {
 
                     <View style={styles.backgroundImage}>
                         <View style={styles.mainbody}>
-                            <View style={{flex:1,}}>
-                    
+                            <View style={{ flex: 1, }}>
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
-                                <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 13,}}>Bank Name</Text>
-                            </View>
-                            <View style={styles.textInputContainer}>
 
-                                <View style={styles.input}>
-                                    <TextInput
-                                        placeholder="Bank Name "
-                                        placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                        returnKeyType="next"
-                                        keyboardType='email-address'
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        defaultValue={this.state.email}
-                                        style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
-                                        onChangeText={(text) => this.validate(text)}
-                                        onSubmitEditing={() => this.passwordInput.focus()}
-                                    />
+                                <View style={{ marginLeft: 20, marginRight: 20, marginTop: 20, justifyContent: 'flex-start', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 13, }}>Bank Name</Text>
+                                </View>
+                                <View style={styles.textInputContainer}>
+
+                                    <View style={styles.input}>
+                                        <TextInput
+                                            placeholder="Bank Name "
+                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                            returnKeyType="next"
+                                            keyboardType='email-address'
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            defaultValue={this.state.email}
+                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
+                                            onChangeText={(text) => this.validate(text)}
+                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
-                           
 
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
-                                <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 13,}}>Account Name</Text>
-                            </View>
-                            <View style={styles.textInputContainer}>
+                                <View style={{ marginLeft: 20, marginRight: 20, marginTop: 20, justifyContent: 'flex-start', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 13, }}>Account Name</Text>
+                                </View>
+                                <View style={styles.textInputContainer}>
 
-                                <View style={styles.input}>
-                                    <TextInput
-                                        placeholder="mymail@yahoo.com "
-                                        placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                        returnKeyType="next"
-                                        keyboardType='email-address'
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        defaultValue={this.state.email}
-                                        style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
-                                        onChangeText={(text) => this.validate(text)}
-                                        onSubmitEditing={() => this.passwordInput.focus()}
-                                    />
+                                    <View style={styles.input}>
+                                        <TextInput
+                                            placeholder="mymail@yahoo.com "
+                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                            returnKeyType="next"
+                                            keyboardType='email-address'
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            defaultValue={this.state.email}
+                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
+                                            onChangeText={(text) => this.validate(text)}
+                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
-                           
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
-                                <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 13,}}>Account Number</Text>
-                            </View>
-                            <View style={styles.textInputContainer}>
+                                <View style={{ marginLeft: 20, marginRight: 20, marginTop: 20, justifyContent: 'flex-start', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 13, }}>Account Number</Text>
+                                </View>
+                                <View style={styles.textInputContainer}>
 
-                                <View style={styles.input}>
-                                    <TextInput
-                                        placeholder=""
-                                        placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                        returnKeyType="next"
-                                        keyboardType='email-address'
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        defaultValue={this.state.email}
-                                        style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
-                                        onChangeText={(text) => this.validate(text)}
-                                        onSubmitEditing={() => this.passwordInput.focus()}
-                                    />
+                                    <View style={styles.input}>
+                                        <TextInput
+                                            placeholder=""
+                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                            returnKeyType="next"
+                                            keyboardType='email-address'
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            defaultValue={this.state.email}
+                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
+                                            onChangeText={(text) => this.validate(text)}
+                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
-                           
 
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
-                                <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 13,}}>Date of Birth</Text>
-                            </View>
-                            <View style={styles.textInputContainer}>
+                                <View style={{ marginLeft: 20, marginRight: 20, marginTop: 20, justifyContent: 'flex-start', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 13, }}>Date of Birth</Text>
+                                </View>
+                                <View style={styles.textInputContainer}>
 
-                                <View style={styles.input}>
-                                    <TextInput
-                                        placeholder=" "
-                                        placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                        returnKeyType="next"
-                                        keyboardType='email-address'
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        defaultValue={this.state.email}
-                                        style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
-                                        onChangeText={(text) => this.validate(text)}
-                                        onSubmitEditing={() => this.passwordInput.focus()}
-                                    />
+                                    <View style={styles.input}>
+                                        <TextInput
+                                            placeholder=" "
+                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                            returnKeyType="next"
+                                            keyboardType='email-address'
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            defaultValue={this.state.email}
+                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
+                                            onChangeText={(text) => this.validate(text)}
+                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
-                           
 
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
-                                <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 13,}}>Identification Mode of identificataion </Text>
-                 <Text style={{ fontFamily: font.REGULAR, fontSize: 13, color: '#A74343' }}>(International passport, national ID, etc)</Text>
-                            </View>
-                            <View style={styles.textInputContainer}>
+                                <View style={{ marginLeft: 20, marginRight: 20, marginTop: 20, justifyContent: 'flex-start', }}>
+                                    <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 13, }}>Identification Mode of identificataion </Text>
+                                    <Text style={{ fontFamily: font.REGULAR, fontSize: 13, color: '#A74343' }}>(International passport, national ID, etc)</Text>
+                                </View>
+                                <View style={styles.textInputContainer}>
 
-                                <View style={styles.input}>
-                                    <TextInput
-                                        placeholder=" "
-                                        placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                        returnKeyType="next"
-                                        keyboardType='email-address'
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        defaultValue={this.state.email}
-                                        style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
-                                        onChangeText={(text) => this.validate(text)}
-                                        onSubmitEditing={() => this.passwordInput.focus()}
-                                    />
+                                    <View style={styles.input}>
+                                        <TextInput
+                                            placeholder=" "
+                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                            returnKeyType="next"
+                                            keyboardType='email-address'
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            defaultValue={this.state.email}
+                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: 'Poppins-SemiBold', }}
+                                            onChangeText={(text) => this.validate(text)}
+                                            onSubmitEditing={() => this.passwordInput.focus()}
+                                        />
+                                    </View>
+
                                 </View>
 
-                            </View>
 
-                          
-                           
-                           
+
+
                             </View>
                             <View style={{ marginTop: 15, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={[buttonStyles.primaryButtonStyle, {height:60}]}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={[buttonStyles.primaryButtonStyle, { height: 60 }]}>
                                     <Text style={[buttonStyles.primaryButtonTextStyle,]}>Update Changes</Text>
                                 </TouchableOpacity>
                             </View>
@@ -229,22 +305,22 @@ export default class BankInformation extends Component {
         let index;
         let vall;
         for (var i = 0; i < data.length; i++) {
-            index =i
+            index = i
             vall = data[index].value
             packages.push(
-                <View style={{ marginHorizontal: 10, marginVertical:5, flexDirection: 'row' , alignItems:'center'}}>
-                 <TouchableOpacity onPress={() => this.selectSymptom(vall)}>
-                 <Icon
-                    active
-                    name={ this.state.selected_symptoms.includes(data[i].value)? "check-box":"check-box-outline-blank"}
-                    type='material'
-                    size={35}
-                    color={this.state.selected_symptoms.includes(data[i].value) ? "#FF7648" : lightTheme.SMALL_BODY_TEXT_COLOR}
-                />
-                </TouchableOpacity>
-                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: this.state.selected_symptoms.includes(data[i].value)? '#FF7648'  : '#080256' }}>{data[i].value}</Text>
+                <View style={{ marginHorizontal: 10, marginVertical: 5, flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => this.selectSymptom(vall)}>
+                        <Icon
+                            active
+                            name={this.state.selected_symptoms.includes(data[i].value) ? "check-box" : "check-box-outline-blank"}
+                            type='material'
+                            size={35}
+                            color={this.state.selected_symptoms.includes(data[i].value) ? "#FF7648" : lightTheme.SMALL_BODY_TEXT_COLOR}
+                        />
+                    </TouchableOpacity>
+                    <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, color: this.state.selected_symptoms.includes(data[i].value) ? '#FF7648' : '#080256' }}>{data[i].value}</Text>
 
-            </View>               
+                </View>
             );
         }
         return packages;

@@ -63,8 +63,11 @@ export default class index extends Component {
             .then(res => {
                 this.setState({ loading: false })
                 const { statusCode, data } = res
+                console.warn(data);
                 if (statusCode == 200) {
-
+                    if (data.status == null) {
+                        return
+                    }
                     this.setState({
                         list_prescription: data.data
                     })
