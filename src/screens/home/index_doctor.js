@@ -162,12 +162,12 @@ export default class index extends Component {
 
     renderSummaryDetails(count, name, bg) {
         return (
-            <TouchableOpacity style={[styles.user_box, { backgroundColor: bg }]}>
+            <View style={[styles.user_box, { backgroundColor: bg }]}>
                 <View style={{ marginLeft: 10, marginVertical: 15, }}>
                     <Text style={[{ fontFamily: font.EXTRA_BOLD, color: lightTheme.WHITE_COLOR, fontSize: 28, marginBottom: 2 }]}>{count}</Text>
                     <Text style={[{ fontFamily: font.REGULAR, textTransform: 'uppercase', color: lightTheme.WHITE_COLOR, fontSize: 11, marginBottom: 5 }]}>{name}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }
 
@@ -175,8 +175,9 @@ export default class index extends Component {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
             let id = i
+            let item = data[id];
             packages.push(
-                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(item)} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                     <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
                     <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
@@ -213,8 +214,10 @@ export default class index extends Component {
     renderSessionItem(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let id = i
+            let item = data[id];
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('prescription_details')} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSessionPress(item)} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                         <Image source={images.user} style={{ width: 50, height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 1, elevation: 5 }} />
                     </View>
@@ -222,9 +225,6 @@ export default class index extends Component {
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].member.fullName}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].title}</Text>
                         <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
-
-
-
 
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}> {Moment(data[i].appointmentDate).format('llll')}</Text>
                             <View style={{ flex: 1 }} />
@@ -250,7 +250,9 @@ export default class index extends Component {
     }
 
 
-
+onSessionPress(data){
+    this.props.navigation.navigate('provider_ment_details', {item: data})
+}
 
 
 

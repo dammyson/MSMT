@@ -29,35 +29,30 @@ import {
     SelectMultipleButton,
     SelectMultipleGroupButton
 } from "react-native-selectmultiple-button";
+import Moment from 'moment';
+Moment.locale('en');
+const moment = require('moment');
 
 export default class DoctorMyAppointment extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            email: '',
-            password: '',
-            image1: '',
-            image1_display: '',
-            is_valide_mail: false,
-            done: false,
-            show_camera: false,
+            details: this.props.route.params.item,
             starCount: 5,
             multipleSelectedData: [],
-            multipleSelectedDataLimited: [ ],
+            multipleSelectedDataLimited: [],
             multipleData: ["Headache", 'Mouth Bleeding', 'Coughing', 'Pain after Surgey', 'Cluster Headache'],
         };
     }
 
     async componentDidMount() {
-
+        console.warn(this.props.route.params.item)
     }
 
 
-
-
-
     render() {
+        const{details} = this.state
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -77,7 +72,7 @@ export default class DoctorMyAppointment extends Component {
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='My Appointment' bg='#101023' />
+                <Navbar left={left} title='Appointment Information' bg='#101023' />
                 <Content>
 
                     <View style={styles.backgroundImage}>
@@ -85,10 +80,10 @@ export default class DoctorMyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
 
                                 <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text numberOfLines={1} style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 20, }}> Josephina, Ibrahim Abubakar</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Behavioral health</Text>
-                                    <View style={{ width: 150 , justifyContent:'center',alignItems:'center', height:20,borderRadius:5, backgroundColor:lightTheme.YELLOW}}>
-                                    <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Member ID: 0000000003</Text>
+                                    <Text numberOfLines={1} style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 20, }}> {details.member.fullName}</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{details.service}</Text>
+                                    <View style={{ width: 150, justifyContent: 'center', alignItems: 'center', height: 20, borderRadius: 5, backgroundColor: lightTheme.YELLOW }}>
+                                        <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Member ID: {details.member.title}</Text>
                                     </View>
                                 </View>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
@@ -98,11 +93,11 @@ export default class DoctorMyAppointment extends Component {
 
 
                             <View style={{ marginLeft: 20, marginVertical: 20, marginRight: 10, }}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{height:70, paddingLeft:20,  justifyContent:'center', alignItems:'flex-start', backgroundColor:'#344356', borderRadius:7}}>
-                                    <Text numberOfLines={1} style={[{ color: '#FFF', fontSize:15 ,fontFamily: font.LIGHT }]}>Provider cost for selected service</Text>
-                                    <Text style={[{ color: '#FFF', fontSize:22 ,fontFamily: font.BOLD }]}>NGN 10,000</Text>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Auth')} style={{ height: 70, paddingLeft: 20, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: '#344356', borderRadius: 7 }}>
+                                    <Text numberOfLines={1} style={[{ color: '#FFF', fontSize: 15, fontFamily: font.LIGHT }]}>Provider cost for selected service</Text>
+                                    <Text style={[{ color: '#FFF', fontSize: 22, fontFamily: font.BOLD }]}>NGN 10,000</Text>
                                 </TouchableOpacity>
-                              
+
 
 
                             </View>
@@ -110,45 +105,7 @@ export default class DoctorMyAppointment extends Component {
 
 
 
-                            <View style={{ height: 0.5, backgroundColor: '#DADADA', marginVertical: 10 }} />
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Appointment Information</Text>
-                                </View>
-
-                                <View style={styles.multipleContainer}>
-                                    {this.state.multipleData.map(interest => (
-                                        <SelectMultipleButton
-                                            key={interest}
-                                            buttonViewStyle={{
-                                                borderRadius: 4,
-                                                height: 30,
-                                                color:'#3D6DEB',
-                                                backgroundColor:'#DEE0ED',
-                                            }}
-                                            textStyle={{
-                                                fontSize: 14,
-                                                marginHorizontal:25,
-                                                color:'#3D6DEB'
-                                            }}
-                                            highLightStyle={{
-                                                borderColor: '#DEE0ED',
-                                                backgroundColor:'#DEE0ED',
-                                                textColor: "#3D6DEB",
-                                                borderTintColor: '#DEE0ED',
-                                                backgroundTintColor: '#DEE0ED',
-                                                textTintColor: '#DEE0ED'
-                                            }}
-                                            value={interest}
-                                            selected={this.state.multipleSelectedData.includes(interest)}
-                                            singleTap={valueTap =>
-                                                this._singleTapMultipleSelectedButtons(interest)
-                                            }
-                                        />
-                                    ))}
-                                </View>
-
-                            </View>
+                      
                             <View style={{ height: 0.5, backgroundColor: '#DADADA', marginVertical: 10 }} />
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
@@ -162,17 +119,17 @@ export default class DoctorMyAppointment extends Component {
                                             buttonViewStyle={{
                                                 borderRadius: 4,
                                                 height: 30,
-                                                color:'#3D6DEB',
-                                                backgroundColor:'#DEE0ED',
+                                                color: '#3D6DEB',
+                                                backgroundColor: '#DEE0ED',
                                             }}
                                             textStyle={{
                                                 fontSize: 14,
-                                                marginHorizontal:25,
-                                                color:'#3D6DEB'
+                                                marginHorizontal: 25,
+                                                color: '#3D6DEB'
                                             }}
                                             highLightStyle={{
                                                 borderColor: '#DEE0ED',
-                                                backgroundColor:'#DEE0ED',
+                                                backgroundColor: '#DEE0ED',
                                                 textColor: "#3D6DEB",
                                                 borderTintColor: '#DEE0ED',
                                                 backgroundTintColor: '#DEE0ED',
@@ -197,12 +154,12 @@ export default class DoctorMyAppointment extends Component {
 
                                 <View style={{ marginRight: 10, justifyContent: 'center', flexDirection: 'row', marginBottom: 5, }}>
                                     <View style={{ flex: 2, justifyContent: 'center' }}>
-                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}> 18th Tuesday, March</Text>
+                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}> {Moment(details.appointmentDate).format('MMM Do YY')}</Text>
                                     </View>
                                     <View style={{ flex: 1 }}>
 
                                         <View style={buttonStyles.appointmentOrangeButtonStyle}>
-                                            <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>11:30 AM</Text>
+                                            <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>{Moment(details.appointmentDate).format('h:mm A')}</Text>
 
                                         </View>
                                     </View>
@@ -222,17 +179,17 @@ export default class DoctorMyAppointment extends Component {
                                             buttonViewStyle={{
                                                 borderRadius: 4,
                                                 height: 30,
-                                                color:'#3D6DEB',
-                                                backgroundColor:'#DEE0ED',
+                                                color: '#3D6DEB',
+                                                backgroundColor: '#DEE0ED',
                                             }}
                                             textStyle={{
                                                 fontSize: 14,
-                                                marginHorizontal:25,
-                                                color:'#3D6DEB'
+                                                marginHorizontal: 25,
+                                                color: '#3D6DEB'
                                             }}
                                             highLightStyle={{
                                                 borderColor: '#DEE0ED',
-                                                backgroundColor:'#DEE0ED',
+                                                backgroundColor: '#DEE0ED',
                                                 textColor: "#3D6DEB",
                                                 borderTintColor: '#DEE0ED',
                                                 backgroundTintColor: '#DEE0ED',
@@ -249,12 +206,12 @@ export default class DoctorMyAppointment extends Component {
 
                             </View>
 
-                        
+
                             <View style={{ height: 0.5, backgroundColor: '#DADADA', marginVertical: 5 }} />
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Previous Diagnosis</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.previousDiagnosis}.</Text>
                                 </View>
                             </View>
 
@@ -263,7 +220,7 @@ export default class DoctorMyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Previous Meditation</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.previousMedication}</Text>
                                 </View>
                             </View>
 
@@ -273,7 +230,7 @@ export default class DoctorMyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Ongoing Meditation</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.on_going_medication}</Text>
                                 </View>
                             </View>
 
