@@ -23,7 +23,9 @@ import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-import { getUserName } from '../../utilities';
+const axios = require('axios');
+import ActivityIndicator from '../../components/ActivityIndicator';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, getUserName } from '../../utilities';
 
 
 export default class index extends Component {
@@ -43,7 +45,47 @@ export default class index extends Component {
 
     async componentDidMount() {
         this.setState({name: await getUserName()})
+        this.getAppointsments();
         
+    }
+
+
+
+
+    async getAppointsments() {
+
+        this.setState({ loading: true })
+
+        try {
+            axios.all([
+                axios({
+                    method: 'GET',
+                    url: baseUrl() + '/Clinician/getSpecialistStatistics',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await getToken(),
+                    }, body: {},
+                }),
+                axios({
+                    method: 'GET',
+                    url: baseUrl() + '/Clinician/getFeaturedDoctors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await getToken(),
+                    }, body: {},
+                })
+            ])
+                .then(axios.spread((data1, data2) => {
+                    this.setState({ loading: false })
+                    console.warn(data1.data, data2.data)
+                    //this.setState({ loading: false, list_appoitment: data1.data.data, list_session: data2.data.data })
+                }));
+
+        } catch (error) {
+            this.setState({ loading: false })
+            return error;
+        }
+
     }
 
 
@@ -51,6 +93,13 @@ export default class index extends Component {
 
 
     render() {
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator message={'getting details... '} />
+
+            );
+        }
 
         return (
 

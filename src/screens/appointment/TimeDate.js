@@ -44,18 +44,63 @@ export default class TimeData extends Component {
             sel_time: '',
             starCount: 5,
             display_days: [],
-            selected: { day: 'M', date: 3, full: "01/01/2021"},
-            clinician: ''
+            selected: { day: 'M', date: 3, full: "01/01/2021" },
+            clinician: this.props.route.params.clinician
         };
     }
 
     async componentDidMount() {
         this.getDates()
-        const { clinician } = this.props.route.params;
-        this.setState({
-            clinician: clinician,
-        });
+        // const { clinician } = this.props.route.params;
+        // this.setState({
+        //     clinician: clinician,
+        // });
+
+        this.getDoctorAvailability()
     }
+
+
+
+
+    async getDoctorAvailability() {
+        const {clinician} = this.state
+        console.warn('/Clinician/getDoctorAvailablity/' + clinician.id)
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getDoctorAvailablity?clinicianId=' + clinician.id, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(statusCode, data)
+
+                if (statusCode == 200) {
+
+                    this.setState({
+                        // list_appointments: data.data
+                    })
+
+
+                } else {
+                    this.setState({ loading: false })
+                   // showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
 
 
     getDates() {
@@ -68,12 +113,12 @@ export default class TimeData extends Component {
             instant_array.push({ day: res[1], date: res[0] })
         }
         var res = Moment(today).format('D-dd-MM/DD/YYYY').split("-");
-        instant_array.push({ day: res[1], date: res[0] ,  full:res[2] })
-        this.setState({ selected: { day: res[1], date: res[0],  full:res[2] } })
+        instant_array.push({ day: res[1], date: res[0], full: res[2] })
+        this.setState({ selected: { day: res[1], date: res[0], full: res[2] } })
         for (let i = 1; i <= 3; i++) {
             var new_date = moment(today, "DD-MM-YYYY").add(i, 'days');
             var res = Moment(new_date).format('D-dd-MM/DD/YYYY').split("-");
-            instant_array.push({ day: res[1], date: res[0], full:res[2] })
+            instant_array.push({ day: res[1], date: res[0], full: res[2] })
         }
 
         this.setState({ display_days: instant_array })
@@ -180,21 +225,21 @@ export default class TimeData extends Component {
     }
 
     hanedProceedButton() {
-       const {sel_time, selected, clinician} = this.state
+        const { sel_time, selected, clinician } = this.state
 
-       if(sel_time == ""){
-        showTopNotification("error", 'Select time date and time',3)
-           return
-       }
+        if (sel_time == "") {
+            showTopNotification("error", 'Select time date and time', 3)
+            return
+        }
 
-       let appointment_datetime = {
-           clinician: clinician,
-           time: sel_time,
-           date: selected
-       }
+        let appointment_datetime = {
+            clinician: clinician,
+            time: sel_time,
+            date: selected
+        }
 
-    
-        this.props.navigation.navigate('appointment_information', { appointment_datetime : appointment_datetime})
+
+        this.props.navigation.navigate('appointment_information', { appointment_datetime: appointment_datetime })
     }
 
     renderdays(data) {
