@@ -25,7 +25,7 @@ import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 const axios = require('axios');
 import ActivityIndicator from '../../components/ActivityIndicator';
-import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, getUserName } from '../../utilities';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, getUserName, userPlaceholderImage, placeholderImage } from '../../utilities';
 
 
 export default class index extends Component {
@@ -33,74 +33,102 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            name: '',
-            password: '',
-            image1: '',
-            image1_display: '',
+            numbers: {
+                dermatologist: 0,
+                generalPractitioner: 0,
+                neurologist: 0,
+                pediatricians: 0,
+                radiologist: 0,
+                therapist: 0,
+            },
             is_valide_mail: false,
-            done: false,
+            list_doctor: [],
             show_camera: false
         };
     }
 
     async componentDidMount() {
-        this.setState({name: await getUserName()})
-        this.getAppointsments();
-        
+        this.setState({ name: await getUserName() })
+        this.getSummary();
+
     }
 
 
 
-
-    async getAppointsments() {
-
+    async getSummary() {
         this.setState({ loading: true })
-
-        try {
-            axios.all([
-                axios({
-                    method: 'GET',
-                    url: baseUrl() + '/Clinician/getSpecialistStatistics',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer ' + await getToken(),
-                    }, body: {},
-                }),
-                axios({
-                    method: 'GET',
-                    url: baseUrl() + '/Clinician/getFeaturedDoctors',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer ' + await getToken(),
-                    }, body: {},
-                })
-            ])
-                .then(axios.spread((data1, data2) => {
+        showTopNotification("info", 'Fetching records', 2)
+        fetch(baseUrl() + '/Clinician/getSpecialistStatistics', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                this.getDoctors()
+                const { data, statusCode } = res
+                console.warn(data.data)
+                if (statusCode == 200) {
+                    this.setState({
+                        numbers: data.data
+                    })
+                } else {
                     this.setState({ loading: false })
-                    console.warn(data1.data, data2.data)
-                    //this.setState({ loading: false, list_appoitment: data1.data.data, list_session: data2.data.data })
-                }));
+                    showTopNotification("danger", res.data.message)
 
-        } catch (error) {
-            this.setState({ loading: false })
-            return error;
-        }
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
 
     }
 
 
 
+    async getDoctors() {
+        this.setState({ loading: true })
+        fetch(baseUrl() + '/Clinician/getFeaturedDoctors', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { statusCode, data } = res
+                console.warn(data)
+                if (statusCode == 200) {
 
+                    this.setState({
+                        list_doctor: data.data
+                    })
+
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
 
     render() {
-
-        if (this.state.loading) {
-            return (
-                <ActivityIndicator message={'getting details... '} />
-
-            );
-        }
-
+        const { numbers, list_doctor } = this.state
         return (
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
@@ -110,7 +138,8 @@ export default class index extends Component {
                         <View style={styles.mainbody}>
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.user} style={styles.image_profile} />
+                                    <Image source={{uri: userPlaceholderImage()}} 
+                                    style={styles.image_profile} />
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 22, marginBottom: 2, marginTop: 2 }}>Hello</Text>
@@ -162,17 +191,17 @@ export default class index extends Component {
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
 
-                                {this.renderSummaryDetails("500", 'RADIOLOGISTS', '#FFB655')}
-                                {this.renderSummaryDetails("4k+", 'Therapists', '#F3603F')}
-                                {this.renderSummaryDetails("4k", 'PHARMAists', '#489E67')}
+                                {this.renderSummaryDetails(numbers.radiologist, 'RADIOLOGISTS', '#FFB655')}
+                                {this.renderSummaryDetails(numbers.therapist, 'Therapists', '#F3603F')}
+                                {this.renderSummaryDetails(numbers.neurologist, 'neurologist', '#489E67')}
 
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 10, }}>
 
-                                {this.renderSummaryDetails("100", 'General Practitioners', '#5383EC')}
-                                {this.renderSummaryDetails("2k+", 'DERMATOLOGISTS', '#A74343')}
-                                {this.renderSummaryDetails("1k", 'PEDIATRICIANS', '#344356')}
+                                {this.renderSummaryDetails(numbers.generalPractitioner, 'General Practitioners', '#5383EC')}
+                                {this.renderSummaryDetails(numbers.dermatologist, 'DERMATOLOGISTS', '#A74343')}
+                                {this.renderSummaryDetails(numbers.pediatricians, 'PEDIATRICIANS', '#344356')}
 
                             </View>
 
@@ -195,23 +224,28 @@ export default class index extends Component {
                                 </ScrollView>
                             </View>
 
+                            {this.state.list_doctor.length > 0 ? 
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Featured Doctors</Text>
+                            <>
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                    <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
+                                        <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Featured Doctors</Text>
+                                    </View>
+
+                                    <TouchableOpacity style={{ marginRight: 20, height: 45, backgroundColor: '#4DC59130', justifyContent: 'center', borderRadius: 10, }}>
+                                        <Text style={{ color: '#4DC59180', fontFamily: font.BOLD, fontSize: 17, marginHorizontal: 10, marginBottom: 2, marginTop: 2 }}>See all</Text>
+                                    </TouchableOpacity>
                                 </View>
 
-                                <TouchableOpacity style={{ marginRight: 20, height: 45, backgroundColor: '#4DC59130', justifyContent: 'center', borderRadius: 10, }}>
-                                    <Text style={{ color: '#4DC59180', fontFamily: font.BOLD, fontSize: 17, marginHorizontal: 10, marginBottom: 2, marginTop: 2 }}>See all</Text>
-                                </TouchableOpacity>
-                            </View>
 
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                    <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
+                                        {this.renderDoctors(list_doctor)}
+                                    </ScrollView>
+                                </View>
 
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
-                                    {this.renderDoctors(doctors)}
-                                </ScrollView>
-                            </View>
+                            </>
+                            : null }
 
 
                         </View>
@@ -225,7 +259,7 @@ export default class index extends Component {
 
     renderSummaryDetails(count, name, bg) {
         return (
-            <TouchableOpacity style={[styles.user_box, { backgroundColor: bg }]}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Calendar')}  style={[styles.user_box, { backgroundColor: bg }]}>
                 <View style={{ marginLeft: 10, marginVertical: 15, }}>
                     <Text style={[{ fontFamily: font.EXTRA_BOLD, color: lightTheme.WHITE_COLOR, fontSize: 28, marginBottom: 2 }]}>{count}</Text>
                     <Text numberOfLines={1} style={[{ fontFamily: font.REGULAR, textTransform: 'uppercase', color: lightTheme.WHITE_COLOR, fontSize: 11, marginBottom: 15 }]}>{name}</Text>
@@ -278,14 +312,15 @@ export default class index extends Component {
     renderDoctors(data) {
         let packages = [];
         for (var i = 0; i < data.length; i++) {
+            let item = data[i]
             packages.push(
-                <View style={[styles.doctor_box, { backgroundColor: data[i].bg }]}>
-                    <Image source={data[i].image} style={{ width: Dimensions.get('window').width / 3.55, height: Dimensions.get('window').width / 4.5, borderRadius: 10, }} />
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details',  {clinician: item})} style={[styles.doctor_box, { backgroundColor: data[i].bg }]}>
+                    <Image source={{ uri: data[i].imageUrl == null || data[i].imageUrl ==  "" || data[i].imageUrl ==  "null" ?  placeholderImage() : data[i].imageUrl}}  style={{ width: Dimensions.get('window').width / 3.6, height: Dimensions.get('window').width / 4.5, borderRadius: 10, }} />
                     <View style={{ marginLeft: 10, flex: 1 }}>
-                        <Text numberOfLines={2} style={[{ fontFamily: font.EXTRA_BOLD, color: '#344356', fontSize: 9, marginBottom: 8 }]}>{data[i].name}</Text>
-                        <Text style={[{ fontFamily: font.REGULAR, color: lightTheme.TEXT_PLACEHOLDER_COLOR, fontSize: 8, marginBottom: 2 }]}>{data[i].job}</Text>
+                        <Text numberOfLines={2} style={[{ fontFamily: font.EXTRA_BOLD, color: '#344356', fontSize: 9, marginBottom: 8 }]}>{data[i].fullName}</Text>
+                        <Text style={[{ fontFamily: font.REGULAR, color: lightTheme.TEXT_PLACEHOLDER_COLOR, fontSize: 8, marginBottom: 2 }]}>{data[i].title}</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             );
         }
         return packages;
@@ -366,7 +401,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 1,
-       
+
     },
     user_box: {
         flex: 1,

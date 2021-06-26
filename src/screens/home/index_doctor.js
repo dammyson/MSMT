@@ -22,7 +22,7 @@ import { font, fontSizes } from '../../constants';
 import { Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import ActivityIndicator from '../../components/ActivityIndicator';
-import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID } from '../../utilities';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, userPlaceholderImage, placeholderImage } from '../../utilities';
 import IsEmpty from '../../components/IsEmpty';
 import Moment from 'moment';
 Moment.locale('en');
@@ -35,6 +35,11 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: true,
+            numbers:{
+                appointmentsCompleted:0,
+                appointmentsPending:0,
+                totalAppointsments:0,
+            },
             list_session: [],
             list_appoitment: [],
 
@@ -44,6 +49,7 @@ export default class index extends Component {
     async componentDidMount() {
         this.setState({ name: await getUserName() })
         this.getAppointsments()
+        this.getSummary()
     }
 
 
@@ -72,7 +78,6 @@ export default class index extends Component {
                 })
             ])
                 .then(axios.spread((data1, data2) => {
-                    console.warn(data2.data.data)
                     this.setState({ loading: false, list_appoitment: data1.data.data, list_session: data2.data.data })
                 }));
 
@@ -84,6 +89,41 @@ export default class index extends Component {
     }
 
 
+    async getSummary() {
+        this.setState({ loading: true })
+        showTopNotification("info", 'Fetching records', 2)
+        fetch(baseUrl() + '/Appointment/getAppointmentStatistics', {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + await getToken(),
+            }
+        })
+            .then(processResponse)
+            .then(res => {
+                this.setState({ loading: false })
+                const { data, statusCode } = res
+                console.warn(data.data)
+                if (statusCode == 200) {
+                    this.setState({
+                        numbers: data.data
+                    })
+                } else {
+                    this.setState({ loading: false })
+                    showTopNotification("danger", res.data.message)
+
+                }
+            })
+            .catch((error) => {
+                this.setState({ loading: false })
+                console.warn(error.message)
+                showTopNotification("danger", error.message)
+            });
+
+
+    }
+
+
     render() {
         if (this.state.loading) {
             return (
@@ -91,7 +131,7 @@ export default class index extends Component {
             );
         }
 
-
+        const { numbers, list_doctor } = this.state
         return (
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor="#fff" barStyle="dark-content" />
@@ -100,7 +140,7 @@ export default class index extends Component {
                         <View style={styles.mainbody}>
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.user} style={styles.image_profile} />
+                                    <Image source={{uri: placeholderImage()}} style={styles.image_profile} />
                                 </View>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 18, marginTop: 2 }}>Hello</Text>
@@ -120,9 +160,9 @@ export default class index extends Component {
                             </View>                           */}
 
                             <View style={{ marginLeft: 20, marginTop: 15, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                {this.renderSummaryDetails("13", 'Pending appointment', '#FFB655')}
-                                {this.renderSummaryDetails("4k+", 'all  appointment', '#F3603F')}
-                                {this.renderSummaryDetails("4k", 'completed sessions', '#489E67')}
+                                {this.renderSummaryDetails(numbers.appointmentsPending, 'Pending appointment', '#FFB655')}
+                                {this.renderSummaryDetails(numbers.totalAppointsments, 'all  appointment', '#F3603F')}
+                                {this.renderSummaryDetails(numbers.appointmentsCompleted, 'completed sessions', '#489E67')}
 
                             </View>
                             {this.state.list_appoitment.length < 1 ? null :
@@ -180,7 +220,9 @@ export default class index extends Component {
                 <TouchableOpacity onPress={() => this.onSingleAppointmentClick(item)} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 10,  flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
                     <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
-                    <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
+                    <Image  
+                      source={{ uri: data[i].member.imageUrl == null || data[i].member.imageUrl ==  "" || data[i].member.imageUrl ==  "null" ?  userPlaceholderImage() : data[i].member.imageUrl}} 
+                    style={styles.image_profile} />
                     </View>
                       
                     </View>
@@ -219,7 +261,9 @@ export default class index extends Component {
             packages.push(
                 <TouchableOpacity onPress={() => this.onSessionPress(item)} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={{ width: 50, height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 1, elevation: 5 }} />
+                        <Image 
+                        source={{ uri: data[i].member.imageUrl == null || data[i].member.imageUrl ==  "" || data[i].member.imageUrl ==  "null" ?  userPlaceholderImage() : data[i].member.imageUrl}} 
+                        style={{ width: 50, height: 50, borderRadius: 150, shadowColor: 'gray', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.8, shadowRadius: 1, elevation: 5 }} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].member.fullName}</Text>

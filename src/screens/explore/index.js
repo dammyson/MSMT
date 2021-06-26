@@ -24,7 +24,7 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
-import { getToken, baseUrl, processResponse, showTopNotification } from '../../utilities';
+import { getToken, baseUrl, processResponse, showTopNotification, placeholderImage } from '../../utilities';
 import ActivityIndicator from '../../components/ActivityIndicator';
 
 export default class index extends Component {
@@ -120,7 +120,7 @@ export default class index extends Component {
 
             <Container style={{ backgroundColor: lightTheme.PRIMARY_BACKGROUND_COLOR }}>
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
-                <Navbar left={left} title='Doctor' bg='#101023' />
+                <Navbar left={left} title='Clinicians' bg='#101023' />
                 <Content scrollEnabled={false}>
 
                     <View style={styles.backgroundImage}>
@@ -192,7 +192,7 @@ export default class index extends Component {
             packages.push(
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details',  {clinician: item})} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={images.user} style={styles.image_profile} />
+                        <Image source={{ uri: data[i].imageUrl == null || data[i].imageUrl ==  "" || data[i].imageUrl ==  "null" ?  placeholderImage() : data[i].imageUrl}} style={styles.image_profile} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].fullName}</Text>

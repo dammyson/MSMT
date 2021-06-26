@@ -25,6 +25,7 @@ import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
 import StarRating from 'react-native-star-rating';
+import { placeholderImage } from '../../utilities';
 
 export default class index extends Component {
     constructor(props) {
@@ -94,7 +95,9 @@ export default class index extends Component {
                                     </View>
                                 </View>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.user} style={styles.image_profile} />
+                                    <Image
+                                    source={{ uri: clinician.imageUrl == null || clinician.imageUrl ==  "" || clinician.imageUrl ==  "null" ?  placeholderImage() : clinician.imageUrl}} 
+                                    style={styles.image_profile} />
                                 </View>
                             </View>
 
@@ -102,7 +105,7 @@ export default class index extends Component {
 
                                 {this.renderSummaryDetails("500", 'PATIENTS', '#FFB655')}
                                 {this.renderSummaryDetails("10yrs+", 'Experience', '#F3603F')}
-                                {this.renderSummaryDetails("4.6", 'RATING', '#489E67')}
+                                {this.renderSummaryDetails(clinician.rating, 'RATING', '#489E67')}
 
                             </View>
 
