@@ -236,7 +236,6 @@ export default class DoctorAppointmentList extends Component {
                     </View>
 
                     <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', }}>
-
                         <Icon
                             name="arrow-right"
                             color={lightTheme.PRIMARY_TEXT_COLOR}
@@ -252,7 +251,7 @@ export default class DoctorAppointmentList extends Component {
 
 
     onSingleAppointmentClick(value) {
-        console.warn(value);
+        this.props.navigation.navigate('provider_ment_details', {item: value})
     }
 
 

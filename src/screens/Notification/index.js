@@ -159,12 +159,12 @@ export default class index extends Component {
                     </View>
 
                     <View style={{ padding: 10, alignItems: 'center', justifyContent: 'center', }}>
-                        <Icon
+                        {/* <Icon
                             name="arrow-right"
                             color={lightTheme.PRIMARY_TEXT_COLOR}
                             size={15}
                             type='simple-line-icon'
-                        />
+                        /> */}
                     </View>
                 </View>
             );
