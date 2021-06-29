@@ -30,11 +30,17 @@ import {
     SelectMultipleGroupButton
 } from "react-native-selectmultiple-button";
 
+import Moment from 'moment';
+import { placeholderImage } from '../../utilities';
+Moment.locale('en');
+const moment = require('moment');
+
 export default class MyAppointment extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
+            details: this.props.route.params.item,
             email: '',
             password: '',
             image1: '',
@@ -49,15 +55,13 @@ export default class MyAppointment extends Component {
         };
     }
 
+ 
     async componentDidMount() {
-
+        console.warn(this.props.route.params.item)
     }
 
-
-
-
-
     render() {
+        const{details} = this.state
 
         var left = (
             <Left style={{ flex: 1 }}>
@@ -85,9 +89,8 @@ export default class MyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 30, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
 
                                 <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Josephina </Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>Ibrahim Abubakar</Text>
-                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>Head of Dental Care - Reddington Hospital</Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.BOLD, fontSize: 22, }}>{details.doctor.fullName} </Text>
+                                    <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{details.doctor.title} - Reddington Hospital</Text>
                                     <View style={{ width: 100 }}>
                                         <StarRating
                                             disabled={false}
@@ -103,7 +106,9 @@ export default class MyAppointment extends Component {
                                     </View>
                                 </View>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.user} style={styles.image_profile} />
+                                    <Image 
+                                     source={{ uri: details.doctor.imageUrl == null || details.doctor.imageUrl == "" || details.doctor.imageUrl == "null" ? placeholderImage() : details.doctor.imageUrl }}
+                                    style={styles.image_profile} />
                                 </View>
                             </View>
 
@@ -176,12 +181,12 @@ export default class MyAppointment extends Component {
 
                                 <View style={{ marginRight: 10, justifyContent: 'center', flexDirection: 'row', marginBottom: 5, }}>
                                     <View style={{ flex: 2, justifyContent: 'center' }}>
-                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}> 18th Tuesday, March</Text>
+                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>{Moment(details.appointmentDate).format('MMM Do YY')}</Text>
                                     </View>
                                     <View style={{ flex: 1 }}>
 
                                         <View style={buttonStyles.appointmentOrangeButtonStyle}>
-                                            <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>11:30 AM</Text>
+                                            <Text style={{ color: lightTheme.WHITE_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>{Moment(details.appointmentDate).format('h:mm A')}</Text>
 
                                         </View>
                                     </View>
@@ -234,7 +239,7 @@ export default class MyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Previous Diagnosis</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.previousDiagnosis}.</Text>
                                 </View>
                             </View>
 
@@ -243,7 +248,7 @@ export default class MyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Previous Meditation</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.previousMedication}</Text>
                                 </View>
                             </View>
 
@@ -253,7 +258,7 @@ export default class MyAppointment extends Component {
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2 }}>Ongoing Meditation</Text>
-                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim maximus augue, ut lobortis est viverra at. Fusce nec finibus massa. Sed ut augue ac justo mattis venenatis non eget nunc. Nunc commodo sollicitudin arcu ut blandit. Sed elementum augue ac nulla iaculis tristique. Proin ornare convallis massa, sed hendrerit urna egestas sed. Fusce ut magna id leo mattis pretium. Suspendisse accumsan magna nec justo vehicula varius.</Text>
+                                    <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 12, marginBottom: 2, marginTop: 2 }}>{details.on_going_medication}</Text>
                                 </View>
                             </View>
 

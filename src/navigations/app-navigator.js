@@ -98,6 +98,7 @@ class AppNavigator extends Component {
           style: { height: 60 },
           showLabel: false,
           keyboardHidesTabBar: true
+          
 
         }}
       >

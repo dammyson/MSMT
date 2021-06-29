@@ -104,7 +104,7 @@ export const processResponse = (response) =>  {
   }));
 }
 //success, warning, info and danger
-export const showTopNotification = (type, message, duration)=> {
+export const showTopNotification = (type, message, duration = 2)=> {
   showMessage({
     message: message,
     type: type,

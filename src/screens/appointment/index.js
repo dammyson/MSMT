@@ -26,7 +26,7 @@ import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
 import ActivityIndicator from '../../components/ActivityIndicator';
-import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID } from '../../utilities';
+import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, placeholderImage } from '../../utilities';
 import IsEmpty from '../../components/IsEmpty';
 import Moment from 'moment';
 Moment.locale('en');
@@ -38,8 +38,8 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            list_appointments:[]
-            
+            list_appointments: []
+
         };
     }
 
@@ -52,7 +52,7 @@ export default class index extends Component {
     async getDoctorServicesCost() {
 
         this.setState({ loading: true })
-        fetch(baseUrl() + '/Appointment/getAppointments?profileId='+await getUserID() , {
+        fetch(baseUrl() + '/Appointment/getAppointments?profileId=' + await getUserID(), {
             method: 'GET', headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -63,7 +63,7 @@ export default class index extends Component {
             .then(res => {
                 this.setState({ loading: false })
                 const { statusCode, data } = res
-                
+
                 if (statusCode == 200) {
 
                     this.setState({
@@ -89,15 +89,15 @@ export default class index extends Component {
     searchFilterFunction = search => {
         this.setState({ search });
         const newData = this.arrayholder.filter(item => {
-          const itemData = `${item.doctor.fullName? item.doctor.fullName.toUpperCase(): ''.toUpperCase()}`;
-          const textData = search.toUpperCase();
-          return itemData.indexOf(textData) > -1;
+            const itemData = `${item.doctor.fullName ? item.doctor.fullName.toUpperCase() : ''.toUpperCase()}`;
+            const textData = search.toUpperCase();
+            return itemData.indexOf(textData) > -1;
         });
         this.setState({
             list_appointments: newData,
         });
-    
-      };
+
+    };
 
     render() {
 
@@ -127,52 +127,52 @@ export default class index extends Component {
                 <StatusBar backgroundColor={lightTheme.PRIMARY_COLOR} barStyle="dark-content" />
                 <Navbar left={left} title='Appointments' bg='#101023' />
                 <Content scrollEnabled={false}>
-                {this.state.list_appointments.length == 0 ?
+                    {this.state.list_appointments.length == 0 ?
                         <IsEmpty message={'You do not have any appointment'} />
                         :
-                    <View style={styles.backgroundImage}>
-                        <View style={styles.mainbody}>
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
-                                <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
-                                    <View style={textInputStyles.operation_icon}>
+                        <View style={styles.backgroundImage}>
+                            <View style={styles.mainbody}>
+                                <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, flexDirection: 'row' }}>
+                                    <View style={[textInputStyles.secondSearchTextInputContainer, { flex: 1 }]}>
+                                        <View style={textInputStyles.operation_icon}>
 
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={22}
-                                            type='ionicon'
-                                        />
+                                            <Icon
+                                                name="search"
+                                                color={lightTheme.PRIMARY_COLOR}
+                                                size={22}
+                                                type='ionicon'
+                                            />
+                                        </View>
+                                        <View style={textInputStyles.input}>
+                                            <TextInput
+                                                placeholder="Search For Provider by Name..."
+                                                placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
+                                                returnKeyType="next"
+                                                keyboardType='email-address'
+                                                autoCapitalize="none"
+                                                autoCorrect={false}
+                                                defaultValue={this.state.email}
+                                                style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
+                                                onChangeText={this.searchFilterFunction}
+                                            />
+                                        </View>
                                     </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search For Provider by Name..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 13, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, }}
-                                            onChangeText={this.searchFilterFunction}
-                                        />
+
+                                    <View style={{ padding: 5, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
                                     </View>
                                 </View>
-
-                                <View style={{ padding: 5, alignItems: 'center', transform: [{ rotate: '90deg' }], justifyContent: 'center', }}>
+                                <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
+                                    <View style={{ marginRight: 20, justifyContent: 'center', }}>
+                                        <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>List</Text>
+                                    </View>
                                 </View>
-                            </View>
-                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
-                                <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>List</Text>
+                                <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
+                                    <ScrollView showsVerticalScrollIndicator={false} style={{}}>
+                                        {this.renderItem(this.state.list_appointments)}
+                                    </ScrollView>
                                 </View>
-                            </View>
-                            <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-                                <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(this.state.list_appointments)}
-                                </ScrollView>
-                            </View>
 
-{/* 
+                                {/* 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ fontFamily: font.BOLD, fontSize: 16, marginBottom: 2, marginTop: 2, color: '#080256' }}>Yesterday</Text>
@@ -197,8 +197,8 @@ export default class index extends Component {
                             </View> */}
 
 
-                        </View>
-                    </View> }
+                            </View>
+                        </View>}
 
                 </Content>
             </Container>
@@ -213,21 +213,23 @@ export default class index extends Component {
         for (var i = 0; i < data.length; i++) {
             let id = i
             packages.push(
-                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 5,  flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onSingleAppointmentClick(data[id])} style={[{ paddingLeft: 10, marginTop: 5, paddingVertical: 5, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                    <View  style={{  borderColor:lightTheme.SMALL_BODY_TEXT_COLOR,borderWidth:1,  borderRadius: 150, }}>
-                    <Image  source={{ uri: imageUrl()+data[i].doctor.fullName }}  style={styles.image_profile} />
-                    </View>
-                      
+                        <View style={{ borderColor: lightTheme.SMALL_BODY_TEXT_COLOR, borderWidth: 1, borderRadius: 150, }}>
+                            <Image
+                                source={{ uri: data[i].doctor.imageUrl == null || data[i].doctor.imageUrl == "" || data[i].doctor.imageUrl == "null" ? placeholderImage() : data[i].doctor.imageUrl }}
+                                style={styles.image_profile} />
+                        </View>
+
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.fullName}</Text>
                         <Text style={{ color: lightTheme.PRIMARY_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, marginBottom: 2, marginTop: 2 }}>{data[i].doctor.title}</Text>
-                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row',  marginTop:5}}>
+                        <View style={{ marginRight: 20, justifyContent: 'center', flexDirection: 'row', marginTop: 5 }}>
 
                             <Text style={{ color: lightTheme.SMALL_BODY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 10, }}>{Moment(data[i].appointmentDate).format('Do, ddd, MMMM')}</Text>
                             <View style={{ flex: 1 }} />
-                            <View style={{ justifyContent: 'center', borderRadius:5, backgroundColor:"#F3603F" }}>
+                            <View style={{ justifyContent: 'center', borderRadius: 5, backgroundColor: "#F3603F" }}>
                                 <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, textTransform: 'uppercase', fontFamily: font.SEMI_BOLD, fontSize: 10, marginVertical: 3, marginHorizontal: 5 }}>{Moment(data[i].appointmentDate).format('h:A')}</Text>
                             </View>
                         </View>
@@ -249,8 +251,8 @@ export default class index extends Component {
     }
 
 
-    onSingleAppointmentClick(value){
-    console.warn(value);
+    onSingleAppointmentClick(value) {
+        this.props.navigation.navigate('apointment_details', {item: value})
     }
 
 
@@ -283,8 +285,8 @@ const styles = StyleSheet.create({
         height: 55,
         borderRadius: 150,
         shadowColor: 'gray',
-        borderColor:lightTheme.PRIMARY_COLOR,
-        borderWidth:8,
+        borderColor: lightTheme.PRIMARY_COLOR,
+        borderWidth: 0,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 1,

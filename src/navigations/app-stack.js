@@ -71,6 +71,7 @@ class AppStack extends Component {
             <Stack.Screen name="Session" component={Session}  /> 
             <Stack.Screen name="BankInformation" component={BankInformation}  /> 
             <Stack.Screen name="provider_ment_details" component={DoctorMyAppointment}  /> 
+            <Stack.Screen name="apointment_details" component={MyAppointment}  /> 
           
           </Stack.Navigator>
         </NavigationContainer>

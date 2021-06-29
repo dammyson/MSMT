@@ -30,6 +30,7 @@ import {
     SelectMultipleGroupButton
 } from "react-native-selectmultiple-button";
 import Moment from 'moment';
+import { userPlaceholderImage } from '../../utilities';
 Moment.locale('en');
 const moment = require('moment');
 
@@ -87,7 +88,9 @@ export default class DoctorMyAppointment extends Component {
                                     </View>
                                 </View>
                                 <View style={{ margin: 2, marginLeft: 20, marginRight: 15 }}>
-                                    <Image source={images.user} style={styles.image_profile} />
+                                    <Image 
+                                    source={{ uri: details.member.imageUrl == null || details.member.imageUrl == "" || details.member.imageUrl == "null" ? userPlaceholderImage() : details.member.imageUrl }}
+                                    source={images.user} style={styles.image_profile} />
                                 </View>
                             </View>
 
@@ -154,7 +157,7 @@ export default class DoctorMyAppointment extends Component {
 
                                 <View style={{ marginRight: 10, justifyContent: 'center', flexDirection: 'row', marginBottom: 5, }}>
                                     <View style={{ flex: 2, justifyContent: 'center' }}>
-                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}> {Moment(details.appointmentDate).format('MMM Do YY')}</Text>
+                                        <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.REGULAR, fontSize: 14, marginBottom: 2, marginTop: 2 }}>{Moment(details.appointmentDate).format('MMM Do YY')}</Text>
                                     </View>
                                     <View style={{ flex: 1 }}>
 
