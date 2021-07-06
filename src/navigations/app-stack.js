@@ -55,7 +55,7 @@ class AppStack extends Component {
             <Stack.Screen name="Splash" component={Splash}  />
             <Stack.Screen name="Intro" component={Intro}  />
             <Stack.Screen name="Welcome" component={Welcome}  />
-            <Stack.Screen name="user_type" component={SlectUserType}  />
+          
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
             <Stack.Screen name="ProviderApp" component={ProviderApp}  /> 

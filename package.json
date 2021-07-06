@@ -33,7 +33,8 @@
     "react-native-selectmultiple-button": "^0.1.105",
     "react-native-star-rating": "^1.1.0",
     "react-native-swiper": "^1.6.0",
-    "react-native-vector-icons": "^8.1.0"
+    "react-native-vector-icons": "^8.1.0",
+    "react-native-webview": "^11.6.5"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
