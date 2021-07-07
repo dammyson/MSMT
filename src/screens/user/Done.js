@@ -81,9 +81,8 @@ export default class Done extends Component {
                             </View>
 
                             <View style={{ marginHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ fontFamily: font.BOLD, fontSize: 30, marginTop: 2, color: lightTheme.PRIMARY_TEXT_COLOR }}>Booking Successful</Text>
-                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 5, color: lightTheme.PRIMARY_TEXT_COLOR, textAlign: 'center' }}>Your appointment booking with
-                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, color: '#A74343', textAlign: 'center' }}> </Text> was successful.</Text>
+                                <Text style={{ fontFamily: font.BOLD, fontSize: 30, marginTop: 2, color: lightTheme.PRIMARY_TEXT_COLOR }}>Completed Successfully</Text>
+                                <Text style={{ fontFamily: font.REGULAR, fontSize: 15, marginTop: 5, color: lightTheme.PRIMARY_TEXT_COLOR, textAlign: 'center' }}> You have successfully completed your signup process, you can now get started..</Text>
                             </View>
                             <View style={{ marginTop: 15, }}>
                                 <TouchableOpacity onPress={() => this.props.navigation.reset({
