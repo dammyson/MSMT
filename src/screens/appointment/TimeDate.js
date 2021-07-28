@@ -64,9 +64,9 @@ export default class TimeData extends Component {
 
     async getDoctorAvailability() {
         const {clinician} = this.state
-        console.warn('/Clinician/getDoctorAvailablity/' + clinician.id)
+        console.warn(baseUrl() + '/Appointment/getClinicianUnavailableTime?clinicianId=' + clinician.id)
         this.setState({ loading: true })
-        fetch(baseUrl() + '/Clinician/getDoctorAvailablity?clinicianId=' + clinician.id, {
+        fetch(baseUrl() + '/Appointment/getClinicianUnavailableTime?clinicianId=' + clinician.id, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -80,15 +80,13 @@ export default class TimeData extends Component {
                 console.warn(statusCode, data)
 
                 if (statusCode == 200) {
-
                     this.setState({
-                        // list_appointments: data.data
+                        // list_appointments: data.data  +14438656503
                     })
-
 
                 } else {
                     this.setState({ loading: false })
-                   // showTopNotification("danger", res.data.message)
+                   // showTopNotification("danger", res.data.message) 
 
                 }
             })
