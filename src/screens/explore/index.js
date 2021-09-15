@@ -32,16 +32,21 @@ export default class index extends Component {
         super(props);
         this.state = {
             loading: false,
-            list_doctor: []
+            list_doctor: [],
+            appointment_information:''
         };
         this.arrayholder = [];
     }
 
     async componentDidMount() {
-        this.getDoctors()
+        const { appointment_information } = this.props.route.params;
+        this.setState({
+            appointment_information: appointment_information,
+        });
+        this.getDoctors(appointment_information)
     }
 
-    async getDoctors() {
+    async getDoctors(criterial) {
         this.setState({ loading: true })
         fetch(baseUrl() + '/Clinician/getFeaturedDoctors', {
             method: 'GET', headers: {
@@ -58,7 +63,7 @@ export default class index extends Component {
                 if (statusCode == 200) {
 
                     this.setState({
-                      list_doctor: data.data
+                        list_doctor: data.data
                     })
                     this.arrayholder = data.data;
 
@@ -78,19 +83,18 @@ export default class index extends Component {
     }
 
 
-
     searchFilterFunction = search => {
         this.setState({ search });
         const newData = this.arrayholder.filter(item => {
-          const itemData = `${item.fullName? item.fullName.toUpperCase(): ''.toUpperCase()}`;
-          const textData = search.toUpperCase();
-          return itemData.indexOf(textData) > -1;
+            const itemData = `${item.fullName ? item.fullName.toUpperCase() : ''.toUpperCase()}`;
+            const textData = search.toUpperCase();
+            return itemData.indexOf(textData) > -1;
         });
         this.setState({
             list_doctor: newData,
         });
-    
-      };
+
+    };
 
 
 
@@ -190,9 +194,9 @@ export default class index extends Component {
         for (var i = 0; i < data.length; i++) {
             let item = data[i]
             packages.push(
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('explore_details',  {clinician: item})} style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
+                <TouchableOpacity onPress={() => this.onProviderSelected(item) } style={[{ paddingLeft: 10, marginTop: 10, paddingVertical: 10, paddingRight: 10, flexDirection: 'row', marginBottom: 5, },]}>
                     <View style={{ margin: 2, }}>
-                        <Image source={{ uri: data[i].imageUrl == null || data[i].imageUrl ==  "" || data[i].imageUrl ==  "null" ?  placeholderImage() : data[i].imageUrl}} style={styles.image_profile} />
+                        <Image source={{ uri: data[i].imageUrl == null || data[i].imageUrl == "" || data[i].imageUrl == "null" ? placeholderImage() : data[i].imageUrl }} style={styles.image_profile} />
                     </View>
                     <View style={{ marginLeft: 10, justifyContent: 'center', flex: 1, }}>
                         <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 15, marginBottom: 2, marginTop: 2 }}>{data[i].fullName}</Text>
@@ -229,6 +233,16 @@ export default class index extends Component {
         return packages;
     }
 
+
+    onProviderSelected(item){
+
+
+        const {appointment_information } = this.state
+
+        appointment_information['provider']= item,
+        console.warn(appointment_information);
+        this.props.navigation.navigate('provider_details', { appointment_information: appointment_information, clinician: item })
+    }
 
 
 

@@ -117,7 +117,7 @@ export default class AppointmentType extends Component {
                                     </TouchableOpacity>
                                 </View>
 
-                                <Text style={{ fontSize: 14, margin: 7, flex: 1, fontFamily: 'NunitoSans-Light', fontStyle: 'italic', color: '#fff', textAlign: 'center', marginRight: 10 }}>Select address type</Text>
+                                <Text style={{ fontSize: 14, margin: 7, flex: 1, fontFamily: 'NunitoSans-Light', fontStyle: 'italic', color: '#fff', textAlign: 'center', marginRight: 10 }}>Select Appointment type</Text>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 25 }}>
                                    <View>
                                    <View>

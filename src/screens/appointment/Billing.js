@@ -57,9 +57,9 @@ export default class Billing extends Component {
 
     async getDoctorServicesCost() {
         const { appointment_information } = this.state
-        console.warn(appointment_information.appointment_datetime.clinician_id)
+        console.warn(appointment_information.provider.id)
         this.setState({ loading: true, loading_msg:'getting services and cost...' })
-        fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + appointment_information.appointment_datetime.clinician.id, {
+        fetch(baseUrl() + '/Clinician/getDoctorServiceCost?clinicianId=' + appointment_information.provider.id, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -95,12 +95,12 @@ export default class Billing extends Component {
 
    async selectSevice(value) {
         const { appointment_information } = this.state
-        // appointment_information.category_id
+
         let information = {
-            clinicianId: appointment_information.appointment_datetime.clinician.id,
+            clinicianId: appointment_information.provider.id,
             appointment_type: appointment_information.type_id,
-            startDate: appointment_information.appointment_datetime.date.full,
-            startTime: appointment_information.appointment_datetime.time,
+            startDate: appointment_information.time.date.full,
+            startTime: appointment_information.time.time,
             appointmentService: value.service_id,
             appointmentActivityId: 4,
             appointmentActivitySubId:  appointment_information.activity_id,

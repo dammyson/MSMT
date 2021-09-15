@@ -42,17 +42,6 @@ export default class AppointmentInformation extends Component {
         super(props);
         this.state = {
             loading: false,
-            show_type: false,
-            type_text: 'Select type',
-            type_id: '',
-            list_doctor_services: [],
-            show_category: false,
-            category_text: 'Select category',
-            category_id: '',
-            show_activty: false,
-            activity_text: 'Select activity',
-            activity_id: '4',
-
             appointment_datetime:'',
             selected_symptoms: ['Migraine', 'Headache'],
             selected: { day: 'M', date: 3 , },
@@ -61,15 +50,12 @@ export default class AppointmentInformation extends Component {
             medication:'',
             on_medication:'',
             diagnosis:'',
+            clinician: this.props.route.params.clinician,
+            appointment_information:this.props.route.params.appointment_information,
         };
     }
 
     async componentDidMount() {
-       // this.getDates()
-        const { appointment_datetime } = this.props.route.params;
-        this.setState({
-            appointment_datetime: appointment_datetime,
-        });
         this.getDoctorServicesCost()
     }
 
@@ -79,18 +65,13 @@ export default class AppointmentInformation extends Component {
     }
    
     hanedProceedButton() {
-        const {appointment_datetime, selected_symptoms, type_id,  activity_id, category_id, allegies, medication, on_medication, diagnosis } = this.state
-        let appointment_information = {
-            appointment_datetime: appointment_datetime,
-            selected_symptoms: selected_symptoms,
-            type_id: type_id,
-            category_id:category_id,
-            activity_id: activity_id,
-            allegies: allegies,
-            medication: medication,
-            on_medication: on_medication,
-            diagnosis: diagnosis,
-        }
+        const { selected_symptoms, appointment_information, allegies, medication, on_medication, diagnosis } = this.state
+        appointment_information['allegies']=  allegies  
+        appointment_information['diagnosis']=  diagnosis 
+        appointment_information['medication']=  medication 
+        appointment_information['on_medication']=  on_medication 
+        appointment_information['selected_symptoms']=  selected_symptoms      
+        console.warn(appointment_information)
          this.props.navigation.navigate('appointment_billing', { appointment_information : appointment_information})
      }
 
@@ -132,41 +113,7 @@ export default class AppointmentInformation extends Component {
 
                             </View> */}
 
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
-                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Type</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => this.setState({ show_type: true })} style={styles.textInputContainer}>
-                                <View style={styles.input}>
-                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.type_text == "Select type" ? { color: '#08025640' } : {}]}>{this.state.type_text}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-
-
-
-
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
-                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment category</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => this.state.type_text == "Select type" ? showTopNotification("warning", "You need to Select type") : this.setState({ show_category: true })} style={styles.textInputContainer}>
-                                <View style={styles.input}>
-                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.category_text == "Select category" ? { color: '#08025640' } : {}]}>{this.state.category_text}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-
-
-
-                            <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10, justifyContent: 'flex-start', }}>
-                                <Text style={{ fontFamily: font.SEMI_BOLD, fontSize: 16, marginTop: 2, color: '#080256' }}>Appointment Activity</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => this.state.category_text == "Select category" ? showTopNotification("warning", "You need to Select category") : this.setState({ show_activty: true })} style={styles.textInputContainer}>
-                                <View style={styles.input}>
-                                    <Text style={[{ fontFamily: font.SEMI_BOLD, fontSize: 14, marginTop: 2, color: '#080256' }, this.state.activity_text == "Select activity" ? { color: '#08025640' } : {}]}>{this.state.activity_text}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-
+                           
 
                             <View style={{ marginHorizontal: 5, marginTop: 20 }}>
                                 <View style={{ marginHorizontal: 10, justifyContent: 'center', }}>
@@ -256,9 +203,6 @@ export default class AppointmentInformation extends Component {
                     </View>
 
                 </Content>
-                {this.state.show_type ? this.SelectAppointmentType() : null}
-                {this.state.show_category ? this.SelectAppointmentCategory() : null}
-                {this.state.show_activty ? this.SelectAppointmentActivity() : null}
             </Container>
 
         );
@@ -290,59 +234,6 @@ export default class AppointmentInformation extends Component {
             );
         }
         return packages;
-    }
-
-
-
-    SelectAppointmentType() {
-        return (
-            <AppointmentType
-                onClose={() => this.setState({ show_type: false })}
-                onSelect={(value) => this.onSelectType(value)}
-            />
-        )
-    }
-    onSelectType(value) {
-        this.setState({
-            show_type: false,
-            type_id: value.id,
-            type_text: value.name
-        })
-    }
-
-
-    SelectAppointmentCategory() {
-        return (
-            <AppointmentCategory
-                onClose={() => this.setState({ show_category: false })}
-                onSelect={(value) => this.onSelectCategory(value)}
-                type={this.state.type_id}
-            />
-        )
-    }
-    onSelectCategory(value) {
-        this.setState({
-            show_category: false,
-            category_id: value.id,
-            category_text: value.name
-        })
-    }
-
-    SelectAppointmentActivity() {
-        return (
-            <AppointmentActivity
-                onClose={() => this.setState({ show_activty: false })}
-                onSelect={(value) => this.onSelectActivity(value)}
-                category={this.state.type_id}
-            />
-        )
-    }
-    onSelectActivity(value) {
-        this.setState({
-            show_activty: false,
-            activity_id: value.id,
-            activity_text: value.name
-        })
     }
 
 }

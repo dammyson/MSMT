@@ -1,32 +1,16 @@
 import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    TextInput,
-    StyleSheet,
-    StatusBar,
-    Alert,
-    Dimensions,
-    Image,
-    Keyboard,
-    NativeModules,
-    PermissionsAndroid,
-    ImageBackground
-
-} from 'react-native';
+import { View,Text, TouchableOpacity, StyleSheet, StatusBar, Dimensions,Image,} from 'react-native';
 import * as images from '../../assets/images';
 import { Container, Content } from 'native-base';
 import { lightTheme } from '../../theme/colors';
 import { font, fontSizes } from '../../constants';
 import { buttonStyles } from '../../theme/ButtonStyle';
 import { Icon } from 'react-native-elements';
-import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
-const axios = require('axios');
-import ActivityIndicator from '../../components/ActivityIndicator';
-import { getToken, showTopNotification, processResponse, baseUrl, imageUrl, getUserID, getUserName, userPlaceholderImage, placeholderImage } from '../../utilities';
-
+import { getToken, showTopNotification, processResponse, baseUrl, getUserName, userPlaceholderImage, placeholderImage } from '../../utilities';
+import AppointmentType from '../../components/AppointmentType';
+import AppointmentCategory from '../../components/AppointmentCategory';
+import AppointmentActivity from '../../components/AppointmentActivity';
 
 export default class index extends Component {
     constructor(props) {
@@ -41,9 +25,18 @@ export default class index extends Component {
                 radiologist: 0,
                 therapist: 0,
             },
-            is_valide_mail: false,
             list_doctor: [],
-            show_camera: false
+            is_valide_mail: false,
+            show_camera: false,
+            show_type: false,
+            type_text: 'Select type',
+            type_id: '23',
+            show_category: false,
+            category_text: 'Select category',
+            category_id: '24',
+            show_activty: false,
+            activity_text: 'Select activity',
+            activity_id: '4',
         };
     }
 
@@ -72,13 +65,10 @@ export default class index extends Component {
                 const { data, statusCode } = res
                 console.warn(data.data)
                 if (statusCode == 200) {
-                    this.setState({
-                        numbers: data.data
-                    })
+                    this.setState({ numbers: data.data  })
                 } else {
                     this.setState({ loading: false })
                     showTopNotification("danger", res.data.message)
-
                 }
             })
             .catch((error) => {
@@ -107,15 +97,12 @@ export default class index extends Component {
                 const { statusCode, data } = res
                 console.warn(data)
                 if (statusCode == 200) {
-
                     this.setState({
                         list_doctor: data.data
                     })
-
                 } else {
                     this.setState({ loading: false })
                     showTopNotification("danger", res.data.message)
-
                 }
             })
             .catch((error) => {
@@ -145,44 +132,21 @@ export default class index extends Component {
                                     <Text style={{ color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, fontSize: 22, marginBottom: 2, marginTop: 2 }}>Hello</Text>
                                 </View>
                             </View>
-
-
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 10, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
-                                    <Text style={{ color: '#080256', fontFamily: font.BOLD, fontSize: 35, marginBottom: 2, marginTop: 2 }}>What are you looking for?</Text>
+                                    <Text style={{ color: '#080256', fontFamily: font.BOLD, fontSize: 30, marginBottom: 2, marginTop: 2 }}>What are you looking for?</Text>
                                 </View>
                             </View>
 
+                            <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10,  marginBottom: 5, }}>
+                            <TouchableOpacity onPress={() => this.setState({show_type: true})} style={buttonStyles.appointmentButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
+                            </TouchableOpacity>
 
-                            <View style={{ marginLeft: 20, marginTop: 10, marginRight: 10, marginBottom: 5, }}>
-                                <View style={textInputStyles.searchTextInputContainer}>
-                                    <View style={textInputStyles.operation_icon}>
-
-                                        <Icon
-                                            name="search"
-                                            color={lightTheme.PRIMARY_COLOR}
-                                            size={30}
-                                            type='ionicon'
-                                        />
-                                    </View>
-                                    <View style={textInputStyles.input}>
-                                        <TextInput
-                                            placeholder="Search..."
-                                            placeholderTextColor={lightTheme.PRIMARY_LIGHT_TEXT_COLOR}
-                                            returnKeyType="next"
-                                            keyboardType='email-address'
-                                            autoCapitalize="none"
-                                            autoCorrect={false}
-                                            defaultValue={this.state.email}
-                                            style={{ flex: 1, fontSize: 16, color: lightTheme.PRIMARY_TEXT_COLOR, fontFamily: font.SEMI_BOLD, }}
-                                            onChangeText={(text) => this.validate(text)}
-                                            onSubmitEditing={() => this.passwordInput.focus()}
-                                        />
-                                    </View>
-                                </View>
+                            <TouchableOpacity onPress={() =>  this. hanedProceedButton()} style={buttonStyles.appointmentButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
+                            </TouchableOpacity>
                             </View>
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Specialist</Text>
@@ -190,42 +154,31 @@ export default class index extends Component {
                             </View>
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
-
                                 {this.renderSummaryDetails(numbers.radiologist, 'RADIOLOGISTS', '#FFB655')}
                                 {this.renderSummaryDetails(numbers.therapist, 'Therapists', '#F3603F')}
                                 {this.renderSummaryDetails(numbers.neurologist, 'neurologist', '#489E67')}
-
                             </View>
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 10, }}>
-
                                 {this.renderSummaryDetails(numbers.generalPractitioner, 'General Practitioners', '#5383EC')}
                                 {this.renderSummaryDetails(numbers.dermatologist, 'DERMATOLOGISTS', '#A74343')}
                                 {this.renderSummaryDetails(numbers.pediatricians, 'PEDIATRICIANS', '#344356')}
-
                             </View>
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>
                                     <Text style={{ color: '4C4F4D, 100%', fontFamily: font.BOLD, fontSize: 17, marginBottom: 2, marginTop: 2 }}>Packages of Services</Text>
                                 </View>
                             </View>
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderPackages(packagesa)}
                                 </ScrollView>
                             </View>
-
-
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderLongPackages(packagesa)}
                                 </ScrollView>
                             </View>
-
                             {this.state.list_doctor.length > 0 ? 
-
                             <>
                                 <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                     <View style={{ marginRight: 20, justifyContent: 'center', flex: 1 }}>
@@ -236,22 +189,19 @@ export default class index extends Component {
                                         <Text style={{ color: '#4DC59180', fontFamily: font.BOLD, fontSize: 17, marginHorizontal: 10, marginBottom: 2, marginTop: 2 }}>See all</Text>
                                     </TouchableOpacity>
                                 </View>
-
-
                                 <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                     <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                         {this.renderDoctors(list_doctor)}
                                     </ScrollView>
                                 </View>
-
                             </>
                             : null }
-
-
                         </View>
                     </View>
-
                 </Content>
+                {this.state.show_type ? this.SelectAppointmentType() : null}
+                {this.state.show_category ? this.SelectAppointmentCategory() : null}
+                {this.state.show_activty ? this.SelectAppointmentActivity() : null}
             </Container>
 
         );
@@ -325,6 +275,74 @@ export default class index extends Component {
         }
         return packages;
     }
+
+
+
+
+    SelectAppointmentType() {
+        return (
+            <AppointmentType
+                onClose={() => this.setState({ show_type: false })}
+                onSelect={(value) => this.onSelectType(value)}
+            />
+        )
+    }
+    onSelectType(value) {
+        this.setState({
+            show_type: false,
+            type_id: value.id,
+            type_text: value.name,
+            show_category: true
+        })
+    }
+
+
+    SelectAppointmentCategory() {
+        return (
+            <AppointmentCategory
+                onClose={() => this.setState({ show_category: false })}
+                onSelect={(value) => this.onSelectCategory(value)}
+                type={this.state.type_id}
+            />
+        )
+    }
+    onSelectCategory(value) {
+        this.setState({
+            show_category: false,
+            category_id: value.id,
+            category_text: value.name,
+            show_activty: true
+        })
+    }
+
+    SelectAppointmentActivity() {
+        return (
+            <AppointmentActivity
+                onClose={() => this.setState({ show_activty: false })}
+                onSelect={(value) => this.onSelectActivity(value)}
+                category={this.state.type_id}
+            />
+        )
+    }
+    onSelectActivity(value) {
+        this.setState({
+            show_activty: false,
+            activity_id: value.id,
+            activity_text: value.name
+        })
+        this. hanedProceedButton()
+    }
+
+    hanedProceedButton() {
+        const {type_id,  activity_id, category_id } = this.state
+        let appointment_information = {
+            type_id: type_id,
+            category_id:category_id,
+            activity_id: activity_id,
+        }
+        console.warn(appointment_information)
+         this.props.navigation.navigate('provider_listing', { appointment_information : appointment_information})
+     }
 
 }
 

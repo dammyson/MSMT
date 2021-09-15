@@ -33,15 +33,16 @@ export default class index extends Component {
         this.state = {
             loading: false,
             clinician: '',
+            appointment_information:''
            
         };
     }
 
     async componentDidMount() {
-        const { clinician } = this.props.route.params;
-        console.warn(clinician)
+        const {  appointment_information, clinician } = this.props.route.params;
         this.setState({ 
             clinician: clinician, 
+            appointment_information: appointment_information,
         });
     }
 
@@ -111,8 +112,8 @@ export default class index extends Component {
 
 
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10,  marginBottom: 5, }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('appointment_datetime', {clinician: clinician})} style={buttonStyles.appointmentButtonStyle}>
-                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
+                            <TouchableOpacity onPress={() =>this.HandleButton() } style={buttonStyles.appointmentButtonStyle}>
+                                <Text style={[buttonStyles.primaryButtonTextStyle]}>Continue</Text>
                             </TouchableOpacity>
                             </View>
 
@@ -145,13 +146,13 @@ export default class index extends Component {
                             </View>
 
 
-
+{/* 
                             <View style={{ marginLeft: 20, marginTop: 25, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsHorizontalScrollIndicator={false} style={{}} horizontal>
                                     {this.renderLongPackages(packagesa)}
                                 </ScrollView>
                             </View>
-
+ */}
 
                            
 
@@ -162,6 +163,11 @@ export default class index extends Component {
             </Container>
 
         );
+    }
+
+    HandleButton(){
+        const { clinician, appointment_information } = this.state
+        this.props.navigation.navigate('appointment_datetime',{ appointment_information: appointment_information, clinician: clinician })
     }
 
     renderSummaryDetails(count, name, bg) {

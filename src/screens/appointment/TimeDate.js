@@ -45,17 +45,13 @@ export default class TimeData extends Component {
             starCount: 5,
             display_days: [],
             selected: { day: 'M', date: 3, full: "01/01/2021" },
-            clinician: this.props.route.params.clinician
+            clinician: this.props.route.params.clinician,
+            appointment_information:this.props.route.params.appointment_information,
         };
     }
 
     async componentDidMount() {
         this.getDates()
-        // const { clinician } = this.props.route.params;
-        // this.setState({
-        //     clinician: clinician,
-        // });
-
         this.getDoctorAvailability()
     }
 
@@ -223,7 +219,7 @@ export default class TimeData extends Component {
     }
 
     hanedProceedButton() {
-        const { sel_time, selected, clinician } = this.state
+        const { sel_time, selected, clinician, appointment_information  } = this.state
 
         if (sel_time == "") {
             showTopNotification("error", 'Select time date and time', 3)
@@ -231,13 +227,12 @@ export default class TimeData extends Component {
         }
 
         let appointment_datetime = {
-            clinician: clinician,
             time: sel_time,
             date: selected
         }
+        appointment_information['time']= appointment_datetime,
 
-
-        this.props.navigation.navigate('appointment_information', { appointment_datetime: appointment_datetime })
+        this.props.navigation.navigate('appointment_information', { appointment_information: appointment_information })
     }
 
     renderdays(data) {

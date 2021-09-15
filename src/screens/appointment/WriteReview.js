@@ -54,9 +54,6 @@ export default class WriteReview extends Component {
     }
 
 
-
-
-
     render() {
 
         var left = (

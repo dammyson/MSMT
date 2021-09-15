@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Avatar, Icon, } from 'react-native-elements';
 import { lightTheme } from '../theme/colors';
-import HomeScreen from '../screens/home';
+import HomeScreen from '../screens/home/stack';
 import ExploreScreen from '../screens/explore/explore-stack';
 import PrescriptionScreen from '../screens/prescription/presscription-stack';
 import { View,Text, Dimensions } from 'react-native';
@@ -37,19 +37,6 @@ class AppNavigator extends Component {
                 type='ionicon'
               />
                <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD, marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Home</Text>
-              </View>;
-            }
-            else if (route.name === 'Calendar') {
-              iconName = 'text-search';
-              return<View style={{width:Dimensions.get('window').width/5}}>
-               <Icon
-                active
-                name={iconName}
-                size={27}
-                color={color}
-                type='material-community'
-              />
-               <Text style={{ marginTop: 1, fontFamily: font.SEMI_BOLD,  marginRight: 7, marginLeft: 7,fontSize: 10, color: color, textAlign: 'center',}}>Explore</Text>
               </View>;
             }
             else if (route.name === 'Add') {
@@ -105,7 +92,6 @@ class AppNavigator extends Component {
 
 
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Calendar" component={ExploreScreen} />
         <Tab.Screen name="Add" component={Appointments} />
         <Tab.Screen name="Setting" component={PrescriptionScreen} />
         <Tab.Screen name="User" component={Settings} />

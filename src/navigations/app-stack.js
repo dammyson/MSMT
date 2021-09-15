@@ -31,6 +31,7 @@ import MakeAppointment from '../screens/settings/MakeAppointment';
 import ViewAppointment from '../screens/settings/ViewAppointment';
 import SlectUserType from '../screens/user/SlectUserType';
 import Intro from '../screens/onBoarding/Intro';
+import ExploreScreen from '../screens/explore/explore-stack';
 
 
 
@@ -59,10 +60,7 @@ class AppStack extends Component {
             <Stack.Screen name="Auth" component={AuthStack}  /> 
             <Stack.Screen name="App" component={App}  /> 
             <Stack.Screen name="ProviderApp" component={ProviderApp}  /> 
-            <Stack.Screen name="appointment_datetime" component={TimeData}  /> 
-            <Stack.Screen name="appointment_information" component={AppointmentInformation}  /> 
-            <Stack.Screen name="appointment_billing" component={Billing}  /> 
-            <Stack.Screen name="mode_appointment" component={ModePayment}  /> 
+           
             <Stack.Screen name="payment" component={Payment}  /> 
             <Stack.Screen name="done" component={Done}  /> 
             <Stack.Screen name="Referer" component={Referer}  /> 
@@ -72,6 +70,8 @@ class AppStack extends Component {
             <Stack.Screen name="BankInformation" component={BankInformation}  /> 
             <Stack.Screen name="provider_ment_details" component={DoctorMyAppointment}  /> 
             <Stack.Screen name="apointment_details" component={MyAppointment}  /> 
+          
+            
           
           </Stack.Navigator>
         </NavigationContainer>
