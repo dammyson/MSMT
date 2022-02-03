@@ -135,6 +135,7 @@ export default class Scheduling extends Component {
                             <View style={{ marginLeft: 20, marginRight: 20, marginTop:20, justifyContent: 'flex-start',}}>
                                 <Text style={{ color: lightTheme.PRIMARY_LIGHT_TEXT_COLOR,fontFamily: font.SEMI_BOLD,fontSize: 11,}}>Cost</Text>
                             </View>
+                            
                             <View style={styles.textInputContainer}>
 
                                 <View style={styles.input}>
@@ -179,7 +180,6 @@ export default class Scheduling extends Component {
         );
     }
 
-
     renderSymptom(data) {
         let packages = [];
         let index;
@@ -206,8 +206,37 @@ export default class Scheduling extends Component {
         return packages;
     }
 
+
+
+    
+
 }
 
+
+const days = [
+    {
+        value: 'Monday',
+    },
+    {
+        value: 'Tuesday',
+    },
+    {
+        value: 'Wednestday',
+    },
+    {
+        value: 'Thurday',
+    },
+    {
+        value: 'Friday',
+    },
+    {
+        value: 'Saturday',
+    },
+    {
+        value: 'Sunday',
+    },
+   
+];
 const styles = StyleSheet.create({
     container: {
         flex: 1,

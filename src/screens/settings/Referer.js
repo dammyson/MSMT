@@ -159,11 +159,8 @@ export default class Referer extends Component {
                                     <Text style={[buttonStyles.primaryButtonTextStyle,]}>Share</Text>
                                 </TouchableOpacity>
                             </View>
-
                         </View>
                     </View>
-
-
                 </Content>
             </Container>
 

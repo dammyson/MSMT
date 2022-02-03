@@ -25,6 +25,8 @@ import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import Navbar from '../../components/Navbar';
 import { getToken, showTopNotification, processResponse, baseUrl } from '../../utilities';
+import { differenceInMinutes } from 'date-fns'
+
 import Moment from 'moment';
 Moment.locale('en');
 const moment = require('moment');
@@ -44,6 +46,7 @@ export default class TimeData extends Component {
             sel_time: '',
             starCount: 5,
             display_days: [],
+            vailable_days: {},
             selected: { day: 'M', date: 3, full: "01/01/2021" },
             clinician: this.props.route.params.clinician,
             appointment_information:this.props.route.params.appointment_information,
@@ -73,12 +76,20 @@ export default class TimeData extends Component {
             .then(res => {
                 this.setState({ loading: false })
                 const { statusCode, data } = res
-                console.warn(statusCode, data)
+                console.warn(statusCode, data.data)
 
                 if (statusCode == 200) {
                     this.setState({
-                        // list_appointments: data.data  +14438656503
+                        vailable_days: data.data
                     })
+                    data.data.forEach(element => {
+                       
+                        var duration = moment.duration(moment(element.endTime, "HH:mm").diff(moment(element.startTime, "HH:mm"))).asMinutes();
+                       console.warn(element, duration)
+                      
+                    });
+                  //  var duration = moment.duration(moment(to, "HH:mm").diff(moment(from, "HH:mm"))).asMinutes();
+                
 
                 } else {
                     this.setState({ loading: false })

@@ -99,6 +99,7 @@ export default class SlectUserType extends Component {
                                         </View>
                                     </View>
                                 </TouchableOpacity>
+                                
                             </View>
 
                         </View>

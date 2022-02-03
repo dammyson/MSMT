@@ -32,6 +32,7 @@ import ViewAppointment from '../screens/settings/ViewAppointment';
 import SlectUserType from '../screens/user/SlectUserType';
 import Intro from '../screens/onBoarding/Intro';
 import ExploreScreen from '../screens/explore/explore-stack';
+import Availability from '../screens/settings/Availability';
 
 
 
@@ -70,8 +71,8 @@ class AppStack extends Component {
             <Stack.Screen name="BankInformation" component={BankInformation}  /> 
             <Stack.Screen name="provider_ment_details" component={DoctorMyAppointment}  /> 
             <Stack.Screen name="apointment_details" component={MyAppointment}  /> 
-          
-            
+            <Stack.Screen name="availability" component={Availability}  /> 
+      
           
           </Stack.Navigator>
         </NavigationContainer>

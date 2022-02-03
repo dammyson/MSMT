@@ -129,7 +129,7 @@ export default class Billing extends Component {
                 let information = {
                     appointmentId: data.data,
                     amount: value.cost,
-                    clinician: appointment_information.appointment_datetime.clinician
+                    clinician: appointment_information.provider.id
                 }
                 this.props.navigation.navigate('mode_appointment', { appointment_information : information})
                 

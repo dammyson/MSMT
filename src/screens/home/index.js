@@ -146,6 +146,7 @@ export default class index extends Component {
                             <TouchableOpacity onPress={() =>  this. hanedProceedButton()} style={buttonStyles.appointmentButtonStyle}>
                                 <Text style={[buttonStyles.primaryButtonTextStyle]}>Book an Appointment</Text>
                             </TouchableOpacity>
+                            
                             </View>
                             <View style={{ marginLeft: 20, marginTop: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <View style={{ marginRight: 20, justifyContent: 'center', }}>

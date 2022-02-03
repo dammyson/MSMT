@@ -31,7 +31,7 @@ export default class WebRegister extends Component {
 
     componentDidMount() {
     
-       
+       console.warn(this.props.route.params.url);
 
     }
 

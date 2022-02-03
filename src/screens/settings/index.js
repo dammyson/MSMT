@@ -24,6 +24,7 @@ import { Icon } from 'react-native-elements';
 import { textInputStyles } from '../../theme/TextInputStyle';
 import { ScrollView } from 'react-native';
 import { getLogout , getUserName, getEmail} from '../../utilities';
+import { getRole } from '../../utilities';
 
 export default class index extends Component {
     constructor(props) {
@@ -32,6 +33,7 @@ export default class index extends Component {
             loading: false,
             email: '',
             name: '',
+            role:''
             
         };
     }
@@ -45,7 +47,13 @@ export default class index extends Component {
     }
 
 
-
+    async componentWillMount() {
+        this.setState({ role: await getRole(), 
+        })
+       
+         
+     }
+ 
 
 
     render() {
@@ -88,7 +96,7 @@ export default class index extends Component {
                            
                             <View style={{ marginLeft: 10, marginBottom: 5, marginRight: 10, flexDirection: 'row', marginBottom: 5, }}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{}}>
-                                    {this.renderItem(doctors)}
+                                    {this.renderItem( this.state.role == "clinician"? doctors : users)}
                                 </ScrollView>
                             </View>
 
@@ -224,12 +232,77 @@ const doctors = [
         tag:''
     },
     {
+        title: 'Add Availability',
+        icon: 'calendar',
+        icon_type: 'evilicon',
+        navigation: 'availability',
+        tag:''
+    },
+    {
         title: 'Bank Information',
         icon: 'credit-card-alt',
         icon_type: 'font-awesome',
         navigation: 'BankInformation',
         tag:''
     },
+    {
+        title: 'Referrals',
+        icon: 'ticket',
+        icon_type: 'foundation',
+        navigation: 'Referer',
+        tag:''
+    },
+    {
+        title: 'Notifications ',
+        icon: 'notifications-none',
+        icon_type: 'material',
+        navigation: 'Notification',
+        tag:''
+    },
+    {
+        title: 'Help',
+        icon: 'help-circle-outline',
+        icon_type: 'material-community',
+        navigation: '',
+        tag:''
+    },
+    {
+        title: 'About ',
+        icon: 'information-outline',
+        icon_type: 'material-community',
+        navigation: '',
+        tag:''
+    }
+
+
+];
+
+
+
+const users = [
+    {
+        title: 'Edit Profile',
+        icon: 'shopping-outline',
+        icon_type: 'material-community',
+        navigation: 'Account',
+        tag:''
+    },
+
+    {
+        title: 'User Account',
+        icon: 'idcard',
+        icon_type: 'antdesign',
+        navigation: 'Account',
+        tag:''
+    },
+    {
+        title: 'My Sessions',
+        icon: 'location',
+        icon_type: 'evilicon',
+        navigation: 'Session',
+        tag:''
+    },
+  
     {
         title: 'Referrals',
         icon: 'ticket',
